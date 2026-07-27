@@ -511,6 +511,11 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .tsg-in:focus{outline:none;border-color:#0891B2;background:#fff;box-shadow:0 0 0 3px rgba(8,145,178,.12)}
 .tsg-ta{resize:vertical;min-height:64px}
 .tsg-err{display:none;align-items:center;gap:6px;font-size:11.5px;color:#DC2626;margin:-6px 0 12px}
+.tsg-pad-wrap{position:relative;border:1.5px dashed #CBD5E1;border-radius:12px;overflow:hidden;margin-bottom:14px;background:#F8FAFC}
+.tsg-canvas{display:block;width:100%;height:140px;touch-action:none;cursor:crosshair}
+.tsg-pad-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#94A3B8;pointer-events:none;font-style:italic}
+.tsg-clear{position:absolute;top:8px;right:8px;background:#fff;border:1px solid #E2E8F0;color:#64748B;border-radius:7px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.tsg-clear:hover{background:#F1F5F9;color:#334155}
 .tsg-foot{padding:14px 22px 22px}
 .tsg-go{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#0891B2;color:#fff;border:none;border-radius:10px;padding:12px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .15s}
 .tsg-go:hover:not(:disabled){transform:translateY(-1px)}
@@ -713,6 +718,7 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .dl-chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;flex-shrink:0}
 .dl-chip.over{background:#FEE2E2;color:#991B1B}
 .mtop{display:none}
+.mbottom{display:none}
 .sb-overlay{display:none}
 @media(max-width:768px){
   /* iPhone à encoche : respecter les zones sûres (haut, bas, côtés) */
@@ -733,6 +739,28 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   .mtop-btn:active{background:rgba(255,255,255,.25)}
   .mtop-logo{width:30px;border-radius:5px}
   .mtop-title{color:#fff;font-weight:700;font-size:15px}
+  /* Barre d'onglets fixe (remplace le tiroir) — maquette Su */
+  .mbottom{display:flex;align-items:stretch;background:#fff;border-top:1px solid #E8EDF4;padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 16px -12px rgba(15,23,42,.2);position:fixed;left:0;right:0;bottom:0;z-index:850}
+  .mbottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;color:#94A3B8;min-height:44px;justify-content:center;background:none;border:none;font-family:inherit;cursor:pointer}
+  .mbottom-tab.on{color:#6D28D9}
+  .mbottom-ic{position:relative;display:flex;align-items:center;justify-content:center;font-size:21px;width:38px;height:24px;border-radius:11px}
+  .mbottom-tab.on .mbottom-ic{background:#F5F3FF}
+  .mbottom-lbl{font-size:10px;font-weight:600}
+  .mbottom-tab.on .mbottom-lbl{font-weight:700}
+  .mbottom-dot{position:absolute;top:1px;right:5px;width:8px;height:8px;border-radius:50%;background:#DC2626;z-index:1;border:1.5px solid #fff}
+  /* r\u00e9serve la place en bas pour que le contenu ne se cache pas derri\u00e8re la barre fixe */
+  .main{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  /* Les boutons flottants (catalogue, scanner) se superposaient \u00e0 la barre —
+     exactement le probl\u00e8me signal\u00e9 dans la maquette (\u00abFAB flottant se
+     superpose parfois au contenu bas d'\u00e9cran\u00bb). On les remonte au-dessus. */
+  .cp-fab{bottom:calc(70px + env(safe-area-inset-bottom))!important}
+  .scan-fab{bottom:calc(70px + env(safe-area-inset-bottom))!important}
+  /* CTA unique + pastilles d'actions rapides (maquette mobile de Su) */
+  .home-hero-cta{display:flex;align-items:center;gap:6px;flex-shrink:0;background:#E4C878;color:#123528;border:none;border-radius:11px;padding:10px 14px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:inherit;min-height:44px;box-shadow:0 6px 14px -4px rgba(228,200,120,.5)}
+  .home-pills{display:flex;gap:8px;overflow-x:auto;margin:-4px -4px 14px;padding:4px}
+  .home-pill{flex-shrink:0;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E8EDF4;border-radius:20px;padding:8px 13px;font-size:11.5px;font-weight:700;color:#334155;min-height:36px;box-shadow:0 1px 2px rgba(15,23,42,.04);white-space:nowrap;cursor:pointer;font-family:inherit}
+  .home-pill i{color:#6D28D9;font-size:15px}
+  .home-actions .qa-primary{display:none} /* déjà couvert par le CTA de la bannière : pas de doublon */
   .depot-wrap{flex-direction:column;padding:14px;gap:18px}
   .at thead{display:none}
   .at,.at tbody{display:block;width:100%}
@@ -769,10 +797,18 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 @keyframes wave{0%,60%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(14deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}}
 .home-title{font-size:27px;font-weight:800;color:#0F172A;letter-spacing:-.5px;margin-top:2px}
 .home-sub{font-size:14px;color:#94A3B8;margin-top:3px}
+.home-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.home-hero-cta{display:none} /* réservé au mobile — voir media query ; desktop garde la carte "Nouvelle appro" des Actions rapides */
+.home-pills{display:none} /* idem : la maquette mobile de Su, pas utile sur grand écran */
 
 /* --- rangée de stats cliquables --- */
 .home-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
 .hstat{position:relative;overflow:hidden;background:#fff;border:1px solid #E8EDF4;border-radius:16px;padding:16px 18px;cursor:pointer;transition:transform .18s var(--ease),box-shadow .2s var(--ease),border-color .18s}
+/* "En retard" (maquette mobile) : se distingue vraiment du lot — fond rouge
+   pâle et libellé "voir", pas un chiffre neutre parmi d'autres. */
+.hstat.hstat-urgent{background:#FEF2F2;border-color:#FECACA;box-shadow:0 4px 12px -8px rgba(220,38,38,.18)}
+.hstat.hstat-urgent .hstat-num{color:#DC2626}
+.hstat.hstat-urgent .hstat-lbl{color:#9A3412}
 .hstat:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.09);border-color:#CBD5E1}
 .hstat:active{transform:scale(.98)}
 .hstat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -1176,6 +1212,8 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .card-hd{padding:13px 18px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center}
 .card-hd-t{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#0F172A}
 .card-hd-n{font-size:11px;background:#F1F5F9;color:#64748B;padding:2px 9px;border-radius:10px;transition:background .2s var(--ease),color .2s var(--ease)}
+.sec-unret{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #E2E8F0;color:#64748B;border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0}
+.sec-unret:hover{background:#F1F5F9;color:#334155;border-color:#CBD5E1}
 /* cascade des cartes du formulaire à l'ouverture */
 .fv>.card,.fv>.info-sec{opacity:0;animation:fadeUp .45s var(--ease) both}
 .fv>*:nth-child(1){animation-delay:0s}
@@ -1690,6 +1728,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .sig-name{font-size:12.5px;font-weight:700;color:#0F172A}
 .sig-when{font-size:11px;color:#94A3B8;margin-top:1px}
 .sig-comment{font-size:12px;color:#475569;line-height:1.5;margin-top:5px;background:#ECFEFF;border-radius:8px;padding:7px 10px}
+.sig-img{display:block;max-width:160px;max-height:60px;margin-top:6px;background:#fff;border:1px solid #E2E8F0;border-radius:6px;padding:4px}
 .thread-empty::before{content:"";position:absolute;width:120px;height:120px;background:radial-gradient(circle,rgba(109,40,217,.06),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:emptyFloat 5s ease-in-out infinite;pointer-events:none}
 .thread-empty i{position:relative;font-size:20px;display:block;margin-bottom:6px;color:#CBD5E1;animation:floaty 3s ease-in-out infinite}
 .thread-msg{display:flex;gap:9px;align-items:flex-start}
@@ -1737,22 +1776,36 @@ table.at tr.kit-row td.td-d{position:relative}
 .scan-fab .scan-fab-t{display:inline}
 @media(max-width:640px){.scan-fab{left:14px;bottom:16px;padding:14px;border-radius:50%}.scan-fab .scan-fab-t{display:none}}
 @media print{.scan-fab{display:none!important}}
-.scan-ov{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column}
+.scan-ov{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;animation:scanOvIn .25s var(--ease)}
+@keyframes scanOvIn{from{opacity:0}to{opacity:1}}
 .scan-video{flex:1;width:100%;height:100%;object-fit:cover}
-.scan-top{position:absolute;top:0;left:0;right:0;padding:calc(16px + env(safe-area-inset-top)) 18px 16px;background:linear-gradient(180deg,rgba(0,0,0,.6),transparent);display:flex;align-items:center;justify-content:space-between;z-index:2}
-.scan-top .t{color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
-.scan-close{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px}
-.scan-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(66vw,260px);height:min(66vw,260px);z-index:2;pointer-events:none}
-.scan-frame::before,.scan-frame::after,.scan-frame>i::before,.scan-frame>i::after{content:"";position:absolute;width:34px;height:34px;border:4px solid #fff;border-radius:3px}
-.scan-frame::before{top:0;left:0;border-right:none;border-bottom:none}
-.scan-frame::after{top:0;right:0;border-left:none;border-bottom:none}
-.scan-frame>i::before{bottom:0;left:0;border-right:none;border-top:none}
-.scan-frame>i::after{bottom:0;right:0;border-left:none;border-top:none}
-.scan-laser{position:absolute;left:6px;right:6px;height:2px;background:linear-gradient(90deg,transparent,#4ADE80,transparent);top:0;animation:scanLaser 2s ease-in-out infinite}
-@keyframes scanLaser{0%,100%{top:6px}50%{top:calc(100% - 8px)}}
-.scan-hint{position:absolute;left:0;right:0;bottom:calc(40px + env(safe-area-inset-bottom));text-align:center;color:#fff;font-size:14px;z-index:2;padding:0 30px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
-.scan-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;text-align:center;padding:30px;z-index:3;background:rgba(0,0,0,.85)}
-.scan-msg i{font-size:44px;color:#F87171}
+.scan-top{position:absolute;top:0;left:0;right:0;padding:calc(16px + env(safe-area-inset-top)) 18px 16px;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,.25) 70%,transparent);display:flex;align-items:center;justify-content:space-between;z-index:2}
+.scan-top .t{color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.2px}
+.scan-close{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:19px;transition:background .16s,transform .16s}
+.scan-close:hover{background:rgba(255,255,255,.24)}
+.scan-close:active{transform:scale(.92)}
+/* Zone sombre tout autour du cadre — l'astuce classique des scanners modernes
+   (Instagram, WhatsApp...) pour guider l'œil, absente de l'ancienne version.
+   Un immense box-shadow fait ce travail sans avoir besoin d'un masque SVG. */
+.scan-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(66vw,260px);height:min(66vw,260px);z-index:2;pointer-events:none;border-radius:22px;box-shadow:0 0 0 9999px rgba(0,0,0,.55);animation:scanFramePulse 2.4s ease-in-out infinite;transition:box-shadow .3s var(--ease)}
+@keyframes scanFramePulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.015)}}
+.scan-frame::before,.scan-frame::after,.scan-frame>i::before,.scan-frame>i::after{content:"";position:absolute;width:30px;height:30px;border:4px solid #fff;filter:drop-shadow(0 0 6px rgba(255,255,255,.5))}
+.scan-frame::before{top:0;left:0;border-right:none;border-bottom:none;border-radius:12px 0 0 0}
+.scan-frame::after{top:0;right:0;border-left:none;border-bottom:none;border-radius:0 12px 0 0}
+.scan-frame>i::before{bottom:0;left:0;border-right:none;border-top:none;border-radius:0 0 0 12px}
+.scan-frame>i::after{bottom:0;right:0;border-left:none;border-top:none;border-radius:0 0 12px 0}
+/* Confirmation visuelle au moment du succès : le cadre passe au vert et une
+   coche apparaît, au lieu de couper instantanément vers la fiche (avant :
+   seule une vibration signalait que ça avait marché). */
+.scan-frame.scan-frame-ok{animation:none;box-shadow:0 0 0 9999px rgba(5,150,105,.35)}
+.scan-frame.scan-frame-ok::before,.scan-frame.scan-frame-ok::after,.scan-frame.scan-frame-ok>i::before,.scan-frame.scan-frame-ok>i::after{border-color:#4ADE80;filter:drop-shadow(0 0 8px rgba(74,222,128,.7))}
+.scan-ok-check{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:64px;height:64px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;z-index:3;box-shadow:0 8px 24px -4px rgba(5,150,105,.6);animation:scanOkPop .4s var(--ease) forwards}
+@keyframes scanOkPop{0%{transform:translate(-50%,-50%) scale(0)}60%{transform:translate(-50%,-50%) scale(1.15)}100%{transform:translate(-50%,-50%) scale(1)}}
+.scan-laser{position:absolute;left:8px;right:8px;height:2.5px;background:linear-gradient(90deg,transparent,#4ADE80,transparent);top:0;border-radius:2px;box-shadow:0 0 10px 1px rgba(74,222,128,.75);animation:scanLaser 2s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes scanLaser{0%,100%{top:6px;opacity:.4}50%{top:calc(100% - 8px);opacity:1}}
+.scan-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(40px + env(safe-area-inset-bottom));text-align:center;color:#fff;font-size:13px;font-weight:600;z-index:2;padding:9px 18px;max-width:calc(100% - 60px);background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:20px;transition:color .2s,background .2s}
+.scan-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;text-align:center;padding:30px;z-index:3;background:rgba(10,10,14,.92);backdrop-filter:blur(4px)}
+.scan-msg i{font-size:26px;color:#F87171;width:64px;height:64px;border-radius:50%;background:rgba(248,113,113,.15);display:flex;align-items:center;justify-content:center}
 .scan-msg .st{font-size:17px;font-weight:700}
 .scan-msg .sd{font-size:13.5px;color:#CBD5E1;line-height:1.5;max-width:320px}
 .scan-msg button{margin-top:6px;background:#6D28D9;color:#fff;border:none;border-radius:11px;padding:12px 22px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
@@ -1854,6 +1907,17 @@ table.at tr.kit-row td.td-d{position:relative}
 .tab-btn.active::after{transform:scaleX(1)}
 .tab-btn .tab-badge{background:#F1F5F9;color:#64748B;font-size:10px;padding:1px 7px;border-radius:8px;font-weight:700}
 .lib-wrap{padding:24px 22px 70px;max-width:1040px;margin:0 auto;width:100%}
+/* Lien discret vers l'Historique complet — pas un onglet en gras, juste
+   un texte, comme demandé. */
+.lib-histo-link{margin:2px 0 18px}
+.lib-histo-link button{background:none;border:none;color:#6D28D9;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;padding:4px 0}
+.lib-histo-link button:hover{text-decoration:underline}
+.lib-histo-hd{margin-bottom:18px}
+.lib-histo-back{background:none;border:none;color:#64748B;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:14px}
+.lib-histo-back:hover{color:#334155}
+.lib-histo-t{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800;color:#0F172A;margin-bottom:6px}
+.lib-histo-d{font-size:12.5px;color:#64748B;line-height:1.55;max-width:560px}
+.lib-card-ajouts{font-size:9.5px;font-weight:700;color:#0891B2;background:#ECFEFF;padding:1px 7px;border-radius:10px;margin-left:6px}
 .lib-searchbox{position:relative;margin-bottom:16px}
 .lib-searchbox>i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:18px;pointer-events:none}
 .lib-search{width:100%;border:1px solid #E4E9F1;border-radius:13px;padding:13px 16px 13px 44px;font-size:14px;color:#1E293B;outline:none;background:#fff;font-family:inherit;transition:border-color .16s var(--ease),box-shadow .18s var(--ease)}
@@ -2443,13 +2507,13 @@ try{var _amb=localStorage.getItem("appro_amb");if(_amb&&_amb!=="none")document.d
   <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="main-col">
     <div class="mtop">
-      <button class="mtop-btn" onclick="toggleSidebar()"><span class="mtop-burger"><span></span><span></span><span></span></span></button>
       <img data-jlogo="1" class="mtop-logo" alt="JARNIAS"/>
       <span class="mtop-title">AppROVISIO</span>
       <button class="mtop-btn mtop-pending" id="btn-pending-m" onclick="renderPending()" title="Messages en attente" style="display:none"><i class="ti ti-message-report" style="font-size:19px"></i><span class="pending-badge" id="pending-badge-m" style="display:none">0</span></button>
     </div>
     <div id="deadline-banner" class="dl-banner" style="display:none"></div>
     <main class="main" id="main-area"></main>
+    <div id="mbottom-anchor"></div>
   </div>
 </div>
 <div class="cp-overlay" id="cp-overlay" onclick="hideCp()"></div>
@@ -2646,6 +2710,7 @@ function _techMarkDirty(){
         if(muts[i].type==="childList"&&muts[i].addedNodes.length){touched=true;break;}
       }
       if(!touched)return;
+      try{_renderBottomTabs();}catch(e){}
       /* On ne compare pas à un "dernier écran vu" tenu à jour au fil des
          appels : on compare directement à la clé capturée au moment de la
          modification. Fiable quel que soit le nombre de rendus qui se sont
@@ -2661,14 +2726,14 @@ function _techMarkDirty(){
 })();
 function _techSignatureHTML(){
   var s=_techDirtySnap||{nomChantier:"",noAffaire:""};
+  var moi=(currentUser&&currentUser.name)||"";
   var h="<div class=\"tsg-ov\" id=\"tsg-ov\"><div class=\"tsg-card j-card\">";
   h+="<div class=\"tsg-hd\"><i class=\"ti ti-signature\"></i><div><div class=\"tsg-t\">Confirmez votre passage</div>";
   h+="<div class=\"tsg-s\">"+esc(s.nomChantier)+(s.noAffaire?" — "+esc(s.noAffaire):"")+"</div></div></div>";
   h+="<div class=\"tsg-body\">";
-  h+="<p class=\"tsg-p\">Vous avez modifié cette appro. Tapez votre nom pour confirmer que c'est bien vous qui avez pris ou ajouté ce matériel.</p>";
-  h+="<label class=\"tsg-lbl\">Votre nom</label>";
-  h+="<input type=\"text\" id=\"tsg-name\" class=\"tsg-in\" placeholder=\""+esc((currentUser&&currentUser.name)||"Nom Pr\u00e9nom")+"\" autocomplete=\"off\" oninput=\"_tsgCheck()\"/>";
-  h+="<div class=\"tsg-err\" id=\"tsg-err\" style=\"display:none\">Le nom tapé ne correspond pas à celui de votre compte.</div>";
+  h+="<p class=\"tsg-p\">Vous avez modifi\u00e9 cette appro en tant que <b>"+esc(moi)+"</b>. Signez ci-dessous pour confirmer.</p>";
+  h+="<label class=\"tsg-lbl\">Votre signature</label>";
+  h+="<div class=\"tsg-pad-wrap\"><canvas id=\"tsg-canvas\" class=\"tsg-canvas\"></canvas><div class=\"tsg-pad-hint\" id=\"tsg-pad-hint\">Signez ici du doigt ou \u00e0 la souris</div><button type=\"button\" class=\"tsg-clear\" id=\"tsg-clear\" onclick=\"_tsgClearPad()\">Effacer</button></div>";
   h+="<label class=\"tsg-lbl\">Un commentaire, s'il manque quelque chose <span class=\"tsg-opt\">(optionnel)</span></label>";
   h+="<textarea id=\"tsg-comment\" class=\"tsg-in tsg-ta\" rows=\"3\" placeholder=\"Ex. il manquait 2 mousquetons, ou tout \u00e9tait complet\"></textarea>";
   h+="</div>";
@@ -2676,29 +2741,79 @@ function _techSignatureHTML(){
   h+="</div></div>";
   return h;
 }
+var _tsgHasStroke=false,_tsgDrawing=false,_tsgCtx=null;
 function _openTechSignature(){
-  if(document.getElementById("tsg-ov"))return; /* déjà ouverte */
+  if(document.getElementById("tsg-ov"))return; /* d\u00e9j\u00e0 ouverte */
   var d=document.createElement("div");
   d.innerHTML=_techSignatureHTML();
   document.body.appendChild(d.firstElementChild);
-  setTimeout(function(){var el=document.getElementById("tsg-name");if(el)el.focus();},50);
+  _tsgHasStroke=false;_tsgDrawing=false;_tsgCtx=null;
+  setTimeout(function(){try{_tsgInitPad();}catch(e){}},50);
 }
-function _tsgNormalise(s){return _stripAccents((""+(s||"")).toLowerCase().trim().replace(/\s+/g," "));}
-function _tsgCheck(){
-  var el=document.getElementById("tsg-name"),err=document.getElementById("tsg-err"),go=document.getElementById("tsg-go");
-  if(!el||!go)return;
-  var typed=_tsgNormalise(el.value);
-  var expect=_tsgNormalise((currentUser&&currentUser.name)||"");
-  var ok=typed.length>0&&typed===expect;
-  go.disabled=!ok;
-  if(err)err.style.display=(el.value.trim()&&!ok)?"flex":"none";
+/* Pav\u00e9 de signature tactile/souris. Le bouton se d\u00e9bloque d\u00e8s le premier
+   trait (suivi via _tsgHasStroke), pas en inspectant les pixels du canevas :
+   \u00e7a marche m\u00eame si le contexte 2D n'est pas disponible (garde d\u00e9fensive,
+   n'arrive jamais dans un vrai navigateur mais \u00e9vite un plantage si jamais). */
+function _tsgInitPad(){
+  var cv=document.getElementById("tsg-canvas");
+  if(!cv)return;
+  var rect=cv.getBoundingClientRect();
+  var dpr=window.devicePixelRatio||1;
+  cv.width=Math.max(1,Math.round((rect.width||300)*dpr));
+  cv.height=Math.max(1,Math.round((rect.height||140)*dpr));
+  var ctx=cv.getContext&&cv.getContext("2d");
+  _tsgCtx=ctx||null;
+  if(ctx){ctx.scale(dpr,dpr);ctx.lineWidth=2.4;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#0F172A";}
+  function pos(e){
+    var r=cv.getBoundingClientRect();
+    var t=e.touches&&e.touches[0];
+    return {x:(t?t.clientX:e.clientX)-r.left,y:(t?t.clientY:e.clientY)-r.top};
+  }
+  function start(e){
+    if(e.cancelable)e.preventDefault();
+    _tsgDrawing=true;
+    var p=pos(e);
+    if(_tsgCtx){_tsgCtx.beginPath();_tsgCtx.moveTo(p.x,p.y);}
+    if(!_tsgHasStroke){
+      _tsgHasStroke=true;
+      var go=document.getElementById("tsg-go");if(go)go.disabled=false;
+      var hint=document.getElementById("tsg-pad-hint");if(hint)hint.style.display="none";
+    }
+  }
+  function move(e){
+    if(!_tsgDrawing)return;
+    if(e.cancelable)e.preventDefault();
+    var p=pos(e);
+    if(_tsgCtx){_tsgCtx.lineTo(p.x,p.y);_tsgCtx.stroke();}
+  }
+  function end(){_tsgDrawing=false;}
+  cv.addEventListener("mousedown",start);
+  cv.addEventListener("mousemove",move);
+  window.addEventListener("mouseup",end);
+  cv.addEventListener("touchstart",start,{passive:false});
+  cv.addEventListener("touchmove",move,{passive:false});
+  cv.addEventListener("touchend",end);
+}
+function _tsgClearPad(){
+  _tsgHasStroke=false;_tsgDrawing=false;
+  var cv=document.getElementById("tsg-canvas");
+  if(cv&&_tsgCtx){
+    var dpr=window.devicePixelRatio||1;
+    _tsgCtx.clearRect(0,0,cv.width/dpr,cv.height/dpr);
+  }
+  var go=document.getElementById("tsg-go");if(go)go.disabled=true;
+  var hint=document.getElementById("tsg-pad-hint");if(hint)hint.style.display="flex";
 }
 function _tsgConfirm(){
-  var nameEl=document.getElementById("tsg-name"),cEl=document.getElementById("tsg-comment"),go=document.getElementById("tsg-go");
-  if(!nameEl||!_techDirtySnap)return;
-  var name=nameEl.value.trim(),comment=(cEl&&cEl.value.trim())||"";
+  var cEl=document.getElementById("tsg-comment"),go=document.getElementById("tsg-go"),cv=document.getElementById("tsg-canvas");
+  if(!cv||!_techDirtySnap)return;
+  if(!_tsgHasStroke){toast("Dessinez votre signature avant de confirmer","ti-signature");return;}
+  var comment=(cEl&&cEl.value.trim())||"";
+  var dataUrl="";
+  try{dataUrl=cv.toDataURL("image/png");}catch(e){}
+  if(!dataUrl){toast("Impossible de r\u00e9cup\u00e9rer la signature, r\u00e9essayez","ti-alert-circle");return;}
   if(go)go.disabled=true;
-  apiCall("POST","/appros/"+_techDirtySnap.id+"/signatures",{name:name,comment:comment}).then(function(){
+  apiCall("POST","/appros/"+_techDirtySnap.id+"/signatures",{signature_image:dataUrl,comment:comment}).then(function(){
     _techDirty=false;_techDirtySnap=null;
     var ov=document.getElementById("tsg-ov");
     if(ov){ov.classList.add("tsg-ov-out");setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);},180);}
@@ -2709,6 +2824,31 @@ function _tsgConfirm(){
     toast("Signature non enregistr\u00e9e, r\u00e9essayez","ti-alert-circle");
   });
 }
+/* Verrou : tant que la signature est \u00e0 l'\u00e9cran, AUCUN autre clic dans
+   l'appli ne passe (phase de capture : intercepte avant tout autre
+   gestionnaire). C'est \u00e7a qui \u00abforce\u00bb la signature, demand\u00e9 par Su ;
+   avant \u00e7a, l'overlay \u00e9tait visuellement au-dessus mais rien n'emp\u00eachait
+   activement une interaction avec ce qu'il y avait en dessous si un \u00e9l\u00e9ment
+   avait, par erreur ailleurs dans le code, un z-index plus \u00e9lev\u00e9. */
+document.addEventListener("click",function(e){
+  var ov=document.getElementById("tsg-ov");
+  if(!ov||ov.contains(e.target))return;
+  e.preventDefault();e.stopPropagation();
+  if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+},true);
+/* Filet suppl\u00e9mentaire : si l'appli passe en arri\u00e8re-plan (verrouillage du
+   t\u00e9l\u00e9phone, changement d'appli) alors qu'une signature est due mais que la
+   personne n'a pas encore navigu\u00e9 dans l'appli pour la d\u00e9clencher, on
+   l'affiche tout de suite \u2014 elle sera d\u00e9j\u00e0 pr\u00e9sente au retour.
+   Ce que \u00e7a NE peut PAS faire (limite du navigateur, honn\u00eatement) : emp\u00eacher
+   de fermer compl\u00e8tement l'onglet ou l'application sans jamais revenir \u2014
+   aucun site web ne peut bloquer \u00e7a, seul le message natif du navigateur
+   (d\u00e9j\u00e0 en place via beforeunload) peut dissuader. */
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="hidden"&&_techDirty&&_techDirtySnap){
+    try{_openTechSignature();}catch(e){}
+  }
+});
 /* Filet de sécurité : fermer l'onglet/l'appli sans signer ne doit pas passer
    totalement inaperçu — le navigateur affichera son avertissement natif. */
 window.addEventListener("beforeunload",function(e){
@@ -4770,12 +4910,16 @@ function condInitials(name){
   if(!name)return "?";
   return name.split(" ").map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
 }
-function previewItems(s){
+function previewItems(s,full){
   var all=[];
   ["consommables","fournitures","outillage"].forEach(function(k){
-    s[k].forEach(function(r){if(r.designation)all.push({n:r.designation,q:r.quantite});});
+    s[k].forEach(function(r){
+      if(!r.designation)return;
+      if(!full&&(r.depotAdded||r.techAdded||r.addBatch))return;
+      all.push({n:r.designation,q:r.quantite});
+    });
   });
-  if(!all.length)return "<div style=\"font-size:10px;color:#CBD5E1;font-style:italic\">Aucun article</div>";
+  if(!all.length)return "<div style=\"font-size:10px;color:#CBD5E1;font-style:italic\">"+(full?"Aucun article":"Aucun article d'origine")+"</div>";
   var total=all.length;
   var show=all.slice(0,3);
   var h="<div style=\"background:#F8FAFC;border:1px solid #F1F5F9;border-radius:7px;padding:6px 8px;margin-top:8px\">";
@@ -4787,10 +4931,14 @@ function previewItems(s){
   return h;
 }
 
-function renderLibrary(){
+
+var _libFullMode=false;
+function renderLibrary(full){
   if(typeof _mountScanFab==="function")_mountScanFab();
   if(typeof _unmountCpFab==="function")_unmountCpFab();
   cur=null;
+  _libFullMode=!!full;
+  currentTab=_libFullMode?"historique":"biblio";
   var q=_stripAccents(libSearch.toLowerCase());
   var vis=sheets.filter(function(s){
     if(!_techVisible(s))return false;
@@ -4804,10 +4952,18 @@ function renderLibrary(){
   var rest=vis.filter(function(s){return !s.favorite;});
   var anyFilter=(q||libFilterClient||libFilterCond||libPeriod!=="all");
 
-  var h=tabsBarHTML();
+  var h=_libFullMode?"":tabsBarHTML();
   h+="<div class=\"lib-wrap\">";
-  h+="<div class=\"lib-searchbox\"><i class=\"ti ti-search\"></i><input class=\"lib-search\" type=\"search\" placeholder=\"Rechercher dans toute la biblioth\u00e8que : chantier, conducteur, client, N\u00b0 affaire, article...\" value=\""+esc(libSearch)+"\" oninput=\"libSearchUpd(this.value)\"/></div>";
+  /* Le lien discret qui bascule entre les deux vues : pas un gros onglet en
+     haut du menu, juste un lien texte (Su : "un onglet plus discret"). La
+     Bibliotheque reste "vierge" (previewItems filtre les rajouts) ;
+     l'Historique montre tout, y compris ce qui a ete ajoute apres coup. */
+  if(_libFullMode){
+    h+="<div class=\"lib-histo-hd\"><button class=\"lib-histo-back\" onclick=\"renderLibrary()\"><i class=\"ti ti-arrow-left\"></i> Retour \u00e0 la biblioth\u00e8que</button><div class=\"lib-histo-t\"><i class=\"ti ti-history\"></i> Historique complet</div><div class=\"lib-histo-d\">Chaque appro telle qu'elle est vraiment aujourd'hui, avec tout ce qui a \u00e9t\u00e9 ajout\u00e9 en cours de route.</div></div>";
+  }
+  h+="<div class=\"lib-searchbox\"><i class=\"ti ti-search\"></i><input class=\"lib-search\" type=\"search\" placeholder=\"Rechercher dans toute la biblioth\u00e8que : chantier, conducteur, client, N\u00b0 affaire, article...\" value=\""+esc(libSearch)+"\" oninput=\"libSearch=this.value;renderLibrary("+(_libFullMode?"true":"")+")\"/></div>";
   h+=_libFilterBar();
+  if(!_libFullMode)h+="<div class=\"lib-histo-link\"><button onclick=\"renderHistorique()\"><i class=\"ti ti-history\"></i> Voir l'historique complet, avec les ajouts</button></div>";
 
   if(!vis.length){
     h+="<div class=\"lib-empty\"><i class=\"ti ti-books\"></i><div class=\"lib-empty-t\">"+(anyFilter?"Aucun r\u00e9sultat":"Biblioth\u00e8que vide")+"</div><div class=\"lib-empty-d\">"+(anyFilter?"Essayez d'\u00e9largir ou de r\u00e9initialiser les filtres.":"Les appros enregistr\u00e9es appara\u00eetront ici, pr\u00eates \u00e0 \u00eatre r\u00e9utilis\u00e9es.")+"</div>"+(anyFilter?"<button class=\"pill-reset\" style=\"margin:16px auto 0\" onclick=\"libSort='type';libFilterClient='';libFilterCond='';libPeriod='all';libSearch='';renderLibrary()\"><i class=\"ti ti-rotate\"></i> R\u00e9initialiser</button>":"")+"</div>";
@@ -4873,20 +5029,22 @@ function _libFilterBar(){
   return h;
 }
 function _libSection(label,dot,list){
-  var body=(libView==="list")?("<div class=\"lib-list stagger\">"+list.map(libRowHTML).join("")+"</div>"):("<div class=\"lib-grid stagger\">"+list.map(libCardHTML).join("")+"</div>");
+  var body=(libView==="list")?("<div class=\"lib-list stagger\">"+list.map(libRowHTML).join("")+"</div>"):("<div class=\"lib-grid stagger\">"+list.map(function(s){return libCardHTML(s,_libFullMode);}).join("")+"</div>");
   return "<div class=\"lib-sec\"><div class=\"lib-sec-hd\"><span class=\"lib-sec-dot\" style=\"background:"+dot+"\"></span><span class=\"lib-sec-title\">"+esc(label)+"</span><span class=\"lib-sec-n\">"+list.length+" appro"+(list.length>1?"s":"")+"</span></div>"+body+"</div>";
 }
-function libCardHTML(s){
+function renderHistorique(){renderLibrary(true);}
+function libCardHTML(s,full){
   var isUrgent=(s.priorite&&s.priorite!=="normale");var avg=avgNote(s);var fav=!!s.favorite;
   var canDel=_isMyAppro(s)||(currentUser&&currentUser.role==="admin");
   var cl={dot:_condKey(s)?_condColor(_condKey(s)):"#CBD5E1"};
+  var nAjouts=0;["consommables","fournitures","outillage"].forEach(function(k){s[k].forEach(function(r){if(r.designation&&(r.depotAdded||r.techAdded||r.addBatch))nAjouts++;});});
   var h="<div class=\"lib-card\" data-id=\""+s.id+"\" data-fav=\""+(s.favorite?"1":"0")+"\" style=\"--type:"+cl.dot+"\" onclick=\"openFromLib('"+s.id+"')\">";
-  h+="<div class=\"sc-aff\"><i class=\"ti ti-hash\"></i>"+esc(s.noAffaire||"Sans N\u00b0 d'affaire")+"</div>";
+  h+="<div class=\"sc-aff\"><i class=\"ti ti-hash\"></i>"+esc(s.noAffaire||"Sans N\u00b0 d'affaire")+(full&&nAjouts?"<span class=\"lib-card-ajouts\">+"+nAjouts+" ajout"+(nAjouts>1?"s":"")+"</span>":"")+"</div>";
   h+="<div class=\"lib-card-top\"><div class=\"lib-card-name\">"+esc(s.nomChantier||"Sans titre")+"</div><div style=\"display:flex;align-items:center;gap:4px;flex-shrink:0\">"+""+"<button class=\"lib-pin\" onclick=\"event.stopPropagation();toggleLibFav('"+s.id+"')\" title=\""+(fav?"Retirer l'\u00e9pingle":"\u00c9pingler comme mod\u00e8le")+"\" style=\"color:"+(fav?"#F59E0B":"#CBD5E1")+"\"><i class=\"ti ti-pin"+(fav?"-filled":"")+"\" style=\"font-size:17px\"></i></button></div></div>";
   h+="<div class=\"lib-card-cond\"><span class=\"cond-av\">"+condInitials(s.conducteur||s.chargeAffaires)+"</span><span>"+(esc(s.conducteur||s.chargeAffaires)||"Conducteur non renseign\u00e9")+"</span></div>";
   h+="<div style=\"display:flex;align-items:center;gap:6px\">"+starsHTML(avg,false,s.id)+(avg>0?"<span style=\"font-size:11px;color:#94A3B8;margin-left:2px\">"+avg.toFixed(1)+" ("+s.notes.length+")</span>":"<span style=\"font-size:11px;color:#CBD5E1;margin-left:2px\">Pas encore not\u00e9e</span>")+"</div>";
   if(s.clientSite)h+="<div class=\"sc-client\" style=\"margin:2px 0 6px\"><i class=\"ti ti-building\"></i>"+esc(s.clientSite)+"</div>";
-  h+=previewItems(s);
+  h+=previewItems(s,!!full);
   h+="<div class=\"lib-card-foot\"><span class=\"lib-card-meta\">"+esc(s.reference||"")+"</span><span class=\"lib-card-meta\">"+s.dateCreation+"</span></div>";
   h+="<div style=\"display:flex;gap:8px;margin-top:10px\">";
   h+="<button class=\"lib-card-btn\" onclick=\"event.stopPropagation();takeBaseFromLib('"+s.id+"')\"><i class=\"ti ti-copy\" style=\"font-size:14px\"></i> Prendre comme base</button>";
@@ -5079,6 +5237,14 @@ function renderWelcome(){
   var nChantier=mine.filter(function(s){return s.statut==="sur_chantier";}).length;
   var nATraiter=mine.filter(function(s){return s.statut==="rendu"||s.statut==="en_attente"||(s.statut==="prete"&&s.modifPrep)||(s.statut==="sur_chantier"&&s.addToPrepare);}).length;
   var nDrafts=sheets.filter(function(s){return s.draft&&s.statut!=="sortie"&&_isMineSheet(s);}).length;
+  /* "En retard" (maquette mobile de Su) : une \u00e9ch\u00e9ance d\u00e9j\u00e0 pass\u00e9e sur une
+     appro encore active \u2014 diff\u00e9rent du bandeau "\u00e9ch\u00e9ance proche" (qui inclut
+     les prochains jours) : ici, c'est strictement pass\u00e9. */
+  var nEnRetard=mine.filter(function(s){
+    if(s.statut==="prete"||s.statut==="sortie")return false;
+    var du=(typeof daysUntil==="function")?daysUntil(s.dateAppro):null;
+    return du!==null&&du<0;
+  }).length;
   var field=isField();
 
   var _hr=new Date().getHours();
@@ -5092,9 +5258,22 @@ function renderWelcome(){
 
   // HERO
   h+="<div class=\"home-hero\">";
-  h+="<div class=\"home-hello\"><span class=\"wave\">\ud83d\udc4b</span> "+_sal+_who+"</div>";
+  h+="<div class=\"home-hero-top\"><div><div class=\"home-hello\"><span class=\"wave\">\ud83d\udc4b</span> "+_sal+_who+"</div>";
   h+="<div class=\"home-title\">Tableau de bord</div>";
-  h+="<div class=\"home-sub\">"+_sub+"</div>";
+  h+="<div class=\"home-sub\">"+_sub+"</div></div>";
+  /* CTA unique dans la banni\u00e8re, mobile seulement (maquette de Su) : sur
+     petit \u00e9cran, la carte "Nouvelle appro" des Actions rapides plus bas
+     est masqu\u00e9e (voir CSS) pour ne garder qu'un seul bouton \u00e9vident. */
+  if(!field)h+="<button class=\"home-hero-cta\" onclick=\"openNew()\"><i class=\"ti ti-plus\"></i> Nouvelle</button>";
+  h+="</div>";
+  h+="</div>";
+
+  // PASTILLES D'ACTIONS RAPIDES (mobile seulement) : des raccourcis r\u00e9els,
+  // pas d\u00e9coratifs \u2014 vers des fonctionnalit\u00e9s qui existent d\u00e9j\u00e0.
+  h+="<div class=\"home-pills\">";
+  h+="<button class=\"home-pill\" onclick=\"openScanner()\"><i class=\"ti ti-qrcode\"></i> Scanner</button>";
+  if(!field)h+="<button class=\"home-pill\" onclick=\"renderHistorique()\"><i class=\"ti ti-history\"></i> Historique</button>";
+  if(featureOn("appro_discussion"))h+="<button class=\"home-pill\" onclick=\"renderPending()\"><i class=\"ti ti-message-2\"></i> Messages</button>";
   h+="</div>";
 
   if(!nTotal&&!field){
@@ -5105,13 +5284,14 @@ function renderWelcome(){
   }
 
   // STATS cliquables
-  var stat=function(num,lbl,ic,bg,col,onclick){
-    return "<div class=\"hstat liv\" onclick=\""+onclick+"\"><div class=\"hstat-top\"><div class=\"hstat-ic\" style=\"background:"+bg+";color:"+col+"\"><i class=\"ti "+ic+"\"></i></div><i class=\"ti ti-chevron-right hstat-arrow\"></i></div><div class=\"hstat-num\" data-count=\""+num+"\">0</div><div class=\"hstat-lbl\">"+lbl+"</div></div>";
+  var stat=function(num,lbl,ic,bg,col,onclick,urgent){
+    return "<div class=\"hstat liv"+(urgent?" hstat-urgent":"")+"\" onclick=\""+onclick+"\"><div class=\"hstat-top\"><div class=\"hstat-ic\" style=\"background:"+bg+";color:"+col+"\"><i class=\"ti "+ic+"\"></i></div><i class=\"ti ti-chevron-right hstat-arrow\"></i></div><div class=\"hstat-num\" data-count=\""+num+"\">0</div><div class=\"hstat-lbl\">"+lbl+"</div></div>";
   };
   var _isDepot=(currentRole==="depot"||(typeof isAdmin==="function"&&isAdmin()));
   var nEnPrep=mine.filter(function(s){return !s.draft&&s.statut==="en_attente";}).length;
   h+="<div class=\"home-stats\">";
   if(field){
+    if(nEnRetard)h+=stat(nEnRetard,"En retard — voir","ti-alert-triangle","#FEE2E2","#DC2626","goStatut('')",true);
     h+=stat(nTotal,"Appros suivies","ti-clipboard-list","#EFF6FF","#2563EB","goStatut('')");
     h+=stat(nChantier,"Sur chantier","ti-tool","#EFF2FF","#4F46E5","goStatut('chantier')");
   } else if(_isDepot){
@@ -5121,6 +5301,7 @@ function renderWelcome(){
     h+=stat(nATraiter,"\u00c0 traiter","ti-progress-alert","#FFF7ED","#D97706","goDepotOrList()");
   } else {
     /* Conducteur : pas d'"Appros au total", pas d'"\u00c0 traiter" (c'est le job du d\u00e9p\u00f4t). */
+    if(nEnRetard)h+=stat(nEnRetard,"En retard — voir","ti-alert-triangle","#FEE2E2","#DC2626","goMaStatut('preparation')",true);
     h+=stat(nEnPrep,"En pr\u00e9paration","ti-clock","#FFF7ED","#D97706","goMaStatut('preparation')");
     h+=stat(nPretes,"Pr\u00eates au d\u00e9p\u00f4t","ti-package","#ECFDF5","#059669","goMaStatut('prete')");
     h+=stat(nChantier,"Sur chantier","ti-tool","#EFF2FF","#4F46E5","goMaStatut('chantier')");
@@ -5465,15 +5646,28 @@ function _onScanResult(raw){
     if("BarcodeDetector" in window&&_scanDetector){_scanRAF=requestAnimationFrame(function(){var v=document.getElementById("scan-video");if(v)_reDetect(v);});}
     return;
   }
-  // succès : vibrer, fermer le scanner, ouvrir l'appro
+  // succès : confirmation visuelle (cadre vert + coche) avant de basculer,
+  // au lieu d'une coupure instantanée — avant, seule une vibration signalait
+  // que ça avait marché, on n'avait pas le temps de voir que c'était bon.
   try{if(navigator.vibrate)navigator.vibrate(60);}catch(e){}
-  closeScanner();
-  if(authToken&&currentUser){
-    try{if(document.getElementById("app").style.display==="none"&&typeof enterApp==="function")enterApp();}catch(e){}
-    try{openApproById(id);}catch(e){if(typeof toast==="function")toast("Impossible d'ouvrir cette appro","ti-alert-circle");}
-  } else {
-    pendingAppro=id;try{_qrTechMode();}catch(e){}
-  }
+  _scanActive=false;
+  if(_scanRAF){cancelAnimationFrame(_scanRAF);_scanRAF=null;}
+  var frame=document.querySelector("#scan-ov .scan-frame");
+  var hint=document.querySelector("#scan-ov .scan-hint");
+  var laser=document.querySelector("#scan-ov .scan-laser");
+  if(frame)frame.classList.add("scan-frame-ok");
+  if(laser)laser.style.display="none";
+  if(hint){hint.textContent="Appro trouv\u00e9e";hint.style.background="rgba(5,150,105,.35)";hint.style.borderColor="rgba(74,222,128,.4)";}
+  if(frame){var ck=document.createElement("div");ck.className="scan-ok-check";ck.innerHTML="<i class=\"ti ti-check\"></i>";frame.appendChild(ck);}
+  setTimeout(function(){
+    closeScanner();
+    if(authToken&&currentUser){
+      try{if(document.getElementById("app").style.display==="none"&&typeof enterApp==="function")enterApp();}catch(e){}
+      try{openApproById(id);}catch(e){if(typeof toast==="function")toast("Impossible d'ouvrir cette appro","ti-alert-circle");}
+    } else {
+      pendingAppro=id;try{_qrTechMode();}catch(e){}
+    }
+  },550);
 }
 function _reDetect(video){
   if(!_scanActive||!_scanDetector)return;
@@ -5563,7 +5757,12 @@ function renderForm(){
   }
   secH+=secs.map(function(s){
     var cnt=cur[s.k].filter(function(r){return r.designation;}).length;
-    return "<div class=\"card sec-card\" style=\"border-top:3px solid "+s.c+"\"><div class=\"card-hd\" style=\"background:"+s.c+"0F\"><div class=\"card-hd-t\" style=\"color:"+s.c+"\"><i class=\"ti "+s.i+"\" style=\"font-size:17px;color:"+s.c+"\"></i> "+s.l+"<span class=\"card-hd-n\" style=\"background:"+s.c+"1A;color:"+s.c+"\">"+cnt+" article"+(cnt!==1?"s":"")+"</span></div></div>"+tblH(s.k,s.c)+"</div>";
+    /* Su : pouvoir décocher tout ce qui a été rendu par erreur, sans repasser
+       ligne par ligne. N'apparaît que s'il y a vraiment quelque chose à
+       annuler ; couvre le retour dépôt ET le retour terrain (technicien). */
+    var hasRet=cur[s.k].some(function(r){return r.returned||r.returnedTL;});
+    var bulkBtn=hasRet?"<button class=\"sec-unret\" onclick=\"event.stopPropagation();togRAllOff('"+s.k+"')\" title=\"Annuler tous les retours de cette section\"><i class=\"ti ti-rotate\"></i> Tout annuler</button>":"";
+    return "<div class=\"card sec-card\" style=\"border-top:3px solid "+s.c+"\"><div class=\"card-hd\" style=\"background:"+s.c+"0F\"><div class=\"card-hd-t\" style=\"color:"+s.c+"\"><i class=\"ti "+s.i+"\" style=\"font-size:17px;color:"+s.c+"\"></i> "+s.l+"<span class=\"card-hd-n\" style=\"background:"+s.c+"1A;color:"+s.c+"\">"+cnt+" article"+(cnt!==1?"s":"")+"</span></div>"+bulkBtn+"</div>"+tblH(s.k,s.c)+"</div>";
   }).join("");
 
   var h="<div class=\"fv\">";
@@ -5652,6 +5851,22 @@ h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class
 }
 
 // ACTIONS
+/* Annule tous les retours (dépôt ET terrain) d'une section en un clic — Su :
+   "décocher tout ce qui a été rendu". Avec un vrai filet de sécurité : ça
+   arrive après une session de tri où on peut se tromper, donc confirmation
+   + possibilité d'annuler ce qu'on vient de faire, comme pour une suppression
+   de ligne. */
+function togRAllOff(sec){
+  if(!cur||!cur[sec])return;
+  var n=cur[sec].filter(function(r){return r.returned||r.returnedTL;}).length;
+  if(!n)return;
+  if(!confirm("Annuler le retour de "+n+" article"+(n>1?"s":"")+" dans cette section ?"))return;
+  var snap=_snapshotSections([sec]);
+  cur[sec].forEach(function(r){r.returned=false;r.returnedTL=false;});
+  saved=false;renderForm();
+  toast(n+" retour"+(n>1?"s":"")+" annul\u00e9"+(n>1?"s":""),"ti-rotate");
+  toastUndo("Retours annul\u00e9s",function(){_restoreSections(snap);});
+}
 function togAdd(){
   addMode=!addMode;
   if(addMode){
@@ -8889,6 +9104,7 @@ function renderSignatures(){
     h+="<div class=\"sig-main\">";
     h+="<div class=\"sig-name\">"+esc(sg.signed_name||sg.author_name)+"</div>";
     h+="<div class=\"sig-when\">"+esc(_threadWhen(sg.created_at))+"</div>";
+    if(sg.signature_image&&/^data:image\//.test(sg.signature_image))h+="<img class=\"sig-img\" src=\""+sg.signature_image+"\" alt=\"Signature de "+esc(sg.signed_name||sg.author_name)+"\"/>";
     if(sg.comment)h+="<div class=\"sig-comment\">"+esc(sg.comment).replace(/\n/g,"<br>")+"</div>";
     h+="</div></div>";
   });
@@ -10648,7 +10864,51 @@ function _showSkeleton(){
 /* Visibilité des entrées du menu (rôle + fonctionnalités désactivées par
    l'admin). Extrait d'enterApp() pour pouvoir la rappeler après un
    changement de réglage, sans attendre une reconnexion. */
+/* ═══ BARRE D'ONGLETS FIXE MOBILE (remplace le tiroir + hamburger) ═══
+   Maquette fournie par Su : les rubriques les plus utilis\u00e9es toujours
+   accessibles au pouce, en bas d'\u00e9cran, plut\u00f4t que cach\u00e9es derri\u00e8re un
+   menu. "Menu" reste un onglet pour le reste (r\u00e9glages, admin\u2026) \u2014 il
+   ouvre le m\u00eame tiroir qu'avant, juste plus comme un dernier recours que
+   comme la porte d'entr\u00e9e principale. Les rubriques propos\u00e9es s'adaptent
+   au r\u00f4le ET aux fonctionnalit\u00e9s d\u00e9sactiv\u00e9es par l'admin (Camions,
+   Demandes du terrain, Commandes\u2026) : jamais un onglet qui m\u00e8ne vers un
+   \u00e9cran coup\u00e9. */
+function _bottomTabsHTML(){
+  if(!currentUser)return "";
+  var tabs=[{ic:"ti-home",lbl:"Accueil",action:"goHome()",on:(currentTab===""||currentTab==="depot")}];
+  if(isField()){
+    tabs.push({ic:"ti-clipboard-list",lbl:"Mes appros",action:"switchTab(\'mes\')",on:currentTab==="mes"});
+    if(featureOn("terrain_requests"))tabs.push({ic:"ti-message-report",lbl:"Demandes",action:"renderTerrainDemande()",on:currentTab==="terrain"});
+    if(featureOn("appro_discussion"))tabs.push({ic:"ti-message-2",lbl:"Messages",action:"renderPending()",on:currentTab==="pending",badge:"pending"});
+  }else if(currentRole==="depot"){
+    if(featureOn("depot_trucks"))tabs.push({ic:"ti-truck",lbl:"Camions",action:"renderTrucksSettings()",on:currentTab==="trucks"});
+    if(featureOn("terrain_requests"))tabs.push({ic:"ti-ticket",lbl:"Demandes",action:"renderTickets()",on:currentTab==="tickets",badge:"tickets"});
+    if(featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
+  }else{ /* conducteur, admin */
+    tabs.push({ic:"ti-clipboard-list",lbl:"Mes appros",action:"switchTab(\'mes\')",on:currentTab==="mes"});
+    tabs.push({ic:"ti-books",lbl:"Biblioth\u00e8que",action:"switchTab(\'biblio\')",on:currentTab==="biblio"||currentTab==="historique"});
+    if(featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
+  }
+  tabs=tabs.slice(0,4);
+  tabs.push({ic:"ti-menu-2",lbl:"Menu",action:"toggleSidebar()",on:false});
+
+  var h="<div class=\"mbottom\">";
+  tabs.forEach(function(t){
+    var dot="";
+    if(t.badge==="pending"&&typeof PENDING!=="undefined"&&PENDING.length)dot="<span class=\"mbottom-dot\"></span>";
+    if(t.badge==="tickets"&&typeof ticketsPendingCount==="function"&&ticketsPendingCount())dot="<span class=\"mbottom-dot\"></span>";
+    h+="<button class=\"mbottom-tab"+(t.on?" on":"")+"\" onclick=\""+t.action+"\"><span class=\"mbottom-ic\">"+dot+"<i class=\"ti "+t.ic+"\"></i></span><span class=\"mbottom-lbl\">"+esc(t.lbl)+"</span></button>";
+  });
+  h+="</div>";
+  return h;
+}
+function _renderBottomTabs(){
+  var el=document.getElementById("mbottom-anchor");
+  if(!el)return;
+  el.innerHTML=_bottomTabsHTML();
+}
 function _syncMenuVisibility(){
+  if(currentUser)try{_renderBottomTabs();}catch(e){}
   if(!currentUser)return;
   document.getElementById("btn-admin").style.display=(currentUser.role==="admin")?"flex":"none";
   var bd=document.getElementById("btn-dash");if(bd)bd.style.display=(currentUser.role==="admin")?"flex":"none";
