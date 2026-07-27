@@ -4801,6 +4801,7 @@ function switchTab(t){
 
 /* ═══ MES APPROS — page d\u00e9di\u00e9e (les appros en cours de l'utilisateur) ═══ */
 var _maFilter="cours"; // cours | brouillons | toutes
+var _maSearch=""; // recherche propre à Mes appros (Su : "ça manque d'une barre de recherche dans cette bibliothèque")
 function setMaFilter(f){_maFilter=f;renderMesAppros();}
 /* Ouvre directement la page « Mes appros » sur le filtre Brouillons. */
 function goDrafts(){
@@ -4868,6 +4869,12 @@ function renderMesAppros(){
   h+="<button class=\"ma-chip liv"+(_maFilter==="brouillons"?" on":"")+"\" onclick=\"setMaFilter('brouillons')\"><i class=\"ti ti-file-pencil\"></i> Brouillons <b>"+brouillons.length+"</b></button>";
   h+="<button class=\"ma-chip liv"+(_maFilter==="toutes"?" on":"")+"\" onclick=\"setMaFilter('toutes')\"><i class=\"ti ti-list\"></i> Toutes <b>"+mine.filter(function(s){return s.statut!=="sortie";}).length+"</b></button>";
   h+="</div>";
+  h+="<div class=\"lib-searchbox ma-searchbox\"><i class=\"ti ti-search\"></i><input class=\"lib-search\" type=\"search\" placeholder=\"Rechercher dans mes appros : chantier, client, N\u00b0 affaire, article...\" value=\""+esc(_maSearch||"")+"\" oninput=\"_maSearch=this.value;renderMesAppros()\"/></div>";
+
+  if(_maSearch&&_maSearch.trim()){
+    var _mq=_stripAccents(_maSearch.toLowerCase().trim());
+    list=list.filter(function(s){return _mq.split(/\s+/).every(function(w){return _approSearchText(s).indexOf(w)>=0;});});
+  }
 
   if(!list.length){
     var msg=(_maFilter==="rendu")?["Aucun rendu en attente","Les appros rendues attendent que le d\u00e9p\u00f4t traite le retour du mat\u00e9riel."]
@@ -5199,7 +5206,9 @@ function renderList(){
   if(!(currentUser&&(currentUser.role==="depot"||isField()))){
     toggle="<div style=\"display:flex;gap:5px;padding:2px 0 9px\"><button class=\"seg-btn"+(_dv?"":" on")+"\" onclick=\"setDraftView(false)\" style=\"flex:1;border:1px solid "+(_dv?"#E2E8F0":"#1D4ED8")+";background:"+(_dv?"#fff":"#EFF6FF")+";color:"+(_dv?"#64748B":"#1D4ED8")+";border-radius:7px;padding:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\">Appros</button><button class=\"seg-btn"+(_dv?" on":"")+"\" onclick=\"setDraftView(true)\" style=\"flex:1;border:1px solid "+(_dv?"#A16207":"#E2E8F0")+";background:"+(_dv?"#FEF9C3":"#fff")+";color:"+(_dv?"#854D0E":"#64748B")+";border-radius:7px;padding:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-pencil\" style=\"font-size:12px\"></i> Brouillons"+(_dc?" ("+_dc+")":"")+"</button></div>";
   }
-  var srchBar="<div style=\"position:relative;margin-bottom:8px\"><i class=\"ti ti-search\" style=\"position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:15px\"></i><input id=\"srch-lib\" value=\""+esc(q)+"\" oninput=\"onLibSearch(this.value)\" placeholder=\"Rechercher dans mes appros...\" style=\"width:100%;box-sizing:border-box;padding:9px 12px 9px 33px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;font-family:inherit;background:#fff\"/></div>";
+  /* Même règle que la recherche statique de la sidebar (#srch) : pas de
+     doublon pour un conducteur pur, "Mes appros" couvre déjà ce périmètre. */
+  var srchBar=(currentUser&&currentUser.role==="conducteur")?"":"<div style=\"position:relative;margin-bottom:8px\"><i class=\"ti ti-search\" style=\"position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:15px\"></i><input id=\"srch-lib\" value=\""+esc(q)+"\" oninput=\"onLibSearch(this.value)\" placeholder=\"Rechercher dans mes appros...\" style=\"width:100%;box-sizing:border-box;padding:9px 12px 9px 33px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;font-family:inherit;background:#fff\"/></div>";
   document.getElementById("sheets-list").innerHTML=srchBar+toggle+html;
 }
 function togC(cid,key){
@@ -10918,6 +10927,12 @@ function _syncMenuVisibility(){
   var bter=document.getElementById("btn-terrain");if(bter)bter.style.display=(isField()&&featureOn("terrain_requests"))?"flex":"none";
   var bpen=document.getElementById("btn-pending");if(bpen)bpen.style.display=featureOn("appro_discussion")?"flex":"none";
   var bbl=document.getElementById("btn-biblio");if(bbl)bbl.style.display=isField()?"none":"flex";
+  /* Recherche de la sidebar : doublon pour un conducteur pur depuis que
+     "Mes appros" a sa propre recherche (m\u00eame p\u00e9rim\u00e8tre exact). Reste visible
+     pour admin/d\u00e9p\u00f4t/technicien, dont la sidebar couvre un p\u00e9rim\u00e8tre bien
+     plus large qu'aucun \u00e9cran unique ne remplace. */
+  var bsrch=document.getElementById("srch");
+  if(bsrch)bsrch.style.display=(currentUser.role==="conducteur")?"none":"block";
 }
 function enterApp(){
   /* Filet de sécurité pour un appareil partagé : si quelqu'un se connecte
