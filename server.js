@@ -955,6 +955,37 @@ app.post('/api/appros/:id/signatures', auth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
 
+// ═══ PRÉSENCE (qui regarde cette appro en ce moment) ═══
+// Éphémère par nature — pas de table, juste une carte en mémoire nettoyée au fil
+// de l'eau. Un seul appel fait à la fois le "je suis toujours là" et le "qui
+// d'autre est là" : le client n'a qu'un battement de cœur à gérer, pas deux
+// mécanismes séparés.
+const _presence = new Map(); // appro_id -> Map(user_id -> {name, role, lastSeen})
+const PRESENCE_STALE_MS = 45000;
+app.post('/api/appros/:id/presence', auth, (req, res) => {
+  const apId = req.params.id;
+  if (!_presence.has(apId)) _presence.set(apId, new Map());
+  const m = _presence.get(apId);
+  m.set(req.user.id, { name: req.user.name, role: req.user.role, lastSeen: Date.now() });
+  const now = Date.now();
+  const others = [];
+  m.forEach((v, uid) => {
+    if (uid === req.user.id) return;
+    if (now - v.lastSeen > PRESENCE_STALE_MS) { m.delete(uid); return; }
+    others.push({ name: v.name, role: v.role });
+  });
+  if (m.size === 0) _presence.delete(apId);
+  res.json({ others });
+});
+// Départ explicite (ferme l'appro, se déconnecte) : pas obligatoire pour que ça
+// fonctionne (l'expiration s'en charge de toute façon), juste plus honnête —
+// sinon quelqu'un qui vient de partir semble encore présent jusqu'à 45s.
+app.post('/api/appros/:id/presence/leave', auth, (req, res) => {
+  const m = _presence.get(req.params.id);
+  if (m) { m.delete(req.user.id); if (m.size === 0) _presence.delete(req.params.id); }
+  res.json({ ok: true });
+});
+
 app.get('/api/appros/:id/signatures', auth, async (req, res) => {
   try {
     if (req.user.role === 'team_leader') {
