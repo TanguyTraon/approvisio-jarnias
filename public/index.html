@@ -497,6 +497,22 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .j-scrim{-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:jScrimIn .26s var(--ease)}
 /* ═══ SIGNATURE DE FIN DE VISITE (technicien) ═══ */
 .tsg-ov{position:fixed;inset:0;z-index:4200;background:rgba(15,23,42,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;animation:jScrimIn .22s var(--ease)}
+/* Glisser pour confirmer une suppression */
+.swc-ov{position:fixed;inset:0;z-index:4200;background:rgba(15,23,42,0);display:flex;align-items:center;justify-content:center;padding:20px;transition:background .2s var(--ease);pointer-events:none}
+.swc-ov.open{background:rgba(15,23,42,.55);pointer-events:auto}
+.swc-card{width:min(380px,100%);background:#fff;border-radius:18px;padding:22px;box-shadow:0 26px 60px -14px rgba(15,23,42,.4);transform:translateY(10px) scale(.97);opacity:0;transition:transform .22s var(--ease),opacity .22s var(--ease)}
+.swc-ov.open .swc-card{transform:translateY(0) scale(1);opacity:1}
+.swc-t{font-size:16px;font-weight:800;color:#0F172A;text-align:center}
+.swc-sub{font-size:12.5px;color:#64748B;text-align:center;margin-top:4px}
+.swc-track{position:relative;height:54px;background:#FEF2F2;border:1px solid #FECACA;border-radius:27px;overflow:hidden;user-select:none;margin-top:18px}
+.swc-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#DC2626;font-size:12.5px;font-weight:700;gap:6px;pointer-events:none}
+.swc-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#FCA5A5,#DC2626);width:52px;border-radius:27px}
+.swc-thumb{position:absolute;left:2px;top:2px;width:50px;height:50px;border-radius:50%;background:#DC2626;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:grab;box-shadow:0 3px 8px rgba(220,38,38,.4);touch-action:none}
+.swc-track.done{background:#ECFDF5;border-color:#A7F3D0}
+.swc-track.done .swc-label{color:#059669}
+.swc-track.done .swc-fill,.swc-track.done .swc-thumb{background:#059669;box-shadow:0 3px 8px rgba(5,150,105,.4)}
+.swc-cancel{width:100%;margin-top:14px;background:none;border:none;color:#64748B;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;padding:8px}
+.swc-cancel:hover{color:#334155}
 .tsg-ov.tsg-ov-out{animation:aloOvOut .16s ease-in both}
 .tsg-card{background:#fff;border-radius:18px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 30px 60px -25px rgba(15,23,42,.5)}
 .tsg-hd{display:flex;gap:12px;align-items:flex-start;padding:20px 22px 14px}
@@ -645,6 +661,11 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 /* Bannière "Depuis votre dernière visite" — cachée par défaut, affichée en JS
    uniquement quand il y a réellement quelque chose de nouveau à signaler. */
 .since-visit{display:flex;align-items:center;gap:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid #3B82F6;border-radius:12px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#1E40AF}
+/* Présence en temps réel */
+.presence-ind{display:none;align-items:center;gap:9px;padding:8px 4px;margin-bottom:10px;font-size:12.5px;color:#64748B}
+.presence-av{width:24px;height:24px;border-radius:50%;background:#6D28D9;color:#fff;font-size:10.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;margin-left:-8px;box-shadow:0 1px 3px rgba(15,23,42,.15)}
+.presence-av:first-child{margin-left:0}
+.presence-txt{margin-left:2px}
 .since-visit i{font-size:17px;flex-shrink:0}
 .since-visit span{flex:1}
 .since-visit button{flex-shrink:0;background:#fff;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
@@ -704,7 +725,23 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .sc-btn-del:hover{background:#FEF2F2;border-color:#FECACA;color:#DC2626}
 .sb-empty{color:#94A3B8;font-size:13px;text-align:center;padding:24px 0;line-height:1.6}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;display:flex;align-items:center;gap:8px;white-space:nowrap}
-.toast-undo{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;padding:10px 10px 10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:10000;display:flex;align-items:center;gap:12px;white-space:nowrap;box-shadow:0 14px 34px -10px rgba(0,0,0,.5);animation:tourPop .25s var(--spring)}
+.toast-undo{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;padding:10px 10px 10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:10000;display:flex;align-items:center;gap:12px;white-space:nowrap;box-shadow:0 14px 34px -10px rgba(0,0,0,.5);animation:tourPop .25s var(--spring);overflow:hidden}
+.toast-undo-bar{position:absolute;left:0;bottom:0;height:3px;background:#E4C878;width:100%;transform-origin:left;transition:transform 6s linear}
+/* Palette de commandes (Ctrl/Cmd+K) */
+.cmdk-scrim{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:9500;display:flex;align-items:flex-start;justify-content:center;padding-top:14vh;transition:background .18s var(--ease)}
+.cmdk-scrim.open{background:rgba(15,23,42,.5)}
+.cmdk-box{width:min(560px,92vw);background:#fff;border-radius:16px;box-shadow:0 24px 60px -14px rgba(15,23,42,.4);overflow:hidden;transform:translateY(-12px) scale(.97);opacity:0;transition:transform .2s var(--ease),opacity .2s var(--ease);max-height:70vh;display:flex;flex-direction:column}
+.cmdk-scrim.open .cmdk-box{transform:translateY(0) scale(1);opacity:1}
+.cmdk-input-wrap{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid #E8EDF4;flex-shrink:0}
+.cmdk-input-wrap i{color:#64748B;font-size:17px}
+.cmdk-input-wrap input{border:none;outline:none;flex:1;font-size:15px;font-family:inherit;color:#0F172A}
+.cmdk-list{overflow-y:auto;padding:8px}
+.cmdk-group{font-size:10.5px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:.5px;padding:9px 10px 4px}
+.cmdk-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;cursor:pointer;font-size:13.5px}
+.cmdk-item i{font-size:16px;color:#123528;width:18px;text-align:center;flex-shrink:0}
+.cmdk-item .sub{color:#94A3B8;font-size:11.5px;margin-left:auto;flex-shrink:0}
+.cmdk-item.active{background:#F0FDF4}
+.cmdk-empty{padding:30px;text-align:center;color:#64748B;font-size:13px}
 .toast-undo-btn{background:rgba(255,255,255,.16);color:#fff;border:none;border-radius:7px;padding:6px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
 .toast-undo-btn:hover{background:rgba(255,255,255,.28)}
 @media(max-width:480px){.toast-undo{left:12px;right:12px;transform:none;white-space:normal}}
@@ -718,6 +755,13 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .dl-chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;flex-shrink:0}
 .dl-chip.over{background:#FEE2E2;color:#991B1B}
 .mtop{display:none}
+.ptr-ind{display:none}
+@media(max-width:760px){
+  .ptr-ind{display:flex;position:fixed;top:calc(env(safe-area-inset-top) + 4px);left:50%;transform:translate(-50%,-60px);width:34px;height:34px;background:#fff;border-radius:50%;align-items:center;justify-content:center;box-shadow:0 4px 14px -4px rgba(15,23,42,.3);z-index:900}
+  .ptr-spin{width:18px;height:18px;border-radius:50%;border:2.5px solid #E8EDF4;border-top-color:#123528}
+  .ptr-spin.spin{animation:ptrSpin .7s linear infinite}
+  @keyframes ptrSpin{to{transform:rotate(360deg)}}
+}
 .mbottom{display:none}
 .sb-overlay{display:none}
 @media(max-width:768px){
@@ -1171,6 +1215,14 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .tbtxt i{font-size:16px}
 .tb-more-wrap{position:relative;display:inline-block}
 .tb-more-pop{display:none;position:absolute;top:44px;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:12px;box-shadow:0 14px 34px -8px rgba(15,23,42,.3);padding:6px;width:200px;z-index:120}
+.tb-more-scrim{display:none}
+@media(max-width:760px){
+  .tb-more-scrim{display:block;position:fixed;inset:0;background:rgba(15,23,42,0);z-index:119;transition:background .22s var(--ease)}
+  .tb-more-scrim.show{background:rgba(15,23,42,.45)}
+  .tb-more-pop{display:block!important;position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:auto!important;border-radius:18px 18px 0 0!important;padding:10px 10px calc(10px + env(safe-area-inset-bottom))!important;box-shadow:0 -10px 30px rgba(0,0,0,.15)!important;transform:translateY(110%);transition:transform .28s var(--ease);pointer-events:none}
+  .tb-more-pop.show{transform:translateY(0);pointer-events:auto}
+  .tb-more-pop::before{content:"";display:block;width:36px;height:4px;border-radius:3px;background:#E2E8F0;margin:2px auto 10px}
+}
 .tb-more-pop.show{display:block}
 .tb-more-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13px;color:#334155;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:inherit}
 .tb-more-item:hover{background:#F5F3FF}
@@ -1238,6 +1290,8 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .fg{display:flex;flex-direction:column;gap:4px}
 .fg label{font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.5px;font-weight:600}.fg-full{grid-column:1/-1}.fg-full{grid-column:1/-1}
 .fin{width:100%;border:1px solid #E2E8F0;border-radius:7px;padding:8px 10px;font-size:13px;color:#1E293B;font-family:inherit;outline:none;background:#F8FAFC;transition:border-color .16s var(--ease),background .16s var(--ease),box-shadow .18s var(--ease)}
+.fin.fld-ok,.cin.fld-ok{border-color:#059669!important}
+.fin.fld-bad,.cin.fld-bad{border-color:#DC2626!important}
 .fin:focus{border-color:#A5B4FC;background:#fff;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
 .ai-banner{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .ai-l{display:flex;gap:12px;align-items:flex-start}
@@ -1255,6 +1309,16 @@ table.at thead tr{background:#F8FAFC;border-bottom:2px solid #E2E8F0}
 table.at th{padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#64748B;font-weight:600;text-align:left}
 .th-d{width:30%}.th-q{width:10%}.th-av{width:18%}.th-c{width:26%}.th-r{width:52px;text-align:center!important}.th-x{width:36px}
 table.at tr.tr{border-bottom:1px solid #F1F5F9}
+/* Actions révélées au survol, grand écran seulement (le tactile n'a pas de
+   survol — sur mobile, ces boutons restent visibles en permanence, déjà
+   compacts après un travail antérieur pour tenir en 2 lignes). Le bouton
+   commentaire reste toujours visible : son fond bleu signale un état
+   (« il y a un commentaire »), pas juste une action, donc le cacher perdrait
+   une information utile au premier coup d'œil. */
+@media(min-width:761px){
+  table.at tr.tr td.cact:not(.cmt-cell):not(:has(.btn-ret.ret)):not(:has(.btn-ret.rettl)){opacity:0;transition:opacity .14s var(--ease)}
+  table.at tr.tr:hover td.cact:not(.cmt-cell),table.at tr.tr:focus-within td.cact:not(.cmt-cell){opacity:1}
+}
 table.at tr.tr:last-child{border-bottom:none}
 table.at td{padding:0}
 table.at tr.kit-hd td{padding:0;border:none;background:none}
@@ -2509,6 +2573,7 @@ try{var _amb=localStorage.getItem("appro_amb");if(_amb&&_amb!=="none")document.d
       <span class="mtop-title">AppROVISIO</span>
       <button class="mtop-btn mtop-pending" id="btn-pending-m" onclick="renderPending()" title="Messages en attente" style="display:none"><i class="ti ti-message-report" style="font-size:19px"></i><span class="pending-badge" id="pending-badge-m" style="display:none">0</span></button>
     </div>
+    <div id="ptr-ind" class="ptr-ind"><div class="ptr-spin"></div></div>
     <div id="deadline-banner" class="dl-banner" style="display:none"></div>
     <main class="main" id="main-area"></main>
     <div id="mbottom-anchor"></div>
@@ -2698,6 +2763,48 @@ function _techMarkDirty(){
      sur le fait, à la source, ne dépend d'aucun ordre de traitement. */
   _techDirtySnap={id:cur.id,nomChantier:cur.nomChantier||"Sans titre",noAffaire:cur.noAffaire||"",key:_scKey()};
 }
+/* Présence en temps réel : réutilise le même détecteur fiable que la
+   signature (celui qui compare une clé d'écran capturée, pas un "dernier vu"
+   qui pourrait dériver si des rendus s'enchaînent vite). */
+var _presenceApId=null,_presenceTimer=null;
+function _presenceSync(){
+  var apId=(typeof cur!=="undefined"&&cur&&cur._id)?cur._id:null;
+  if(apId===_presenceApId)return; // rien n'a changé côté appro affichée : ne relance rien
+  _presenceStop();
+  _presenceApId=apId;
+  if(apId)_presenceStart(apId);
+}
+function _presenceStart(apId){
+  _presenceTick(apId);
+  _presenceTimer=setInterval(function(){_presenceTick(apId);},15000);
+}
+function _presenceStop(){
+  if(_presenceTimer){clearInterval(_presenceTimer);_presenceTimer=null;}
+  var el=document.getElementById("presence-ind");
+  if(el){el.innerHTML="";el.style.display="none";}
+  if(_presenceApId){
+    var leaving=_presenceApId;
+    try{apiCall("POST","/appros/"+leaving+"/presence/leave").catch(function(){});}catch(e){}
+  }
+}
+function _presenceTick(apId){
+  apiCall("POST","/appros/"+apId+"/presence").then(function(r){
+    if(apId!==_presenceApId)return; // r\u00e9ponse arriv\u00e9e en retard, on a d\u00e9j\u00e0 chang\u00e9 d'appro
+    _presenceRender((r&&r.others)||[]);
+  }).catch(function(){});
+}
+function _presenceRender(others){
+  var el=document.getElementById("presence-ind");
+  if(!el)return;
+  if(!others||!others.length){el.innerHTML="";el.style.display="none";return;}
+  el.style.display="flex";
+  var av=others.slice(0,4).map(function(p){
+    var lbl=(ROLE_INFO[p.role]||{}).label||p.role||"";
+    return "<span class=\"presence-av\" title=\""+esc(p.name||"")+(lbl?" ("+esc(lbl)+")":"")+"\">"+esc(((p.name||"?")[0]||"?").toUpperCase())+"</span>";
+  }).join("");
+  var txt=others.length===1?(esc(others[0].name||"Quelqu'un")+" consulte aussi cette appro"):others.length+" autres personnes consultent aussi cette appro";
+  el.innerHTML=av+"<span class=\"presence-txt\">"+txt+"</span>";
+}
 (function(){
   function hook(){
     var m=document.getElementById("main-area");
@@ -2709,6 +2816,7 @@ function _techMarkDirty(){
       }
       if(!touched)return;
       try{_renderBottomTabs();}catch(e){}
+      try{_presenceSync();}catch(e){}
       /* On ne compare pas à un "dernier écran vu" tenu à jour au fil des
          appels : on compare directement à la clé capturée au moment de la
          modification. Fiable quel que soit le nombre de rendus qui se sont
@@ -2822,6 +2930,164 @@ function _tsgConfirm(){
     toast("Signature non enregistr\u00e9e, r\u00e9essayez","ti-alert-circle");
   });
 }
+/* Palette de commandes (Ctrl/Cmd+K) : réutilise l'état déjà calculé par
+   _syncMenuVisibility() (les boutons .btn-admin déjà filtrés par rôle et par
+   fonctionnalités désactivées) plutôt que de redupliquer cette logique ici —
+   un seul endroit décide qui voit quoi. */
+var _cmdkItems=[];
+function _cmdkBuildItems(){
+  var items=[];
+  document.querySelectorAll(".btn-admin").forEach(function(btn){
+    if(btn.style.display==="none")return;
+    var label=(MENU_LABELS&&MENU_LABELS[btn.id])||btn.textContent.trim();
+    if(!label)return;
+    var ic="ti-arrow-right";
+    var m=btn.querySelector("i");
+    if(m){var mc=Array.prototype.slice.call(m.classList).filter(function(c){return c.indexOf("ti-")===0;})[0];if(mc)ic=mc;}
+    items.push({g:"Écrans",ic:ic,n:label,run:function(){btn.click();}});
+  });
+  if(typeof sheets!=="undefined"&&sheets){
+    sheets.forEach(function(s){
+      if(!s.nomChantier)return;
+      if(typeof _techVisible==="function"&&!_techVisible(s))return;
+      if(!(canManage()||isField()||(typeof _isMyAppro==="function"&&_isMyAppro(s))))return;
+      items.push({g:"Appros",ic:"ti-clipboard-list",n:s.nomChantier,sub:s.noAffaire||"",run:function(){openFromLib(s.id);}});
+    });
+  }
+  return items;
+}
+function _cmdkHTML(){
+  return "<div class=\"cmdk-scrim\" id=\"cmdk-ov\"><div class=\"cmdk-box\"><div class=\"cmdk-input-wrap\"><i class=\"ti ti-search\"></i><input id=\"cmdk-input\" placeholder=\"Rechercher une appro, un écran...\" autocomplete=\"off\"/></div><div class=\"cmdk-list\" id=\"cmdk-list\"></div></div></div>";
+}
+var _cmdkActive=0,_cmdkFiltered=[];
+function _cmdkRender(){
+  var input=document.getElementById("cmdk-input"),list=document.getElementById("cmdk-list");
+  if(!input||!list)return;
+  var q=_stripAccents(input.value.toLowerCase().trim());
+  _cmdkFiltered=_cmdkItems.filter(function(it){return !q||_stripAccents(it.n.toLowerCase()).indexOf(q)>=0;});
+  _cmdkActive=0;
+  if(!_cmdkFiltered.length){list.innerHTML="<div class=\"cmdk-empty\">Aucun résultat</div>";return;}
+  var html="",lastG=null;
+  _cmdkFiltered.forEach(function(it,i){
+    if(it.g!==lastG){html+="<div class=\"cmdk-group\">"+esc(it.g)+"</div>";lastG=it.g;}
+    html+="<div class=\"cmdk-item"+(i===0?" active":"")+"\" data-i=\""+i+"\"><i class=\"ti "+it.ic+"\"></i>"+esc(it.n)+(it.sub?"<span class=\"sub\">"+esc(it.sub)+"</span>":"")+"</div>";
+  });
+  list.innerHTML=html;
+}
+function _cmdkHighlight(){
+  document.querySelectorAll("#cmdk-list .cmdk-item").forEach(function(el,i){el.classList.toggle("active",i===_cmdkActive);});
+  var el=document.querySelector("#cmdk-list .cmdk-item.active");
+  if(el)el.scrollIntoView({block:"nearest"});
+}
+function openCmdk(){
+  if(document.getElementById("cmdk-ov"))return;
+  _cmdkItems=_cmdkBuildItems();
+  var d=document.createElement("div");d.innerHTML=_cmdkHTML();
+  document.body.appendChild(d.firstElementChild);
+  _cmdkRender();
+  var ov=document.getElementById("cmdk-ov");
+  /* Garde contre une course possible : si closeCmdk() est appelée avant que
+     ce requestAnimationFrame n'ait eu l'occasion de s'exécuter (fermeture
+     quasi immédiate après l'ouverture), on ne doit pas rouvrir la palette
+     par-dessus une fermeture déjà demandée. */
+  requestAnimationFrame(function(){if(ov.isConnected&&!ov.dataset.closing)ov.classList.add("open");});
+  var input=document.getElementById("cmdk-input");
+  setTimeout(function(){input.focus();},60);
+  input.addEventListener("input",_cmdkRender);
+  ov.addEventListener("click",function(e){if(e.target===ov)closeCmdk();});
+  document.getElementById("cmdk-list").addEventListener("click",function(e){
+    var it=e.target.closest(".cmdk-item");
+    if(it)_cmdkRun(+it.dataset.i);
+  });
+}
+function closeCmdk(){
+  var ov=document.getElementById("cmdk-ov");
+  if(!ov)return;
+  ov.dataset.closing="1";
+  ov.classList.remove("open");
+  setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);},160);
+}
+function _cmdkRun(i){
+  var it=_cmdkFiltered[i];
+  closeCmdk();
+  if(it&&typeof it.run==="function")try{it.run();}catch(e){}
+}
+document.addEventListener("keydown",function(e){
+  var tag=(e.target.tagName||"").toLowerCase();
+  var typing=tag==="input"||tag==="textarea"||e.target.isContentEditable;
+  var ov=document.getElementById("cmdk-ov");
+  if(ov&&ov.dataset.closing)ov=null; // en cours de fermeture (fondu) : ne bloque plus rien
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){
+    e.preventDefault();
+    if(ov)closeCmdk();else if(typeof currentUser!=="undefined"&&currentUser)openCmdk();
+    return;
+  }
+  if(ov){
+    if(e.key==="Escape"){closeCmdk();return;}
+    if(e.key==="ArrowDown"){e.preventDefault();_cmdkActive=Math.min(_cmdkFiltered.length-1,_cmdkActive+1);_cmdkHighlight();}
+    else if(e.key==="ArrowUp"){e.preventDefault();_cmdkActive=Math.max(0,_cmdkActive-1);_cmdkHighlight();}
+    else if(e.key==="Enter"){e.preventDefault();_cmdkRun(_cmdkActive);}
+    return;
+  }
+  /* Raccourcis globaux : jamais quand on tape dans un champ, jamais quand une
+     signature est due (le verrou existant a déjà la priorité), jamais avant
+     connexion. */
+  if(typing||!(typeof currentUser!=="undefined"&&currentUser)||document.getElementById("tsg-ov"))return;
+  if(e.key==="n"||e.key==="N"){
+    if(typeof openNew==="function"&&!isField()){e.preventDefault();openNew();}
+  } else if(e.key==="/"){
+    var s=document.getElementById("srch")||document.getElementById("srch-lib");
+    if(s&&s.style.display!=="none"){e.preventDefault();s.focus();}
+    else{e.preventDefault();if(typeof currentUser!=="undefined"&&currentUser)openCmdk();}
+  }
+});
+/* Tirer pour rafraîchir (mobile) : réutilise refreshFromServer() telle
+   quelle — même garde-fou "modifications non enregistrées", même appel
+   réseau, même bouton "Actualiser" qui tourne en même temps. Pas de logique
+   dupliquée, juste un déclencheur de plus. */
+(function(){
+  var ind=document.getElementById("ptr-ind");
+  if(!ind)return;
+  var spin=ind.querySelector(".ptr-spin");
+  var startY=null,dragging=false,busy=false;
+  function isMobile(){return window.innerWidth<=760;}
+  function atTop(){return (window.scrollY||document.documentElement.scrollTop||0)<=0;}
+  function down(y){
+    if(!isMobile()||busy||!atTop())return;
+    startY=y;dragging=true;ind.style.transition="none";
+  }
+  function move(y){
+    if(!dragging)return;
+    var dy=y-startY;
+    if(dy<0){dragging=false;ind.style.transform="";return;} // on remonte : on annule, on laisse le scroll normal faire son travail
+    if(!atTop()){dragging=false;ind.style.transform="";return;}
+    var pull=Math.min(70,dy*0.5);
+    ind.style.transform="translateY("+(pull-60)+"px)";
+    spin.style.transform="rotate("+(pull*4)+"deg)";
+  }
+  function up(){
+    if(!dragging)return;
+    dragging=false;
+    ind.style.transition="transform .25s var(--ease)";
+    var m=/-?[\d.]+/.exec(ind.style.transform||"");
+    var pulled=m?(parseFloat(m[0])+60):0;
+    if(pulled>50){
+      busy=true;
+      ind.style.transform="translateY(0)";
+      spin.classList.add("spin");
+      refreshFromServer({silent:true}).then(function(){
+        spin.classList.remove("spin");
+        ind.style.transform="translateY(-60px)";
+        busy=false;
+      });
+    } else {
+      ind.style.transform="translateY(-60px)";
+    }
+  }
+  document.addEventListener("touchstart",function(e){if(e.touches&&e.touches[0])down(e.touches[0].clientY);},{passive:true});
+  document.addEventListener("touchmove",function(e){if(e.touches&&e.touches[0])move(e.touches[0].clientY);},{passive:true});
+  document.addEventListener("touchend",up);
+})();
 /* Verrou : tant que la signature est \u00e0 l'\u00e9cran, AUCUN autre clic dans
    l'appli ne passe (phase de capture : intercepte avant tout autre
    gestionnaire). C'est \u00e7a qui \u00abforce\u00bb la signature, demand\u00e9 par Su ;
@@ -3755,10 +4021,18 @@ function toastUndo(msg,undoFn){
   var span=document.createElement("span");span.innerHTML="<i class=\"ti ti-circle-check\" style=\"font-size:15px\"></i> "+msg;
   el.appendChild(span);
   var btn=document.createElement("button");btn.className="toast-undo-btn";btn.textContent="Annuler";
-  btn.onclick=function(){try{undoFn();}catch(e){}el.remove();};
+  var bar=document.createElement("div");bar.className="toast-undo-bar";
+  var dismissed=false;
+  function dismiss(){if(dismissed)return;dismissed=true;if(el.parentNode)el.remove();}
+  btn.onclick=function(){try{undoFn();}catch(e){}dismiss();};
   el.appendChild(btn);
+  el.appendChild(bar);
   document.body.appendChild(el);
-  setTimeout(function(){if(el.parentNode)el.remove();},6000);
+  /* Barre qui se vide (Su, voir plus_de_mimiques_demo.html) : montre visuellement
+     le temps restant avant que "Annuler" ne disparaisse, comme dans Gmail —
+     plus honnête qu'un délai invisible. */
+  requestAnimationFrame(function(){bar.style.transform="scaleX(0)";});
+  setTimeout(dismiss,6000);
 }
 /* Fusionne avec une ligne D\u00c9J\u00c0 PR\u00c9SENTE (m\u00eame d\u00e9signation) au lieu d'en cr\u00e9er une
    deuxi\u00e8me : additionne simplement les quantit\u00e9s. Sans \u00e7a, ajouter deux fois
@@ -5462,7 +5736,7 @@ function tblH(sec,secColor){
     row+=" placeholder=\"0\" style=\"text-align:center;"+st+"\"";
     row+=" onkeydown=\"_rowKeyNav(event,'"+sec+"',"+i+")\"";
     row+=" onblur=\"_qtyDefault1('"+sec+"',"+i+",this)\"";
-    row+=" oninput=\"upR('"+sec+"',"+i+",'quantite',this.value)\"/></td>";
+    row+=" oninput=\"upR('"+sec+"',"+i+",'quantite',this.value);_liveValidate('qte_"+sec+"_"+i+"',this.value.trim()===''?null:(/^[0-9]+([.,][0-9]+)?$/.test(this.value.trim())&&parseFloat(this.value.replace(',','.'))>0))\"/></td>";
     row+="<td data-label=\"Dispo\" class=\"td-av\"><select class=\"csel\" onchange=\"upR('"+sec+"',"+i+",'disponibilite',this.value)\"";
     row+=" style=\""+st+"\">"+dOpts+"</select></td>";
     row+="<td data-label=\"Commentaire\" class=\"td-c\" id=\"cmt_"+sec+"_"+i+"\"><input class=\"cin\" id=\"ncm_"+sec+"_"+i+"\" value=\""+esc(r.commentaire||"")+"\"";
@@ -5782,6 +6056,7 @@ function renderForm(){
   h+=tplNotice+addBanner;
   h+=_approStepperHTML();
   h+="<div class=\"since-visit\" id=\"since-visit\" style=\"display:none\"><i class=\"ti ti-history\"></i><span id=\"since-visit-txt\"></span><button onclick=\"markThreadRead()\">Marquer comme vu</button></div>";
+  h+="<div class=\"presence-ind\" id=\"presence-ind\" style=\"display:none\"></div>";
   if(cur.draft&&!isField()){
     h+="<div style=\"background:#fff;border:1px solid #FDE9C8;border-left:4px solid #F59E0B;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 3px 12px -7px rgba(245,158,11,.5)\"><div style=\"display:flex;align-items:center;gap:11px\"><div style=\"width:38px;height:38px;border-radius:11px;background:#FEF3C7;color:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><i class=\"ti ti-pencil\" style=\"font-size:19px\"></i></div><div><div style=\"font-size:14px;font-weight:700;color:#0F172A\">Brouillon</div><div style=\"font-size:12px;color:#78716C\">Le chef d\u00e9p\u00f4t ne voit pas encore cette appro. Envoie-la en production quand elle est pr\u00eate.</div></div></div><button onclick=\"sendToProduction()\" class=\"liv\" style=\"background:#15803D;color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;box-shadow:0 5px 14px -6px rgba(21,128,61,.6)\"><i class=\"ti ti-send\"></i> Envoyer en production</button></div>";
   }
@@ -5795,7 +6070,7 @@ function renderForm(){
   h+="</div></div>";
   h+="<div class=\"info-grid\">";
   h+="<div class=\"card info-sec\"><div class=\"card-hd\"><div class=\"card-hd-t\"><span class=\"card-num\">1</span><i class=\"ti ti-building-community\" style=\"font-size:16px;color:#6D28D9\"></i> Chantier <span class=\"card-hint\">Où sont les travaux ?</span></div></div><div class=\"card-fields\">";
-  h+="<div class=\"fg\"><label>Nom du chantier</label><input class=\"fin\" value=\""+esc(cur.nomChantier)+"\" placeholder=\"Ex: Ravalement fa&#231;ade...\" oninput=\"upF('nomChantier',this.value)\"/></div>";
+  h+="<div class=\"fg\"><label>Nom du chantier</label><input class=\"fin\" id=\"fld-nomChantier\" value=\""+esc(cur.nomChantier)+"\" placeholder=\"Ex: Ravalement fa&#231;ade...\" oninput=\"upF('nomChantier',this.value);_liveValidate('fld-nomChantier',this.value.trim()?true:null)\"/></div>";
   h+="<div class=\"fg fg-full\"><label style=\"display:flex;align-items:center;gap:6px\"><i class=\"ti ti-map-pin\" style=\"font-size:12px;color:#DC2626\"></i> Adresse du chantier</label><textarea class=\"fin\" rows=\"2\" style=\"resize:vertical\" placeholder=\"Adresse compl&#232;te du chantier (rue, code postal, ville)...\" oninput=\"upF('adresseChantier',this.value)\">"+esc(cur.adresseChantier||"")+"</textarea></div>";
   h+="";
 h+="";
@@ -5947,6 +6222,15 @@ function _scheduleAutosave(){
     }
     // si pas encore en base : le snapshot local suffit jusqu'au 1er enregistrement explicite
   },2000);
+}
+/* Validation en direct : ok=true (vert), ok=false (rouge), ok=null (neutre,
+   pas encore assez rempli pour juger). Générique, réutilisable sur n'importe
+   quel champ .fin ou .cin par son id. */
+function _liveValidate(id,ok){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle("fld-ok",ok===true);
+  el.classList.toggle("fld-bad",ok===false);
 }
 function upF(f,v){
   if(!cur)return;cur[f]=v;cur.dateMiseAJour=new Date().toLocaleDateString("fr-FR");saved=false;
@@ -6167,7 +6451,15 @@ function _maybeRestoreLocal(){
   }catch(e){}
 }
 function delS(id){
-  if(!confirm("Supprimer cette appro d\u00e9finitivement ?"))return;
+  var s=null;sheets.forEach(function(x){if(x.id===id)s=x;});
+  _openSwipeConfirm({
+    title:"Supprimer cette appro ?",
+    sub:(s&&s.nomChantier)||"",
+    label:"Glisser pour supprimer",
+    run:function(){_delSExecute(id);}
+  });
+}
+function _delSExecute(id){
   var sid=findServerId(id);
   if(!sid){sheets=sheets.filter(function(s){return s.id!==id;});if(cur&&cur.id===id)renderWelcome();else refreshCurrentView();return;}
   apiCall("DELETE","/appros/"+sid).then(function(){
@@ -6175,6 +6467,66 @@ function delS(id){
     if(cur&&cur.id===id)goBack();else refreshCurrentView();
     toast("Appro supprim\u00e9e","ti-trash");
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+/* Glisser pour confirmer une suppression (Su, voir encore_mimiques_demo.html) :
+   plus délibéré qu'un clic sur "Oui" dans une fenêtre de confirmation —
+   difficile de le déclencher par erreur. Générique : {title,sub,label,run}. */
+function _openSwipeConfirm(opts){
+  if(document.getElementById("swc-ov"))return;
+  var h="<div class=\"swc-ov\" id=\"swc-ov\"><div class=\"swc-card j-card\">";
+  h+="<div class=\"swc-t\">"+esc(opts.title)+"</div>";
+  if(opts.sub)h+="<div class=\"swc-sub\">"+esc(opts.sub)+"</div>";
+  h+="<div class=\"swc-track\" id=\"swc-track\"><div class=\"swc-fill\" id=\"swc-fill\"></div><div class=\"swc-label\"><i class=\"ti ti-chevron-right\"></i> "+esc(opts.label)+"</div><div class=\"swc-thumb\" id=\"swc-thumb\"><i class=\"ti ti-trash\"></i></div></div>";
+  h+="<button class=\"swc-cancel\" onclick=\"_closeSwipeConfirm()\">Annuler</button>";
+  h+="</div></div>";
+  var d=document.createElement("div");d.innerHTML=h;
+  document.body.appendChild(d.firstElementChild);
+  var ov=document.getElementById("swc-ov");
+  ov.addEventListener("click",function(e){if(e.target===ov)_closeSwipeConfirm();});
+  requestAnimationFrame(function(){if(ov)ov.classList.add("open");});
+  _wireSwipeConfirm(opts.run);
+}
+function _closeSwipeConfirm(){
+  var ov=document.getElementById("swc-ov");
+  if(!ov)return;
+  ov.classList.remove("open");
+  setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);},180);
+}
+function _wireSwipeConfirm(run){
+  var track=document.getElementById("swc-track"),thumb=document.getElementById("swc-thumb"),fill=document.getElementById("swc-fill");
+  if(!track||!thumb)return;
+  var maxX=0,dragging=false,startX=0,done=false;
+  function bounds(){maxX=track.clientWidth-52;}
+  function pos(x){return Math.max(0,Math.min(maxX,x));}
+  function down(x){if(done)return;bounds();dragging=true;startX=x-thumb.offsetLeft;thumb.style.transition="none";fill.style.transition="none";}
+  function move(x){
+    if(!dragging)return;
+    var left=pos(x-startX);
+    thumb.style.left=left+"px";
+    fill.style.width=(left+52)+"px";
+  }
+  function up(){
+    if(!dragging)return;
+    dragging=false;
+    thumb.style.transition="left .2s var(--ease)";
+    fill.style.transition="width .2s var(--ease)";
+    if(thumb.offsetLeft>maxX*.82&&maxX>0){
+      thumb.style.left=maxX+"px";fill.style.width=(maxX+52)+"px";
+      track.classList.add("done");
+      thumb.innerHTML="<i class=\"ti ti-check\"></i>";
+      done=true;
+      try{if(navigator.vibrate)navigator.vibrate(40);}catch(e){}
+      setTimeout(function(){_closeSwipeConfirm();try{run();}catch(e){}},350);
+    } else {
+      thumb.style.left="2px";fill.style.width="52px";
+    }
+  }
+  thumb.addEventListener("mousedown",function(e){down(e.clientX);});
+  window.addEventListener("mousemove",function(e){move(e.clientX);});
+  window.addEventListener("mouseup",up);
+  thumb.addEventListener("touchstart",function(e){down(e.touches[0].clientX);},{passive:true});
+  thumb.addEventListener("touchmove",function(e){move(e.touches[0].clientX);},{passive:true});
+  thumb.addEventListener("touchend",up);
 }
 function refreshCurrentView(){
   if(currentRole==="depot")renderDepot();
@@ -8741,13 +9093,31 @@ function toggleTbMore(e){
   closeTbMore();
   if(willOpen){
     pop.classList.add("show");
+    _tbMoreScrim(true,closeTbMore);
     setTimeout(function(){document.addEventListener("click",_tbMoreOutside);},0);
   }
 }
 function closeTbMore(){
   var pop=document.getElementById("tb-more-pop");
   if(pop)pop.classList.remove("show");
+  _tbMoreScrim(false);
   document.removeEventListener("click",_tbMoreOutside);
+}
+/* Sur mobile, ce menu devient un panneau qui remonte du bas (Su, voir
+   gestes_mobile_demo.html) plutôt qu'un petit menu déroulant — plus facile à
+   viser au pouce, et un fond assombri derrière rend plus clair que c'est un
+   panneau à part entière. Sur grand écran, ce fond reste invisible (voir
+   CSS) : le menu garde son apparence de dropdown habituelle, inchangée. */
+function _tbMoreScrim(show,closeFn){
+  var s=document.getElementById("tb-more-scrim");
+  if(show){
+    if(!s){s=document.createElement("div");s.id="tb-more-scrim";s.className="tb-more-scrim";document.body.appendChild(s);}
+    s.onclick=closeFn||closeTbMore;
+    requestAnimationFrame(function(){s.classList.add("show");});
+  } else if(s){
+    s.classList.remove("show");
+    setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},220);
+  }
 }
 function _tbMoreOutside(e){
   var pop=document.getElementById("tb-more-pop");
@@ -8766,12 +9136,14 @@ function toggleHdrMore(e){
   closeHdrMore();
   if(willOpen){
     pop.classList.add("show");
+    _tbMoreScrim(true,closeHdrMore);
     setTimeout(function(){document.addEventListener("click",_hdrMoreOutside);},0);
   }
 }
 function closeHdrMore(){
   var pop=document.getElementById("hdr-more-pop");
   if(pop)pop.classList.remove("show");
+  _tbMoreScrim(false);
   document.removeEventListener("click",_hdrMoreOutside);
 }
 function _hdrMoreOutside(e){
