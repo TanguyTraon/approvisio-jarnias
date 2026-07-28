@@ -2061,11 +2061,15 @@ table.at tr.kit-row td.td-d{position:relative}
   .pill-sel{flex:1 1 40%;min-width:120px}
 }
 
-.depot-wrap{display:flex;gap:16px;padding:20px 24px;align-items:flex-start}
+.depot-wrap{display:flex;flex-direction:column;gap:16px;padding:20px 24px}
 .depot-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
 /* Grille sur ordinateur uniquement (Su : "seulement sur ordinateur") — les
    cartes se placent plusieurs par ligne au lieu de s'empiler une par une,
-   comme la section "Sur chantier" juste en dessous le fait déjà. Mobile
+   comme la section "Sur chantier" juste en dessous le fait déjà. Les deux
+   sections sont aussi empilées en pleine largeur l'une sur l'autre (plus
+   côte à côte à moitié largeur) pour que cette grille ait vraiment la place
+   de s'étaler — sinon la grille existait déjà mais restait coincée dans une
+   colonne trop étroite pour afficher plus d'une carte par ligne. Mobile
    garde l'empilement à une seule carte par ligne, plus adapté à un petit
    écran. */
 @media(min-width:761px){
