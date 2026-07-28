@@ -2072,7 +2072,13 @@ table.at tr.kit-row td.td-d{position:relative}
    colonne trop étroite pour afficher plus d'une carte par ligne. Mobile
    garde l'empilement à une seule carte par ligne, plus adapté à un petit
    écran. */
-@media(min-width:761px){
+/* Seuil volontairement plus bas que le 760px utilisé pour la navigation
+   mobile (menu du bas, etc.) : deux préoccupations différentes. La barre du
+   bas a vraiment besoin d'un écran de taille téléphone. Cette grille, elle,
+   n'a besoin que d'assez de place pour deux cartes de 240px côte à côte —
+   une fenêtre de bureau pas maximisée tombe souvent sous les 760px sans
+   être un téléphone pour autant. */
+@media(min-width:560px){
   .depot-col{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));align-items:start;gap:12px}
   .depot-col-hd,.depot-empty{grid-column:1/-1}
 }
