@@ -4896,6 +4896,24 @@ function depotItemsPreview(s){
   if(all.length>4)h+="<div style=\"color:#94A3B8;font-size:10px;margin-top:2px\">+"+(all.length-4)+" autre"+(all.length-4>1?"s":"")+"...</div>";
   return h;
 }
+/* Même principe que maRowHTML, pour le dépôt (Su : "c'est lui qui l'utilisera
+   le plus souvent"). Garde un bouton d'action rapide (marquer prête/rendue),
+   contrairement aux lignes de bibliothèque — c'est le geste le plus fréquent
+   du chef dépôt, pas la peine de le forcer à rouvrir la fiche pour ça. */
+function depotRowHTML(s,kind){
+  var isModif=(kind==="prep"&&s.statut==="prete"&&s.modifPrep);
+  var isAddCh=(kind==="prep"&&s.statut==="sur_chantier"&&s.addToPrepare);
+  var dotCol=kind==="prep"?(isAddCh?"#1D4ED8":(isModif?"#7C3AED":"#F59E0B")):"#059669";
+  var sub=kind==="prep"
+    ? ((isAddCh&&s.tlName)?esc(s.tlName):esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.dateAppro&&!isAddCh?" \u00b7 limite "+s.dateAppro:"")
+    : esc(s.conducteur||s.chargeAffaires||"Conducteur ?")+(s.preparedAt?" \u00b7 pr\u00eate depuis "+s.preparedAt:"");
+  var h="<div class=\"lib-row\" onclick=\"openFromDepot('"+s.id+"')\">";
+  h+="<span class=\"lib-row-dot\" style=\"background:"+dotCol+"\" title=\""+(isAddCh?"Ajout \u00e0 pr\u00e9parer":isModif?"D\u00e9j\u00e0 pr\u00eate, modifi\u00e9e":"")+"\"></span>";
+  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span></div><div class=\"lib-row-sub\">"+sub+"</div></div>";
+  h+="<button onclick=\"event.stopPropagation();"+(kind==="prep"?"depotMarkPrete":"depotMarkRendu")+"('"+s.id+"')\" class=\"lib-row-act\" title=\""+(kind==="prep"?"Marquer pr\u00eate":"Marquer rendue")+"\" style=\"color:"+(kind==="prep"?"#059669":"#1D4ED8")+"\"><i class=\"ti "+(kind==="prep"?"ti-package-import":"ti-checks")+"\"></i></button>";
+  h+="</div>";
+  return h;
+}
 function renderDepot(){
   if(typeof _mountScanFab==="function")_mountScanFab();
   if(typeof _unmountCpFab==="function")_unmountCpFab();
@@ -4920,6 +4938,7 @@ function renderDepot(){
 
   var h=_dashHeader("Poste de pilotage \u2014 D\u00e9p\u00f4t","Ce qu'il y a \u00e0 pr\u00e9parer et ce qui est pr\u00eat \u00e0 partir.");
   h+=(typeof dashLiveKPIs==="function"?dashLiveKPIs():"");
+  h+="<div style=\"display:flex;justify-content:flex-end;padding:0 24px\"><div class=\"lib-view-tog\"><button class=\""+(_depotView==="cards"?"on":"")+"\" onclick=\"_depotView='cards';renderDepot()\" title=\"Vue cartes\"><i class=\"ti ti-layout-grid\"></i></button><button class=\""+(_depotView==="list"?"on":"")+"\" onclick=\"_depotView='list';renderDepot()\" title=\"Vue liste, plus condens\u00e9e\"><i class=\"ti ti-list\"></i></button></div></div>";
   h+="<div class=\"depot-wrap\">";
 
   // COLUMN 1 - A PREPARER
@@ -4927,6 +4946,8 @@ function renderDepot(){
   h+="<div class=\"depot-col-hd dc-prep\"><i class=\"ti ti-clipboard-list\"></i> \u00c0 pr\u00e9parer<span class=\"dch-n\">"+aPreparer.length+"</span></div>";
   if(!aPreparer.length){
     h+="<div class=\"depot-empty\"><i class=\"ti ti-check\" style=\"font-size:32px\"></i><div style=\"margin-top:8px\">Rien \u00e0 pr\u00e9parer</div></div>";
+  } else if(_depotView==="list"){
+    h+="<div class=\"lib-list stagger\">"+aPreparer.map(function(s){return depotRowHTML(s,"prep");}).join("")+"</div>";
   } else {
     aPreparer.forEach(function(s){
       var isModif=(s.statut==="prete"&&s.modifPrep);
@@ -4954,6 +4975,8 @@ function renderDepot(){
   h+="<div class=\"depot-col-hd dc-ready\"><i class=\"ti ti-package\"></i> Au d\u00e9p\u00f4t (pr\u00eates)<span class=\"dch-n\">"+auDepot.length+"</span></div>";
   if(!auDepot.length){
     h+="<div class=\"depot-empty\"><i class=\"ti ti-package-off\" style=\"font-size:32px\"></i><div style=\"margin-top:8px\">Aucune appro au d\u00e9p\u00f4t</div></div>";
+  } else if(_depotView==="list"){
+    h+="<div class=\"lib-list stagger\">"+auDepot.map(function(s){return depotRowHTML(s,"ready");}).join("")+"</div>";
   } else {
     auDepot.forEach(function(s){
       h+="<div class=\"depot-card\" data-id=\""+s.id+"\">";
@@ -5101,6 +5124,8 @@ function switchTab(t){
 
 /* ═══ MES APPROS — page d\u00e9di\u00e9e (les appros en cours de l'utilisateur) ═══ */
 var _maFilter="cours"; // cours | brouillons | toutes
+var _depotView="cards"; // cards | list — même bascule que Mes appros, pour le chef dépôt
+var _maView="cards"; // cards | list — bascule demandée par Su pour condenser sur mobile
 var _maSearch=""; // recherche propre à Mes appros (Su : "ça manque d'une barre de recherche dans cette bibliothèque")
 function setMaFilter(f){_maFilter=f;renderMesAppros();}
 /* Ouvre directement la page « Mes appros » sur le filtre Brouillons. */
@@ -5131,6 +5156,19 @@ function goMaStatut(f){
   _maFilter=f;currentTab="mes";cur=null;
   if(typeof setActiveNav==="function")setActiveNav("btn-home");
   renderMesAppros();
+}
+/* Ligne compacte pour "Mes appros" (Su : "je trouve qu'on scrolle beaucoup...
+   pouvoir les condenser") — réutilise exactement les mêmes classes que la
+   liste de la Bibliothèque (.lib-row), pas de nouveau CSS à maintenir. */
+function maRowHTML(s){
+  var col=_condColor(s.conducteur||s.chargeAffaires||"");
+  var n=0;["consommables","fournitures","outillage"].forEach(function(k){(s[k]||[]).forEach(function(r){if(r&&String(r.designation||"").trim())n++;});});
+  var h="<div class=\"lib-row\" onclick=\"openFromLib('"+s.id+"')\">";
+  h+="<span class=\"lib-row-dot\" style=\"background:"+col+"\" title=\""+esc(s.conducteur||s.chargeAffaires||"Sans conducteur")+"\"></span>";
+  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans nom")+"</span>"+(s.draft?"<i class=\"ti ti-file-pencil\" style=\"color:#7C3AED;font-size:12px;flex-shrink:0\" title=\"Brouillon\"></i>":"")+"</div><div class=\"lib-row-sub\">"+esc(s.conducteur||s.chargeAffaires||"\u2014")+" \u00b7 "+n+" article"+(n>1?"s":"")+(s.clientSite?" \u00b7 "+esc(s.clientSite):"")+"</div></div>";
+  h+="<span class=\"lib-row-rate\">"+statutBadge(s.draft?"en_attente":s.statut)+"</span>";
+  h+="</div>";
+  return h;
 }
 function renderMesAppros(){
   if(typeof _mountScanFab==="function")_mountScanFab();
@@ -5168,6 +5206,7 @@ function renderMesAppros(){
   h+="<button class=\"ma-chip liv ma-chip-rd"+(_maFilter==="rendu"?" on":"")+"\" onclick=\"setMaFilter('rendu')\"><i class=\"ti ti-package-import\"></i> Rendu au d\u00e9p\u00f4t <b>"+rendus.length+"</b></button>";
   h+="<button class=\"ma-chip liv"+(_maFilter==="brouillons"?" on":"")+"\" onclick=\"setMaFilter('brouillons')\"><i class=\"ti ti-file-pencil\"></i> Brouillons <b>"+brouillons.length+"</b></button>";
   h+="<button class=\"ma-chip liv"+(_maFilter==="toutes"?" on":"")+"\" onclick=\"setMaFilter('toutes')\"><i class=\"ti ti-list\"></i> Toutes <b>"+mine.filter(function(s){return s.statut!=="sortie";}).length+"</b></button>";
+  h+="<div class=\"lib-view-tog\" style=\"margin-left:auto\"><button class=\""+(_maView==="cards"?"on":"")+"\" onclick=\"_maView='cards';renderMesAppros()\" title=\"Vue cartes\"><i class=\"ti ti-layout-grid\"></i></button><button class=\""+(_maView==="list"?"on":"")+"\" onclick=\"_maView='list';renderMesAppros()\" title=\"Vue liste, plus condens\u00e9e\"><i class=\"ti ti-list\"></i></button></div>";
   h+="</div>";
   h+="<div class=\"lib-searchbox ma-searchbox\"><i class=\"ti ti-search\"></i><input class=\"lib-search\" type=\"search\" placeholder=\"Rechercher dans mes appros : chantier, client, N\u00b0 affaire, article...\" value=\""+esc(_maSearch||"")+"\" oninput=\"_maSearch=this.value;renderMesAppros()\"/></div>";
 
@@ -5189,6 +5228,9 @@ function renderMesAppros(){
   } else {
     var order={en_attente:0,prete:1,sur_chantier:2,rendu:3};
     list.sort(function(a,b){return (order[a.statut]||9)-(order[b.statut]||9);});
+    if(_maView==="list"){
+      h+="<div class=\"lib-list stagger\">"+list.map(maRowHTML).join("")+"</div>";
+    } else {
     h+="<div class=\"ma-grid stagger\">";
     list.forEach(function(s){
       var col=_condColor(s.conducteur||s.chargeAffaires||"");
@@ -5204,6 +5246,7 @@ function renderMesAppros(){
       h+="</div></div>";
     });
     h+="</div>";
+    }
   }
   h+="</div></div>";
   m.innerHTML=h;
@@ -11253,7 +11296,26 @@ function maybeAutoTour(){
   try{if(localStorage.getItem(_tutoAllDoneKey())==="1")return;}catch(e){}
   // 1ère connexion : on lance le module "bases" après stabilisation de l'UI
   try{if(_tutoModuleDone("bases"))return;}catch(e){}
-  setTimeout(function(){if(document.getElementById("app")&&document.getElementById("app").style.display!=="none")startTutoModule("bases");},800);
+  /* Su : ne plus forcer le tuto direct — demander d'abord, et préciser qu'on
+     peut le faire à tout moment. Ne redemande plus ensuite, qu'on ait dit oui
+     ou non : la personne sait désormais que ça existe et où le retrouver. */
+  try{if(localStorage.getItem(_tutoPromptedKey())==="1")return;}catch(e){}
+  setTimeout(function(){if(document.getElementById("app")&&document.getElementById("app").style.display!=="none")_showTutoPrompt();},800);
+}
+function _tutoPromptedKey(){return "appro_tuto_prompted_"+((currentUser&&currentUser.id)||"u");}
+function _showTutoPrompt(){
+  try{localStorage.setItem(_tutoPromptedKey(),"1");}catch(e){}
+  var ov=_tourOverlay();ov.classList.add("on");
+  var body="<div class=\"tour-w-ic\" style=\"background:linear-gradient(135deg,var(--accent,#6D28D9),var(--accent-2,#7C3AED))\"><i class=\"ti ti-compass\"></i></div>"+
+    "<h2>Faire une petite visite guidée ?</h2>"+
+    "<p>Deux minutes pour découvrir les bases — vous pourrez toujours la refaire ou la sauter plus tard depuis le bouton d'aide.</p>"+
+    "<div class=\"tour-w-btns\"><button class=\"tour-w-skip\" onclick=\"_declineTutoPrompt()\">Non merci</button>"+
+    "<button class=\"tour-w-go\" onclick=\"startTutoModule('bases')\"><i class=\"ti ti-player-play\" style=\"font-size:14px\"></i> Oui, montrez-moi</button></div>";
+  ov.innerHTML="<div class=\"tour-scrim\"></div><div class=\"tour-welcome\"><div class=\"tour-w-card\"><button class=\"tour-skip-x\" onclick=\"_declineTutoPrompt()\"><i class=\"ti ti-x\"></i></button>"+body+"</div></div>";
+}
+function _declineTutoPrompt(){
+  var ov=document.getElementById("tour-ov");if(ov){ov.classList.remove("on");ov.innerHTML="";}
+  toast("Vous pourrez suivre la visite guidée depuis le bouton d'aide, à tout moment","ti-info-circle");
 }
 /* Affich\u00e9 le temps que les donn\u00e9es arrivent du serveur, \u00e0 la toute premi\u00e8re
    connexion : \u00e9vite que l'\u00e9cran reste blanc et fasse croire \u00e0 un blocage. Il est
