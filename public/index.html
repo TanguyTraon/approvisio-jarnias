@@ -750,6 +750,8 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
 .dl-banner{flex-shrink:0;padding:10px 16px;background:#FFFBEB;border-bottom:1px solid #FDE68A}
 .dl-row{display:flex;align-items:center;gap:9px;font-size:13px;color:#92400E;padding:3px 0;cursor:pointer}
+.dl-toggle{display:flex;align-items:center;gap:5px;background:none;border:none;color:#92400E;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:5px 0 0;opacity:.85}
+.dl-toggle:hover{opacity:1;text-decoration:underline}
 .dl-row:hover{color:#B45309;text-decoration:underline}
 .dl-row.over{color:#991B1B}
 .dl-chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:#FEF3C7;color:#92400E;flex-shrink:0}
@@ -4899,18 +4901,29 @@ function depotItemsPreview(s){
 /* Même principe que maRowHTML, pour le dépôt (Su : "c'est lui qui l'utilisera
    le plus souvent"). Garde un bouton d'action rapide (marquer prête/rendue),
    contrairement aux lignes de bibliothèque — c'est le geste le plus fréquent
-   du chef dépôt, pas la peine de le forcer à rouvrir la fiche pour ça. */
+   du chef dépôt, pas la peine de le forcer à rouvrir la fiche pour ça.
+   kind : "prep" | "ready" | "chantier" | "renduFinal" — les 4 sections de
+   l'écran dépôt, pour que la bascule carte/liste couvre vraiment tout
+   l'écran et pas seulement les deux premières (Su : "ça n'a pas de sens"). */
 function depotRowHTML(s,kind){
   var isModif=(kind==="prep"&&s.statut==="prete"&&s.modifPrep);
   var isAddCh=(kind==="prep"&&s.statut==="sur_chantier"&&s.addToPrepare);
-  var dotCol=kind==="prep"?(isAddCh?"#1D4ED8":(isModif?"#7C3AED":"#F59E0B")):"#059669";
-  var sub=kind==="prep"
-    ? ((isAddCh&&s.tlName)?esc(s.tlName):esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.dateAppro&&!isAddCh?" \u00b7 limite "+s.dateAppro:"")
-    : esc(s.conducteur||s.chargeAffaires||"Conducteur ?")+(s.preparedAt?" \u00b7 pr\u00eate depuis "+s.preparedAt:"");
+  var dotCol={prep:isAddCh?"#1D4ED8":(isModif?"#7C3AED":"#F59E0B"),ready:"#059669",chantier:"#1D4ED8",renduFinal:"#EA580C"}[kind];
+  var sub;
+  if(kind==="prep")sub=((isAddCh&&s.tlName)?esc(s.tlName):esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.dateAppro&&!isAddCh?" \u00b7 limite "+s.dateAppro:"");
+  else if(kind==="ready")sub=esc(s.conducteur||s.chargeAffaires||"Conducteur ?")+(s.preparedAt?" \u00b7 pr\u00eate depuis "+s.preparedAt:"");
+  else if(kind==="chantier")sub=(s.tlName?esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.surChantierAt?" \u00b7 pris le "+s.surChantierAt:"");
+  else sub=(s.tlName?"Rendu par "+esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.renduAt?" \u00b7 rendu le "+s.renduAt:"");
   var h="<div class=\"lib-row\" onclick=\"openFromDepot('"+s.id+"')\">";
   h+="<span class=\"lib-row-dot\" style=\"background:"+dotCol+"\" title=\""+(isAddCh?"Ajout \u00e0 pr\u00e9parer":isModif?"D\u00e9j\u00e0 pr\u00eate, modifi\u00e9e":"")+"\"></span>";
   h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span></div><div class=\"lib-row-sub\">"+sub+"</div></div>";
-  h+="<button onclick=\"event.stopPropagation();"+(kind==="prep"?"depotMarkPrete":"depotMarkRendu")+"('"+s.id+"')\" class=\"lib-row-act\" title=\""+(kind==="prep"?"Marquer pr\u00eate":"Marquer rendue")+"\" style=\"color:"+(kind==="prep"?"#059669":"#1D4ED8")+"\"><i class=\"ti "+(kind==="prep"?"ti-package-import":"ti-checks")+"\"></i></button>";
+  if(kind==="prep"||kind==="ready"||kind==="renduFinal"){
+    var act=(kind==="prep")?"depotMarkPrete":"depotMarkRendu";
+    var ic=(kind==="prep")?"ti-package-import":"ti-checks";
+    var col=(kind==="prep")?"#059669":"#1D4ED8";
+    var lbl=(kind==="prep")?"Marquer pr\u00eate":(kind==="ready")?"Marquer rendue":"Valider le rendu";
+    h+="<button onclick=\"event.stopPropagation();"+act+"('"+s.id+"')\" class=\"lib-row-act\" title=\""+lbl+"\" style=\"color:"+col+"\"><i class=\"ti "+ic+"\"></i></button>";
+  }
   h+="</div>";
   return h;
 }
@@ -4999,6 +5012,9 @@ function renderDepot(){
   if(surChantier.length){
     h+="<div style=\"padding:0 24px 18px\">";
     h+="<div style=\"display:flex;align-items:center;gap:8px;padding:10px 14px;background:#DBEAFE;border-radius:10px;margin-bottom:12px\"><i class=\"ti ti-tool\" style=\"font-size:18px;color:#1D4ED8\"></i><span style=\"font-weight:700;font-size:14px;color:#1E40AF\">Sur chantier</span><span style=\"font-size:12px;background:#fff;color:#1D4ED8;padding:2px 9px;border-radius:10px\">"+surChantier.length+"</span></div>";
+    if(_depotView==="list"){
+      h+="<div class=\"lib-list stagger\">"+surChantier.map(function(s){return depotRowHTML(s,"chantier");}).join("")+"</div>";
+    } else {
     h+="<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px\">";
     surChantier.forEach(function(s){
       h+="<div class=\"depot-card\" style=\"border-left:4px solid #1D4ED8;padding-left:9px\" onclick=\"openFromDepot('"+s.id+"')\">";
@@ -5008,7 +5024,9 @@ function renderDepot(){
       h+="<div style=\"display:flex;align-items:center;gap:5px;font-size:11px;color:#1D4ED8;font-weight:600\"><i class=\"ti ti-clock\" style=\"font-size:13px\"></i> En cours chez le Team Leader</div>";
       h+="</div>";
     });
-    h+="</div></div>";
+    h+="</div>";
+    }
+    h+="</div>";
   }
 
   // SECTION RENDU A TRAITER (TL a rendu, depot doit valider)
@@ -5017,6 +5035,9 @@ function renderDepot(){
   if(renduATraiter.length){
     h+="<div style=\"padding:0 24px 18px\">";
     h+="<div style=\"display:flex;align-items:center;gap:8px;padding:10px 14px;background:#FFEDD5;border-radius:10px;margin-bottom:12px\"><i class=\"ti ti-package-export\" style=\"font-size:18px;color:#9A3412\"></i><span style=\"font-weight:700;font-size:14px;color:#9A3412\">Rendu \u00e0 traiter</span><span style=\"font-size:12px;background:#fff;color:#9A3412;padding:2px 9px;border-radius:10px\">"+renduATraiter.length+"</span></div>";
+    if(_depotView==="list"){
+      h+="<div class=\"lib-list stagger\">"+renduATraiter.map(function(s){return depotRowHTML(s,"renduFinal");}).join("")+"</div>";
+    } else {
     h+="<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px\">";
     renduATraiter.forEach(function(s){
       h+="<div class=\"depot-card\" data-id=\""+s.id+"\" style=\"border-left:4px solid #EA580C;padding-left:9px\">";
@@ -5028,7 +5049,9 @@ function renderDepot(){
       h+="<button class=\"depot-btn depot-btn-rendu\" onclick=\"depotMarkRendu('"+s.id+"')\"><i class=\"ti ti-checks\" style=\"font-size:15px\"></i> Valider le rendu (chantier fini)</button>";
       h+="</div>";
     });
-    h+="</div></div>";
+    h+="</div>";
+    }
+    h+="</div>";
   }
 
   // SECTION TERMINEES (collapsible, below the two columns)
@@ -9866,14 +9889,24 @@ function renderDeadlineBanner(){
   if(!urgent.length){el.style.display="none";el.innerHTML="";return;}
   urgent.sort(function(a,b){return daysUntil(a.dateAppro)-daysUntil(b.dateAppro);});
   var h="<div style=\"font-size:12px;font-weight:700;color:#92400E;margin-bottom:5px;display:flex;align-items:center;gap:6px\"><i class=\"ti ti-clock-exclamation\" style=\"font-size:15px\"></i> \u00c9ch\u00e9ance"+(urgent.length>1?"s":"")+" proche"+(urgent.length>1?"s":"")+" \u2014 \u00e0 pr\u00e9parer</div>";
-  urgent.forEach(function(s){
+  /* Su : "au bout de trois lignes, un bouton pour d\u00e9plier" \u2014 \u00e9vite qu'un
+     empilement de retards mange tout l'\u00e9cran, sans rien cacher d\u00e9finitivement. */
+  var LIMIT=3;
+  var shown=_dlBannerOpen?urgent:urgent.slice(0,LIMIT);
+  shown.forEach(function(s){
     var du=daysUntil(s.dateAppro);
     var over=du<0;
     var lbl=over?("En retard de "+Math.abs(du)+" j"):(du===0?"Aujourd'hui":(du===1?"Demain":"Dans "+du+" j"));
     h+="<div class=\"dl-row"+(over?" over":"")+"\" onclick=\"openSheet('"+s.id+"')\"><span class=\"dl-chip"+(over?" over":"")+"\">"+lbl+"</span><span>"+esc(s.nomChantier||"Sans titre")+"</span><span style=\"color:#A8A29E;font-size:12px\">\u2014 "+fd(s.dateAppro)+"</span></div>";
   });
+  if(urgent.length>LIMIT){
+    h+=_dlBannerOpen
+      ? "<button class=\"dl-toggle\" onclick=\"_dlBannerOpen=false;renderDeadlineBanner()\"><i class=\"ti ti-chevron-up\"></i> Replier</button>"
+      : "<button class=\"dl-toggle\" onclick=\"_dlBannerOpen=true;renderDeadlineBanner()\"><i class=\"ti ti-chevron-down\"></i> Voir "+(urgent.length-LIMIT)+" de plus</button>";
+  }
   el.innerHTML=h;el.style.display="block";
 }
+var _dlBannerOpen=false;
 function dashBars(items,color,unit){
   if(!items||!items.length)return "<div style=\"color:#94A3B8;font-size:13px;padding:8px 0\">Aucune donn\u00e9e</div>";
   var max=items[0].count||1;
