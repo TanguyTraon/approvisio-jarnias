@@ -749,8 +749,9 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;background-image:radial-gradient(rgba(15,23,42,.035) 1px,transparent 1.5px);background-size:22px 22px}
 .main-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
 .dl-banner{flex-shrink:0;padding:10px 16px;background:#FFFBEB;border-bottom:1px solid #FDE68A}
-.dl-row{display:flex;align-items:center;gap:9px;font-size:13px;color:#92400E;padding:3px 0;cursor:pointer}
-.dl-toggle{display:flex;align-items:center;gap:5px;background:none;border:none;color:#92400E;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:5px 0 0;opacity:.85}
+.dl-row{display:flex;align-items:center;gap:9px;font-size:13px;color:#92400E;padding:9px 4px;min-height:26px;border-radius:6px;cursor:pointer}
+.dl-row:active{background:rgba(217,119,6,.08)}
+.dl-toggle{display:flex;align-items:center;gap:5px;background:none;border:none;color:#92400E;font-size:11.5px;font-weight:700;font-family:inherit;cursor:pointer;padding:10px 6px;min-height:26px;margin:2px -6px 0;border-radius:6px;opacity:.85}
 .dl-toggle:hover{opacity:1;text-decoration:underline}
 .dl-row:hover{color:#B45309;text-decoration:underline}
 .dl-row.over{color:#991B1B}
@@ -807,6 +808,13 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   .home-pill{flex-shrink:0;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #E8EDF4;border-radius:20px;padding:8px 13px;font-size:11.5px;font-weight:700;color:#334155;min-height:36px;box-shadow:0 1px 2px rgba(15,23,42,.04);white-space:nowrap;cursor:pointer;font-family:inherit}
   .home-pill i{color:#6D28D9;font-size:15px}
   .home-actions .qa-primary{display:none} /* déjà couvert par le CTA de la bannière : pas de doublon */
+  /* .fin et .btn-save : parmi les éléments les plus utilisés de toute
+     l'appli (quasi tous les champs texte, le bouton principal
+     d'enregistrement), et pourtant sans la moindre adaptation tactile —
+     ~29px de haut, sous les 44px recommandés. Seulement sur mobile : le
+     bureau garde son gabarit compact habituel, adapté à la souris. */
+  .fin{padding:12px 11px;font-size:14.5px}
+  .btn-save{padding:13px 20px;min-height:44px;font-size:14px}
   .depot-wrap{flex-direction:column;padding:14px;gap:18px}
   .at thead{display:none}
   .at,.at tbody{display:block;width:100%}
@@ -2045,7 +2053,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .lib-row-name{display:flex;align-items:center;gap:6px;min-width:0;font-size:14px;font-weight:700;color:#0F172A}
 .lib-row-sub{font-size:11px;color:#94A3B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
 .lib-row-rate{font-size:12px;color:#64748B;font-weight:700;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:3px}
-.lib-row-act{background:none;border:none;cursor:pointer;padding:6px;font-size:15px;flex-shrink:0;border-radius:8px;transition:background .15s,transform .12s var(--ease)}
+.lib-row-act{background:none;border:none;cursor:pointer;padding:11px;min-width:40px;min-height:40px;font-size:16px;flex-shrink:0;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:background .15s,transform .12s var(--ease)}
 .lib-row-act:hover{background:#F1F5F9}
 .lib-row-act:active{transform:scale(.88)}
 
@@ -3040,10 +3048,12 @@ document.addEventListener("keydown",function(e){
   if(ov&&ov.dataset.closing)ov=null; // en cours de fermeture (fondu) : ne bloque plus rien
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){
     e.preventDefault();
+    if(document.getElementById("tsg-ov"))return; // signature due : la palette ne doit pas pouvoir s'ouvrir par-dessus, ni contourner le verrou au clavier
     if(ov)closeCmdk();else if(typeof currentUser!=="undefined"&&currentUser)openCmdk();
     return;
   }
   if(ov){
+    if(document.getElementById("tsg-ov")){closeCmdk();return;} // une signature est devenue due pendant que la palette était ouverte : on la referme, priorité au verrou
     if(e.key==="Escape"){closeCmdk();return;}
     if(e.key==="ArrowDown"){e.preventDefault();_cmdkActive=Math.min(_cmdkFiltered.length-1,_cmdkActive+1);_cmdkHighlight();}
     else if(e.key==="ArrowUp"){e.preventDefault();_cmdkActive=Math.max(0,_cmdkActive-1);_cmdkHighlight();}
@@ -9876,12 +9886,26 @@ function daysUntil(iso){
   var t=new Date();t.setHours(0,0,0,0);
   return Math.round((d-t)/86400000);
 }
+/* Vérification dédiée au bandeau d'échéances — plus stricte que _isMyAppro().
+   _isMyAppro() reconnaît aussi un technicien via tlName (utile ailleurs :
+   navigation, droits de suppression), mais la préparation matérielle n'est
+   pas son rôle — Su : "les échéances ne devraient être visibles que par le
+   conducteur qui a créé l'appro ou est mentionné dessus, et le chef de
+   dépôt", explicitement PAS le terrain, même s'il est assigné à l'appro. */
+function _isMyApproDeadline(s){
+  if(!s||!currentUser)return false;
+  if(currentUser.role==="admin"||currentUser.role==="depot")return true;
+  if(currentUser.role!=="conducteur")return false;
+  var me=_stripAccents((currentUser.name||"").toLowerCase());
+  if(!me)return false;
+  return [s.conducteur,s.chargeAffaires].some(function(n){return _stripAccents((n||"").toLowerCase())===me;});
+}
 function renderDeadlineBanner(){
   var el=document.getElementById("deadline-banner");
   if(!el)return;
   var urgent=(sheets||[]).filter(function(s){
     if(s.statut==="prete"||s.statut==="sortie")return false;
-    if(!_isMyAppro(s))return false; // un conducteur ne voit QUE ses propres échéances, pas toute la bibliothèque
+    if(!_isMyApproDeadline(s))return false; // conducteur concerné + dépôt uniquement, jamais le terrain
     var du=daysUntil(s.dateAppro);
     var seuil=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.deadlineDays)?parseInt(CONFIG.deadlineDays,10)||3:3;
     return du!==null&&du<=seuil;
@@ -9897,7 +9921,7 @@ function renderDeadlineBanner(){
     var du=daysUntil(s.dateAppro);
     var over=du<0;
     var lbl=over?("En retard de "+Math.abs(du)+" j"):(du===0?"Aujourd'hui":(du===1?"Demain":"Dans "+du+" j"));
-    h+="<div class=\"dl-row"+(over?" over":"")+"\" onclick=\"openSheet('"+s.id+"')\"><span class=\"dl-chip"+(over?" over":"")+"\">"+lbl+"</span><span>"+esc(s.nomChantier||"Sans titre")+"</span><span style=\"color:#A8A29E;font-size:12px\">\u2014 "+fd(s.dateAppro)+"</span></div>";
+    h+="<div class=\"dl-row"+(over?" over":"")+"\" onclick=\"openSheet('"+s.id+"')\"><span class=\"dl-chip"+(over?" over":"")+"\">"+lbl+"</span><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span><span style=\"color:#A8A29E;font-size:12px;flex-shrink:0\">\u2014 "+fd(s.dateAppro)+"</span></div>";
   });
   if(urgent.length>LIMIT){
     h+=_dlBannerOpen
