@@ -3233,6 +3233,22 @@ function togglePdfTruckDetail(on){
   CONFIG.pdfTruckDetail=!!on;
   saveConfig(function(){toast(on?"Détail camion activé pour l'impression/PDF":"Quantité camion résumée pour l'impression/PDF","ti-truck");});
 }
+/* Rendu (icône + libellé) d'un item de menu "à cocher", et sa bascule
+   ciblée depuis le menu ⋮ : on met à jour uniquement ce bouton, sans fermer
+   le menu ni re-rendre tout le formulaire — sinon chaque clic referme le menu. */
+function _tbToggleInner(ic,label,on){
+  return "<i class=\"ti "+ic+"\"></i> "+label+"<i class=\"ti "+(on?"ti-square-rounded-check":"ti-square-rounded")+"\" style=\"margin-left:auto;color:"+(on?"#15803D":"#CBD5E1")+"\"></i>";
+}
+function _tbTogglePdfKits(){
+  togglePdfKitsDetail(!pdfKitsDetailOn());
+  var el=document.getElementById("tb-pdf-kits-tgl");
+  if(el)el.innerHTML=_tbToggleInner("ti-package","D\u00e9tail des kits (PDF)",pdfKitsDetailOn());
+}
+function _tbTogglePdfTruck(){
+  togglePdfTruckDetail(!pdfTruckDetailOn());
+  var el=document.getElementById("tb-pdf-truck-tgl");
+  if(el)el.innerHTML=_tbToggleInner("ti-truck","D\u00e9tail camion (PDF)",pdfTruckDetailOn());
+}
 var _DEF_STATUT_LABELS={en_attente:"En attente",prete:"Pr\u00eate au d\u00e9p\u00f4t",sur_chantier:"Sur chantier",rendu:"Rendu \u00e0 traiter",sortie:"Chantier fini"};
 var CAT_ITEMS=[
   // SÉCURITÉ / EPI
@@ -3631,6 +3647,28 @@ function starsHTML(val,interactive,id){var h="";for(var i=1;i<=5;i++){var filled
 
 var sheets=[],cur=null,saved=false,aiSug=null,tpl=null,addMode=false,addDate=null,openC={};
 var currentTab="mes";var libSearch="";var currentRole="conducteur";var depotShowDone=false;
+/* Repli du bloc « Informations chantier » (3 cartes) : replié par défaut sur
+   une appro déjà nommée (rien à re-remplir), déplié par défaut sur une appro
+   neuve/brouillon. Réinitialisé à chaque nouvelle ouverture d'appro, conservé
+   entre deux re-rendus de la même appro (ex. après un enregistrement). */
+var _infoOpen=null,_infoOpenFor=null;
+/* Résumé compact des informations chantier, affiché quand le bloc complet
+   (3 cartes) est réduit. Une seule ligne, l'essentiel pour se repérer, avec
+   un bouton pour rouvrir le détail si besoin de le modifier. */
+function _infoSummaryHTML(){
+  var bits=[];
+  if(cur.noAffaire)bits.push("<b>"+esc(cur.noAffaire)+"</b>");
+  if(cur.clientSite)bits.push(esc(cur.clientSite));
+  if(cur.conducteur)bits.push("<i class=\"ti ti-user\" style=\"font-size:11px\"></i> "+esc(cur.conducteur));
+  if(cur.dateAppro)bits.push("<i class=\"ti ti-calendar-due\" style=\"font-size:11px;color:#C2410C\"></i> "+fd(cur.dateAppro));
+  if(cur.tlCamion)bits.push("<i class=\"ti ti-truck\" style=\"font-size:11px;color:#A16207\"></i> "+esc(cur.tlCamion));
+  var line=bits.length?bits.join(" &nbsp;&#183;&nbsp; "):"<span style=\"color:#94A3B8\">Aucune information compl&#233;mentaire</span>";
+  return "<div class=\"card\" style=\"margin-bottom:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap\">"+
+    "<div style=\"flex:1;min-width:0\"><div style=\"font-size:14px;font-weight:700;color:#0F172A;margin-bottom:2px\">"+esc(cur.nomChantier||"Sans titre")+(cur.adresseChantier?" <span style=\"font-weight:400;color:#94A3B8;font-size:12px\">&#183; "+esc(cur.adresseChantier.split("\n")[0])+"</span>":"")+"</div><div style=\"font-size:12.5px;color:#64748B\">"+line+"</div></div>"+
+    "<button type=\"button\" onclick=\"_toggleInfoGrid(true)\" style=\"flex-shrink:0;background:#F5F3FF;border:1px solid #EDE4FF;color:#6D28D9;border-radius:8px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px\"><i class=\"ti ti-pencil\"></i> Modifier</button>"+
+    "</div>";
+}
+function _toggleInfoGrid(open){_infoOpen=open;if(typeof renderForm==="function")renderForm();}
 var libSort="type",libFilterClient="",libFilterCond="",libPeriod="all",libView="cards";
 
 var authToken=null;
@@ -6167,7 +6205,15 @@ function renderForm(){
   var canDelCur=(cur&&cur.id&&typeof sheets!=="undefined"&&sheets.some(function(x){return x.id===cur.id;})&&currentUser&&currentUser.role!=="technicien"&&(currentUser.role==="admin"||currentUser.role==="depot"||!cur._createdBy||_isMyAppro(cur)));
   var delBtn=canDelCur?"<button class=\"tb-more-item danger\" onclick=\"delS(cur.id);closeTbMore()\"><i class=\"ti ti-trash\"></i> Supprimer l'appro</button>":"";
   var pdfItem="<button class=\"tb-more-item\" onclick=\"doPDF();closeTbMore()\"><i class=\"ti ti-file-type-pdf\"></i> Exporter en PDF</button>";
-  var moreItems=pdfItem+shareBtn+delBtn;
+  // Options de d\u00e9tail PDF (kits / camion) : plac\u00e9es directement ici, au moment
+  // o\u00f9 on exporte, plut\u00f4t qu'enfouies dans Gestion des camions \u2014 sinon personne
+  // ne les retrouve. Reste modifiable aussi depuis Gestion des camions.
+  var pdfOptsItems=canManage()?(
+    "<div style=\"border-top:1px solid #F1F5F9;margin:4px 8px\"></div>"+
+    "<button class=\"tb-more-item\" id=\"tb-pdf-kits-tgl\" onclick=\"_tbTogglePdfKits()\">"+_tbToggleInner("ti-package","D\u00e9tail des kits (PDF)",pdfKitsDetailOn())+"</button>"+
+    "<button class=\"tb-more-item\" id=\"tb-pdf-truck-tgl\" onclick=\"_tbTogglePdfTruck()\">"+_tbToggleInner("ti-truck","D\u00e9tail camion (PDF)",pdfTruckDetailOn())+"</button>"
+  ):"";
+  var moreItems=pdfItem+pdfOptsItems+shareBtn+delBtn;
   var moreBtn=moreItems?("<div class=\"tb-more-wrap\"><button class=\"tbi\" title=\"Plus d'actions\" onclick=\"toggleTbMore(event)\"><i class=\"ti ti-dots-vertical\"></i></button><div class=\"tb-more-pop\" id=\"tb-more-pop\">"+moreItems+"</div></div>"):"";
   h+="<div class=\"topbar\"><button class=\"btn-back\" onclick=\"goBack()\"><i class=\"ti ti-arrow-left\" style=\"font-size:13px\"></i> Retour</button><div class=\"tb-right\"><button class=\"tbtxt\" style=\"color:#6D28D9;background:#F5F3FF;border-color:#EDE4FF\" title=\"Catalogue\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Catalogue</button>"+_threadJumpBtn()+addBtn+moreBtn+saveBtn+"</div></div>";
   _mountCpFab();
@@ -6187,6 +6233,10 @@ function renderForm(){
     h+="<div class=\"fg fg-full\" style=\"display:flex;align-items:center;gap:10px;flex-wrap:wrap\"><button type=\"button\" id=\"alo-import-btn\" onclick=\"showAlobeesPicker()\" style=\"display:inline-flex;align-items:center;gap:7px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-cloud-download\" style=\"font-size:16px\"></i> Importer un chantier depuis Alobees</button>"+(cur.alobeesSiteId?" <span class=\"alo-linked\" style=\"font-size:11px;color:#15803D;background:#DCFCE7;padding:4px 9px;border-radius:20px;font-weight:600\"><i class=\"ti ti-link\"></i> Li\u00e9 \u00e0 Alobees</span>":"")+"</div>";
   }
   h+="</div></div>";
+  _autoSujetCheck();
+  var _infoIsNew=!cur.nomChantier||cur.draft;
+  if(_infoOpen===null||_infoOpenFor!==cur.id){_infoOpen=_infoIsNew;_infoOpenFor=cur.id;}
+  if(_infoOpen){
   h+="<div class=\"info-grid\">";
   h+="<div class=\"card info-sec\"><div class=\"card-hd\"><div class=\"card-hd-t\"><span class=\"card-num\">1</span><i class=\"ti ti-building-community\" style=\"font-size:16px;color:#6D28D9\"></i> Chantier <span class=\"card-hint\">Où sont les travaux ?</span></div></div><div class=\"card-fields\">";
   h+="<div class=\"fg\"><label>Nom du chantier</label><input class=\"fin\" id=\"fld-nomChantier\" value=\""+esc(cur.nomChantier)+"\" placeholder=\"Ex: Ravalement fa&#231;ade...\" oninput=\"upF('nomChantier',this.value);_liveValidate('fld-nomChantier',this.value.trim()?true:null)\"/></div>";
@@ -6205,12 +6255,18 @@ h+="";
   h+="<div class=\"card info-sec\"><div class=\"card-hd\"><div class=\"card-hd-t\"><span class=\"card-num\">3</span><i class=\"ti ti-calendar-clock\" style=\"font-size:16px;color:#6D28D9\"></i> Planning &amp; camion <span class=\"card-hint\">Pour quand ?</span></div></div><div class=\"card-fields\">";
   h+="<div class=\"fg\"><label><i class=\"ti ti-calendar-due\" style=\"font-size:12px;vertical-align:-1px\"></i> Date limite d&#39;appro</label><input class=\"fin\" type=\"date\" value=\""+esc(cur.dateAppro)+"\" oninput=\"upF('dateAppro',this.value)\"/></div>";
   h+="<div class=\"fg\"><label><i class=\"ti ti-calendar-event\" style=\"font-size:12px;vertical-align:-1px\"></i> Date d&#233;but de chantier</label><input class=\"fin\" type=\"date\" value=\""+esc(cur.dateChantier)+"\" oninput=\"upF('dateChantier',this.value)\"/></div>";
-  _autoSujetCheck();
   h+=truckSelectorHTML();
   h+="</div></div>";
   h+="</div>"; /* fin .info-grid (2 colonnes sur ordinateur) */
+  if(!_infoIsNew){
+    h+="<div style=\"text-align:right;margin:-4px 0 12px\"><button type=\"button\" onclick=\"_toggleInfoGrid(false)\" style=\"background:none;border:none;color:#6D28D9;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px\"><i class=\"ti ti-chevron-up\"></i> R&#233;duire les informations chantier</button></div>";
+  }
+  } else {
+    h+=_infoSummaryHTML();
+  }
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
+  if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
 h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-star\" style=\"font-size:16px;color:#F59E0B\"></i> Qualit\u00e9 de l'appro</div>"+(avgNote(cur)>0?"<span class=\"card-hd-n\">"+avgNote(cur).toFixed(1)+"/5 \u00b7 "+cur.notes.length+" avis</span>":"")+"</div><div style=\"padding:16px 18px;display:flex;align-items:center;gap:14px\"><div style=\"display:flex;gap:3px\">"+starsHTML(avgNote(cur),true,cur.id)+"</div><span style=\"font-size:12px;color:#94A3B8\">"+(avgNote(cur)>0?"Note moyenne : "+avgNote(cur).toFixed(1)+"/5":"Cliquez sur les \u00e9toiles pour noter")+"</span></div></div>";
   h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-notes\" style=\"font-size:16px;color:#64748B\"></i> Observation</div></div><textarea class=\"obs-ta\" placeholder=\"Remarques, consignes particuli&#232;res...\" rows=\"3\" oninput=\"upF('observation',this.value)\">"+esc(cur.observation)+"</textarea></div>";
@@ -8025,11 +8081,6 @@ function importTrucks(){
 // ═══ PRÊT DE CAMION ENTRE TL (traçabilité) ═══
 
 // ═══ CAMIONS — édition inline dans la vue d'ensemble + camion type ═══
-function _truckStateCompact(t,ti){
-  var ch=(!t.etat||t.etat==="chantier"),d=t.etat==="depot",r=t.etat==="revision";
-  function b(et,ic,col,on,ti2){return "<button onclick=\"setTruckEtat("+ti2+",'"+et+"')\" style=\"padding:4px 6px;border-radius:6px;cursor:pointer;border:1px solid "+(on?col:"#E2E8F0")+";background:"+(on?col:"#fff")+";color:"+(on?"#fff":"#64748B")+"\"><i class=\"ti "+ic+"\" style=\"font-size:13px\"></i></button>";}
-  return b("chantier","ti-cone","#15803D",ch,ti)+" "+b("depot","ti-building-warehouse","#1D4ED8",d,ti)+" "+b("revision","ti-tool","#B91C1C",r,ti)+" <button onclick=\"openTruckSituation("+ti+")\" title=\"Situation du camion\" style=\"padding:4px 6px;border-radius:6px;cursor:pointer;border:1px solid #E2E8F0;background:#fff;color:#6D28D9\"><i class=\"ti ti-settings\" style=\"font-size:13px\"></i></button>";
-}
 function setTruckTl(ti,v){var t=TRUCKS[ti];if(!t)return;v=(v||"").trim();if(!v)return;var before=t.tl||"";if(before&&before!==v)_truckLog(t,"tl","Team Leader : "+before+" \u2192 "+v);t.tl=v;saveTrucks(function(){renderTrucksSettings();});}
 function _truckMatch(t){var q=_stripAccents((window._truckSearch||"").toLowerCase().trim());if(!q)return true;return _stripAccents(((t.tl||"")+" "+(t.plaque||"")+" "+(t.type||"")).toLowerCase()).indexOf(q)>=0;}
 function _truckSearchBar(){return "<div style=\"position:relative;margin-bottom:14px\"><i class=\"ti ti-search\" style=\"position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#94A3B8;font-size:15px\"></i><input id=\"truck-search\" value=\""+esc(window._truckSearch||"")+"\" oninput=\"setTruckSearch(this.value)\" placeholder=\"Rechercher un camion (nom, plaque, type)...\" style=\"width:100%;box-sizing:border-box;padding:9px 12px 9px 33px;border:1px solid #E2E8F0;border-radius:9px;font-size:13px;font-family:inherit\"/></div>";}
@@ -8087,6 +8138,7 @@ function _tvDetail(t,ti,names){
     h+="<div class=\"tpret athome\"><i class=\"ti ti-user-check\"></i> Chez le titulaire<select onchange=\"quickLend("+ti+",this.value)\" class=\"tpret-btn tpret-lend\" style=\"cursor:pointer\">"+opts+"</select></div>";
   }
   h+="<div class=\"tv-acts\">";
+  h+="<button class=\"trev\" style=\"background:#F5F3FF;color:#6D28D9\" onclick=\"openTruckSituation("+ti+")\"><i class=\"ti ti-history\"></i> Situation / Historique</button>";
   h+="<button class=\"trev\" style=\"background:"+_rvs.bg+";color:"+_rvs.c+"\" onclick=\"openTruckRevision("+ti+")\"><i class=\"ti "+_rvs.ic+"\"></i> R\u00e9vision : "+_rvs.label+"</button>";
   h+="<button class=\"tequip\" onclick=\"openTruckEquip("+ti+")\"><i class=\"ti ti-package\"></i> \u00c9quipement ("+nEquip+")</button>";
   h+="<button class=\"tv-del\" onclick=\"delTruck("+ti+")\"><i class=\"ti ti-trash\"></i> Supprimer</button>";
