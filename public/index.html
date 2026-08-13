@@ -9906,6 +9906,12 @@ function renderDeadlineBanner(){
   var urgent=(sheets||[]).filter(function(s){
     if(s.statut==="prete"||s.statut==="sortie")return false;
     if(!_isMyApproDeadline(s))return false; // conducteur concerné + dépôt uniquement, jamais le terrain
+    /* Un brouillon n'a pas encore été poussé en production — le dépôt (et
+       l'admin) n'a rien à en faire, ça ne le concerne pas encore. Mais le
+       conducteur, lui, doit continuer à le voir : si c'est un oubli de ne
+       pas l'avoir envoyé alors que l'échéance approche, c'est justement ce
+       rappel qui lui permet de rectifier le tir. */
+    if(s.draft&&currentUser.role!=="conducteur")return false;
     var du=daysUntil(s.dateAppro);
     var seuil=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.deadlineDays)?parseInt(CONFIG.deadlineDays,10)||3:3;
     return du!==null&&du<=seuil;
@@ -10559,6 +10565,18 @@ function doRegister(){
     .finally(function(){btn.disabled=false;btn.innerHTML="<i class=\"ti ti-user-plus\"></i> Cr\u00e9er mon compte";});
 }
 function doLogout(){
+  /* Fiabilité (audit demandé par Su, "ce qui cafouille de temps en temps") :
+     avant ce correctif, seul le sondage des notifications s'arrêtait à la
+     déconnexion. Le battement de cœur de présence continuait à appeler le
+     serveur toutes les 15s avec un jeton qui vient d'être effacé (échecs
+     silencieux en boucle), le rappel de cloche continuait de tourner à vide,
+     et un tuto en cours restait accroché à des éléments qui vont disparaître
+     au prochain rendu. Sur un appareil partagé, exactement le genre de
+     résidu qui peut faire "cafouiller" la session de la personne suivante. */
+  try{if(typeof _presenceStop==="function")_presenceStop();}catch(e){}
+  if(window._bellTimer){clearInterval(window._bellTimer);window._bellTimer=null;}
+  if(sheetsPollTimer){clearInterval(sheetsPollTimer);sheetsPollTimer=null;}
+  try{if(typeof endTour==="function")endTour();}catch(e){}
   authToken=null;currentUser=null;
   if(notifPollTimer){clearInterval(notifPollTimer);notifPollTimer=null;}
   notifData=[];
@@ -11510,6 +11528,22 @@ function enterApp(){
   fetch("/api/alobees/status",{headers:{Authorization:"Bearer "+authToken}}).then(function(r){return r.json();}).then(function(d){window.alobeesOn=!!(d&&d.configured);if(cur)renderForm();}).catch(function(){window.alobeesOn=false;});
   loadLists().then(function(){if(cur)renderForm();});
   startNotifPolling();
+  startSheetsPolling();
+}
+/* Sondage périodique de la liste des appros (Su : "selon les postes, les
+   chiffres ne se mettent pas à jour") — sans ça, les compteurs "Mes appros"
+   / "Bibliothèque" ne reflètent que l'état connu au dernier chargement ou
+   rafraîchissement manuel. Sur plusieurs postes ouverts en même temps, un
+   changement fait ailleurs n'apparaît jamais tout seul. Réutilise
+   refreshFromServer() telle quelle : mêmes garde-fous (jamais si une appro
+   est ouverte avec des modifications non enregistrées), silencieux (pas de
+   toast toutes les minutes). */
+var sheetsPollTimer=null;
+function startSheetsPolling(){
+  if(sheetsPollTimer)clearInterval(sheetsPollTimer);
+  sheetsPollTimer=setInterval(function(){
+    if(typeof refreshFromServer==="function")refreshFromServer({silent:true});
+  },60000);
 }
 function applyRoleView(){
   var newBtn=document.getElementById("btn-new-sb");
@@ -11615,10 +11649,13 @@ function _admRenderUsers(){
   box.innerHTML=list.map(_admUserRowHTML).join("");
 }
 function genCode(role){
+  var btn=(typeof event!=="undefined"&&event)?event.currentTarget:null;
+  if(btn){if(btn.disabled)return;btn.disabled=true;}
   apiCall("POST","/invites",{role:role}).then(function(r){
+    if(btn)btn.disabled=false;
     renderAdmin();
     toast("Code g\u00e9n\u00e9r\u00e9 : "+r.code,"ti-ticket");
-  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+  }).catch(function(e){if(btn)btn.disabled=false;toast("Erreur: "+e.message,"ti-alert-circle");});
 }
 function copyCode(code){
   try{navigator.clipboard.writeText(code);toast("Code copi\u00e9 : "+code,"ti-copy");}
