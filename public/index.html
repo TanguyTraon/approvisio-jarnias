@@ -36,6 +36,10 @@ body{font-family:'Ubuntu',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
      navigation et à la sélection ; la couleur vive reste dédiée aux statuts. */
   --accent:#123528;
   --accent-2:#123528;
+  /* Sidebar : navy + or, fidèle au mockup "1a" (distinct de --accent, qui
+     reste utilisé ailleurs dans l'appli). */
+  --ink:#0F1E2E;
+  --gold:#E4C878;
 }
 
 /* ============================================================
@@ -612,7 +616,7 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
 .app{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:272px;min-width:272px;background:#fff;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;overflow:hidden}
+.sidebar{width:272px;min-width:272px;background:var(--ink);border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;overflow:hidden}
 /* --- Repli du menu de gauche (desktop uniquement) : plus de place pour l'appro --- */
 .sb-collapse-btn{display:none;position:fixed;top:14px;left:14px;z-index:500;width:34px;height:34px;border-radius:9px;background:#fff;border:1px solid #E2E8F0;color:#64748B;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 10px -4px rgba(15,23,42,.28);font-size:15px}
 .sb-collapse-btn:hover{color:var(--accent,#6D28D9);border-color:var(--accent,#6D28D9)}
@@ -624,10 +628,10 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   .app.sb-collapsed .sb-collapse-btn{display:flex}
 }
 @media(max-width:768px){.sb-collapse-btn{display:none!important}}
-.sb-brand{background:var(--accent,#0F172A);padding:14px 16px;display:flex;align-items:center;gap:10px}
+.sb-brand{background:transparent;border-bottom:1px solid rgba(255,255,255,.08);padding:14px 16px;display:flex;align-items:center;gap:10px}
 .sb-brand img{width:72px;border-radius:8px}
-.sb-brand-name{font-size:13px;font-weight:700;color:#F1F5F9}
-.sb-brand-tag{font-size:10px;color:#64748B;margin-top:1px}
+.sb-brand-name{font-size:13px;font-weight:700;color:#fff}
+.sb-brand-tag{font-size:10px;color:#7C8B9C;margin-top:1px}
 .sb-body{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
 .sb-body>.sb-search,.sb-body>.btn-admin,.sb-body>.btn-new-sb{opacity:0;animation:fadeUp .4s var(--ease) both}
 .sb-body>*:nth-child(1){animation-delay:.02s}
@@ -640,10 +644,11 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .sb-body>*:nth-child(8){animation-delay:.23s}
 .sb-body>*:nth-child(9){animation-delay:.26s}
 .sb-body>*:nth-child(n+10){animation-delay:.29s}
-.sb-search{width:100%;border:1px solid #E2E8F0;border-radius:8px;padding:7px 11px;font-size:13px;color:#1E293B;outline:none;background:#F8FAFC;font-family:inherit}
-.btn-new-sb{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--accent,#1D4ED8),var(--accent-2,#2563EB));border:none;border-radius:10px;padding:11px 12px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:8px;font-family:inherit;box-shadow:0 4px 12px color-mix(in srgb,var(--accent,#1D4ED8) 30%,transparent);transition:transform .12s var(--ease),box-shadow .2s var(--ease),filter .16s var(--ease)}
+.sb-search{width:100%;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 11px;font-size:13px;color:#fff;outline:none;background:rgba(255,255,255,.07);font-family:inherit}
+.sb-search::placeholder{color:#8A9AAB}
+.btn-new-sb{position:relative;overflow:hidden;background:var(--gold);border:none;border-radius:10px;padding:11px 12px;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:8px;font-family:inherit;transition:transform .12s var(--ease),filter .16s var(--ease)}
 .btn-new-sb i{font-size:17px}
-.btn-new-sb:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 8px 20px color-mix(in srgb,var(--accent,#1D4ED8) 38%,transparent)}
+.btn-new-sb:hover{transform:translateY(-2px);filter:brightness(1.06)}
 .btn-new-sb:active{transform:scale(.98)}
 .cat-group{display:flex;flex-direction:column;gap:4px}
 .cat-hd{display:flex;align-items:center;gap:6px;padding:6px 4px;cursor:pointer;user-select:none;border-radius:6px}.cat-hd:hover{background:#F8FAFC}
@@ -890,6 +895,44 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 
 /* --- rangée de stats cliquables --- */
 .home-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+/* --- KPI "à traiter maintenant", fidèle au mockup 1a : une tuile sombre
+   dominante (pas 4 tuiles de même poids) + des tuiles plates pour le reste. --- */
+.home-kpi-row{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:820px){.home-kpi-row{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.home-kpi-row{grid-template-columns:1fr}}
+.home-kpi-hero{background:var(--ink);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px;cursor:pointer;border:none;text-align:left;font-family:inherit;transition:transform .18s var(--ease)}
+.home-kpi-hero:hover{transform:translateY(-2px)}
+.home-kpi-hero-lbl{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--gold);text-transform:uppercase}
+.home-kpi-hero-num{font-size:36px;font-weight:700;color:#fff;line-height:1}
+.home-kpi-hero-sub{font-size:13px;color:#9FADBB}
+.home-kpi{background:#fff;border:1px solid #E4E8ED;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:6px;cursor:pointer;text-align:left;font-family:inherit;transition:transform .18s var(--ease),border-color .18s}
+.home-kpi:hover{transform:translateY(-2px);border-color:#D8DDE3}
+.home-kpi-lbl{font-size:12px;color:#6C7A88}
+.home-kpi-num{font-size:30px;font-weight:700;color:#0F172A;line-height:1}
+/* --- Table "Appros récentes", fidèle au mockup 1a : un vrai tableau triable
+   plutôt que des cartes empilées, avec pastilles de filtre au-dessus. --- */
+.home-filter-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}
+.home-filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.home-filter-pill{font-size:12px;font-weight:500;background:#fff;border:1px solid #D8DDE3;border-radius:20px;padding:5px 12px;cursor:pointer;color:#6C7A88;font-family:inherit}
+.home-filter-pill.active{color:#0F1E2E;border-color:#0F1E2E;font-weight:700}
+.home-table-wrap{background:#fff;border:1px solid #E4E8ED;border-radius:10px;overflow:hidden}
+.home-table-hd,.home-table-row{display:grid;grid-template-columns:96px 1.6fr 1fr 150px 108px;gap:14px;align-items:center}
+.home-table-hd{padding:12px 18px;border-bottom:1px solid #EDF0F3;background:#FAFBFC;font-size:11px;font-weight:700;letter-spacing:.8px;color:#8A96A5;text-transform:uppercase}
+.home-table-row{padding:15px 18px;border-bottom:1px solid #EDF0F3;font-size:13.5px;cursor:pointer;transition:background .15s}
+.home-table-row:last-child{border-bottom:none}
+.home-table-row:hover{background:#FAFBFC}
+.home-table-row.urgent{box-shadow:inset 3px 0 0 #DC2626}
+.home-table-aff{font-weight:700;color:#0F1E2E}
+.home-table-cond{color:#4A5866}
+.home-table-maj{color:#8A96A5;font-size:12px;text-align:right}
+.home-urgent-tag{color:#DC2626;font-size:11px;font-weight:700;margin-left:8px}
+.home-status-pill{font-size:12px;font-weight:500;border-radius:6px;padding:4px 9px;justify-self:start;display:inline-block}
+.home-table-empty{padding:32px 18px;text-align:center;color:#94A3B8;font-size:13px}
+@media(max-width:760px){
+  .home-table-hd{display:none}
+  .home-table-row{grid-template-columns:1fr;gap:4px}
+  .home-table-maj{text-align:left}
+}
 .hstat{position:relative;overflow:hidden;background:#fff;border:1px solid #E8EDF4;border-radius:16px;padding:16px 18px;cursor:pointer;transition:transform .18s var(--ease),box-shadow .2s var(--ease),border-color .18s}
 /* "En retard" (maquette mobile) : se distingue vraiment du lot — fond rouge
    pâle et libellé "voir", pas un chiffre neutre parmi d'autres. */
@@ -2214,16 +2257,16 @@ table.at tr.kit-row td.td-d{position:relative}
 .btn-auth:hover{background:#1E293B}
 .btn-auth:disabled{opacity:.6;cursor:default}
 .auth-hint{font-size:12px;color:#94A3B8;text-align:center;margin-top:14px;line-height:1.5}
-.sb-user{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid #E2E8F0;background:#F8FAFC}
+.sb-user{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);background:transparent}
 .sb-user-info{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 100%}
 /* flex-wrap OBLIGATOIRE : la sidebar est en overflow:hidden. Sans retour à la ligne,
    tout bouton qui ne tient pas est COUPÉ — donc invisible ET incliquable.
    C'est ce qui est arrivé à la déconnexion quand la rangée est passée à 8 boutons
    (8×30 + 7×6 = 282 px pour 244 px utiles). Ne pas remettre nowrap. */
 .sb-user-actions{display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex:1 1 100%;justify-content:flex-end}
-.sb-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
-.sb-user-name{font-size:12px;font-weight:600;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-user-role{font-size:10px;color:#94A3B8}
+.sb-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:var(--gold)!important;color:var(--ink)!important}
+.sb-user-name{font-size:12px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-user-role{font-size:10px;color:#7C8B9C}
 /* M\u00eame gabarit que les autres : la d\u00e9connexion est un bouton comme un autre,
    elle ne doit pas \u00eatre le maillon faible de la rang\u00e9e. */
 /* La d\u00e9connexion n'est PLUS une ic\u00f4ne dans la rang\u00e9e du haut : elle y \u00e9tait le dernier
@@ -2234,20 +2277,20 @@ table.at tr.kit-row td.td-d{position:relative}
    qu'on le cherche (\u00e0 c\u00f4t\u00e9 de son nom), pas en pied de sidebar.
    flex:1 1 100% -> il prend TOUTE une ligne (.sb-user est en flex-wrap:wrap) :
    aucune ic\u00f4ne ne peut le pousser dehors, contrairement \u00e0 l'ancienne 8e ic\u00f4ne. */
-.sb-logout{flex:1 1 100%;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:1px solid #E2E8F0;border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#64748B;cursor:pointer;font-family:inherit;transition:background .16s,color .16s,border-color .16s}
+.sb-logout{flex:1 1 100%;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#C3CDD8;cursor:pointer;font-family:inherit;transition:background .16s,color .16s,border-color .16s}
 .sb-logout i{font-size:15px}
-.sb-logout:hover{background:#FEF2F2;border-color:#FECACA;color:#DC2626}
+.sb-logout:hover{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.3);color:#FCA5A5}
 @media print{.sb-logout{display:none!important}}
 .btn-logout:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
-.btn-admin{position:relative;overflow:hidden;background:transparent;border:none;border-radius:10px;padding:9px 12px 9px 14px;font-size:13.5px;font-weight:600;color:#475569;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:9px;font-family:inherit;transition:background .18s var(--ease),color .18s var(--ease),transform .1s var(--ease)}
-.btn-admin i{color:#94A3B8;transition:color .18s var(--ease);font-size:16px}
-.btn-admin::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:3px;height:60%;border-radius:3px;background:var(--c,#6D28D9);transition:transform .2s var(--spring)}
-.btn-admin:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);color:var(--accent)}
-.btn-admin:hover i{color:var(--accent)}
+.btn-admin{position:relative;overflow:hidden;background:transparent;border:none;border-radius:10px;padding:9px 12px 9px 14px;font-size:13.5px;font-weight:600;color:#C3CDD8;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:9px;font-family:inherit;transition:background .18s var(--ease),color .18s var(--ease),transform .1s var(--ease)}
+.btn-admin i{color:#8A9AAB;transition:color .18s var(--ease);font-size:16px}
+.btn-admin::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:3px;height:60%;border-radius:3px;background:var(--gold);transition:transform .2s var(--spring)}
+.btn-admin:hover{background:rgba(255,255,255,.07);color:#fff}
+.btn-admin:hover i{color:var(--gold)}
 .btn-admin:hover::before{transform:translateY(-50%) scaleY(.7)}
 .btn-admin:active{transform:scale(.98)}
-.btn-admin.active{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent)}
-.btn-admin.active i{color:var(--accent)}
+.btn-admin.active{background:rgba(228,200,120,.14);color:#fff}
+.btn-admin.active i{color:var(--gold)}
 .btn-admin.active::before{transform:translateY(-50%) scaleY(1)}
 .adm-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:600;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .adm-overlay.open{display:flex;animation:jScrimIn .26s var(--ease)}
@@ -2375,10 +2418,10 @@ html.dark .tour-hole{box-shadow:0 0 0 3px #0F172A,0 0 0 6px var(--accent,#6D28D9
    Mélange de deux essais : les icônes sont rangées en 2 petits groupes logiques
    (usage courant / réglages), sur un fond semi-transparent flouté, et le nom de
    chaque action apparaît en douceur au survol au lieu d'une bulle d'aide classique. */
-.hdr-grp{display:flex;gap:2px;background:rgba(255,255,255,.85);border:1px solid rgba(226,232,240,.9);border-radius:11px;padding:3px;box-shadow:0 2px 8px rgba(15,23,42,.05)}
-.hdr-sep{width:1px;height:20px;background:rgba(148,163,184,.4);margin:0 5px;flex-shrink:0}
-.hdr-btn{position:relative;width:28px;height:28px;border:none;background:none;border-radius:8px;color:#64748B;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .22s var(--spring)}
-.hdr-btn:hover{background:rgba(109,40,217,.14);color:#6D28D9;transform:translateY(-2px)}
+.hdr-grp{display:flex;gap:2px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:3px}
+.hdr-sep{width:1px;height:20px;background:rgba(255,255,255,.14);margin:0 5px;flex-shrink:0}
+.hdr-btn{position:relative;width:28px;height:28px;border:none;background:none;border-radius:8px;color:#C3CDD8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .22s var(--spring)}
+.hdr-btn:hover{background:rgba(228,200,120,.16);color:var(--gold);transform:translateY(-2px)}
 .hdr-lbl{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%) translateY(3px);background:#0F172A;color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .18s var(--ease);z-index:200}
 .hdr-btn:hover .hdr-lbl{opacity:1;transform:translateX(-50%) translateY(0)}
 html.dark .hdr-grp{background:rgba(30,41,59,.6);border-color:rgba(71,85,105,.6)}
@@ -3703,6 +3746,7 @@ function starsHTML(val,interactive,id){var h="";for(var i=1;i<=5;i++){var filled
 
 var sheets=[],cur=null,saved=false,aiSug=null,tpl=null,addMode=false,addDate=null,openC={};
 var currentTab="mes";var libSearch="";var currentRole="conducteur";var depotShowDone=false;
+var _homeTableFilter="all"; // "all" | "urgent" | "draft" — pastilles du tableau "Appros récentes"
 /* Repli du bloc « Informations chantier » (3 cartes) : replié par défaut sur
    une appro déjà nommée (rien à re-remplir), déplié par défaut sur une appro
    neuve/brouillon. Réinitialisé à chaque nouvelle ouverture d'appro, conservé
@@ -5715,6 +5759,67 @@ function _isMineSheet(s){
   var noms=[s.conducteur,s.chargeAffaires,s.tlName];
   return noms.some(function(n){return _stripAccents((n||"").toLowerCase())===meN;});
 }
+function timeAgo(iso){
+  if(!iso)return "";
+  try{
+    var d=new Date(iso);
+    if(isNaN(d.getTime()))return "";
+    var diffMs=Date.now()-d.getTime();
+    var mn=Math.floor(diffMs/60000);
+    if(mn<1)return "\u00e0 l'instant";
+    if(mn<60)return "il y a "+mn+" min";
+    var h=Math.floor(mn/60);
+    if(h<24)return "il y a "+h+"h";
+    var j=Math.floor(h/24);
+    if(j===1)return "hier";
+    if(j<7)return j+" jours";
+    return fd(iso);
+  }catch(e){return "";}
+}
+/* --- "Appros récentes" : vrai tableau (fidèle au mockup 1a) au lieu de
+   cartes empilées. Réutilise les vraies couleurs de statut de l'appli
+   (STATUT), pas une palette inventée pour l'occasion. --- */
+function _homeIsUrgent(s){
+  if(s.statut==="prete"||s.statut==="sortie")return false;
+  var du=(typeof daysUntil==="function")?daysUntil(s.dateAppro):null;
+  var seuil=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.deadlineDays)?parseInt(CONFIG.deadlineDays,10)||3:3;
+  return du!==null&&du<=seuil;
+}
+function _homeStatusPillHTML(s){
+  if(s.draft)return "<span class=\"home-status-pill\" style=\"color:#6C7A88;background:#F1F3F6;border:1px dashed #C9D1DA\">Brouillon</span>";
+  var st=(typeof STATUT!=="undefined"&&STATUT[s.statut])?STATUT[s.statut]:{label:s.statut||"\u2014",color:"#6C7A88",bg:"#F1F3F6"};
+  return "<span class=\"home-status-pill\" style=\"color:"+st.color+";background:"+st.bg+"\">"+esc(st.label)+"</span>";
+}
+function setHomeTableFilter(f){_homeTableFilter=f;renderWelcome();}
+function _homeApprosTableHTML(list){
+  var filtered=list.filter(function(s){
+    if(_homeTableFilter==="urgent")return _homeIsUrgent(s);
+    if(_homeTableFilter==="draft")return !!s.draft;
+    return true;
+  });
+  filtered.sort(function(a,b){return (b._updatedAt||b.dateMiseAJour||"").localeCompare(a._updatedAt||a.dateMiseAJour||"");});
+  filtered=filtered.slice(0,12);
+  var pill=function(key,lbl){return "<button class=\"home-filter-pill"+(_homeTableFilter===key?" active":"")+"\" onclick=\"setHomeTableFilter('"+key+"')\">"+lbl+"</button>";};
+  var h="<div class=\"home-filter-row\"><span style=\"font-size:15px;font-weight:700;color:#0F1E2E\">Appros r\u00e9centes</span><div class=\"home-filter-pills\">"+pill("all","Toutes")+pill("urgent","Urgentes")+pill("draft","Brouillons")+"</div></div>";
+  h+="<div class=\"home-table-wrap\">";
+  h+="<div class=\"home-table-hd\"><span>Affaire</span><span>Chantier</span><span>Conducteur</span><span>Statut</span><span style=\"text-align:right\">MAJ</span></div>";
+  if(!filtered.length){
+    h+="<div class=\"home-table-empty\">Aucune appro \u00e0 afficher ici.</div>";
+  } else {
+    filtered.forEach(function(s){
+      var urgent=_homeIsUrgent(s);
+      h+="<div class=\"home-table-row"+(urgent?" urgent":"")+"\" onclick=\"openApproById('"+(s._id||s.id)+"')\">";
+      h+="<span class=\"home-table-aff\">"+esc(s.noAffaire||"\u2014")+"</span>";
+      h+="<span>"+esc(s.nomChantier||"Sans titre")+(urgent?"<span class=\"home-urgent-tag\">URGENT</span>":"")+"</span>";
+      h+="<span class=\"home-table-cond\">"+esc(s.conducteur||s.chargeAffaires||"\u2014")+"</span>";
+      h+=_homeStatusPillHTML(s);
+      h+="<span class=\"home-table-maj\">"+(typeof timeAgo==="function"&&(s._updatedAt||s.dateMiseAJour)?timeAgo(s._updatedAt||s.dateMiseAJour):"\u2014")+"</span>";
+      h+="</div>";
+    });
+  }
+  h+="</div>";
+  return h;
+}
 function renderWelcome(){
   if(typeof _mountScanFab==="function")_mountScanFab();
   /* L'accueil ne sert pas au chef d\u00e9p\u00f4t : son \u00e9cran de travail, c'est la vue d\u00e9p\u00f4t. */
@@ -5775,31 +5880,59 @@ function renderWelcome(){
     var _mae=document.getElementById("main-area");_mae.innerHTML=h;renderList();return;
   }
 
-  // STATS cliquables
+  // STATS cliquables (terrain uniquement : le mockup ne couvre pas cet écran)
   var stat=function(num,lbl,ic,bg,col,onclick,urgent){
     return "<div class=\"hstat liv"+(urgent?" hstat-urgent":"")+"\" onclick=\""+onclick+"\"><div class=\"hstat-top\"><div class=\"hstat-ic\" style=\"background:"+bg+";color:"+col+"\"><i class=\"ti "+ic+"\"></i></div><i class=\"ti ti-chevron-right hstat-arrow\"></i></div><div class=\"hstat-num\" data-count=\""+num+"\">0</div><div class=\"hstat-lbl\">"+lbl+"</div></div>";
   };
   var _isDepot=(currentRole==="depot"||(typeof isAdmin==="function"&&isAdmin()));
   var nEnPrep=mine.filter(function(s){return !s.draft&&s.statut==="en_attente";}).length;
-  h+="<div class=\"home-stats\">";
   if(field){
+    h+="<div class=\"home-stats\">";
     if(nEnRetard)h+=stat(nEnRetard,"En retard — voir","ti-alert-triangle","#FEE2E2","#DC2626","goStatut('')",true);
     h+=stat(nTotal,"Appros suivies","ti-clipboard-list","#EFF6FF","#2563EB","goStatut('')");
     h+=stat(nChantier,"Sur chantier","ti-tool","#EFF2FF","#4F46E5","goStatut('chantier')");
+    h+="</div>";
   } else if(_isDepot){
-    h+=stat(nTotal,"Appros au total","ti-clipboard-list","#EFF6FF","#2563EB","goStatut('')");
-    h+=stat(nPretes,"Pr\u00eates au d\u00e9p\u00f4t","ti-package","#ECFDF5","#059669","goDepotOrList()");
-    h+=stat(nChantier,"Sur chantier","ti-tool","#EFF2FF","#4F46E5","goStatut('chantier')");
-    h+=stat(nATraiter,"\u00c0 traiter","ti-progress-alert","#FFF7ED","#D97706","goDepotOrList()");
+    // Fidèle au mockup 1a : une tuile sombre dominante ("à traiter maintenant"),
+    // pas 4 tuiles de même poids.
+    var _sub1;
+    if(nEnRetard){
+      _sub1=nEnRetard+" en retard"+(nATraiter>nEnRetard?(", "+(nATraiter-nEnRetard)+" autre"+(nATraiter-nEnRetard>1?"s":"")+" \u00e0 traiter"):"");
+    } else if(nATraiter){
+      _sub1=nATraiter+" appro"+(nATraiter>1?"s":"")+" \u00e0 traiter";
+    } else {
+      _sub1="Rien d'urgent pour le moment";
+    }
+    h+="<div class=\"home-kpi-row\">";
+    h+="<button class=\"home-kpi-hero\" onclick=\"goDepotOrList()\"><span class=\"home-kpi-hero-lbl\">\u00c0 traiter maintenant</span><span class=\"home-kpi-hero-num\">"+nATraiter+"</span><span class=\"home-kpi-hero-sub\">"+esc(_sub1)+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goStatut('')\"><span class=\"home-kpi-lbl\">En pr\u00e9paration</span><span class=\"home-kpi-num\">"+nEnPrep+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goDepotOrList()\"><span class=\"home-kpi-lbl\">Pr\u00eates au d\u00e9p\u00f4t</span><span class=\"home-kpi-num\">"+nPretes+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goStatut('chantier')\"><span class=\"home-kpi-lbl\">Sur chantier</span><span class=\"home-kpi-num\">"+nChantier+"</span></button>";
+    h+="</div>";
   } else {
-    /* Conducteur : pas d'"Appros au total", pas d'"\u00c0 traiter" (c'est le job du d\u00e9p\u00f4t). */
-    if(nEnRetard)h+=stat(nEnRetard,"En retard — voir","ti-alert-triangle","#FEE2E2","#DC2626","goMaStatut('preparation')",true);
-    h+=stat(nEnPrep,"En pr\u00e9paration","ti-clock","#FFF7ED","#D97706","goMaStatut('preparation')");
-    h+=stat(nPretes,"Pr\u00eates au d\u00e9p\u00f4t","ti-package","#ECFDF5","#059669","goMaStatut('prete')");
-    h+=stat(nChantier,"Sur chantier","ti-tool","#EFF2FF","#4F46E5","goMaStatut('chantier')");
-    h+=stat(nDrafts,"Brouillons","ti-file-pencil","#F5F3FF","#7C3AED","goDrafts()");
+    /* Conducteur : pas d'"appros au total", pas d'"à traiter" (c'est le job du dépôt).
+       La tuile sombre met en avant ce qui LUI revient : les préparations en cours. */
+    var _sub2;
+    if(nEnRetard){
+      _sub2=nEnRetard+" en retard";
+    } else if(nDrafts){
+      _sub2=nDrafts+" brouillon"+(nDrafts>1?"s":"")+" \u00e0 envoyer";
+    } else {
+      _sub2="Rien d'urgent pour le moment";
+    }
+    h+="<div class=\"home-kpi-row\">";
+    h+="<button class=\"home-kpi-hero\" onclick=\"goMaStatut('preparation')\"><span class=\"home-kpi-hero-lbl\">En pr\u00e9paration</span><span class=\"home-kpi-hero-num\">"+nEnPrep+"</span><span class=\"home-kpi-hero-sub\">"+esc(_sub2)+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goMaStatut('prete')\"><span class=\"home-kpi-lbl\">Pr\u00eates au d\u00e9p\u00f4t</span><span class=\"home-kpi-num\">"+nPretes+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goMaStatut('chantier')\"><span class=\"home-kpi-lbl\">Sur chantier</span><span class=\"home-kpi-num\">"+nChantier+"</span></button>";
+    h+="<button class=\"home-kpi\" onclick=\"goDrafts()\"><span class=\"home-kpi-lbl\">Brouillons</span><span class=\"home-kpi-num\">"+nDrafts+"</span></button>";
+    h+="</div>";
   }
-  h+="</div>";
+
+  // APPROS RÉCENTES — vrai tableau (fidèle au mockup 1a), pas de cartes
+  if(!field){
+    var tableList=sheets.filter(function(s){return _isMineSheet(s);});
+    h+=_homeApprosTableHTML(tableList);
+  }
 
   // ACTIONS RAPIDES
   h+="<div class=\"home-sec-t\">Actions rapides</div>";
