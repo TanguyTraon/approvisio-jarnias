@@ -11,12 +11,15 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="AppROVISIO"/>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F1F5F9;color:#1E293B;font-size:14px}
+body{font-family:'Ubuntu',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F1F5F9;color:#1E293B;font-size:14px}
 
 /* ============================================================
    COUCHE DE BASE — animations & micro-interactions (BRIEF §4)
@@ -26,8 +29,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 :root{
   --ease:cubic-bezier(.22,1,.36,1);      /* ease-out doux, par défaut */
   --spring:cubic-bezier(.34,1.56,.64,1); /* léger rebond, micro-réactions */
-  --accent:#0F172A;                       /* accent par défaut (sobre) */
-  --accent-2:#1E293B;
+  /* Direction 1a (audit design) : la charte Jarnias — vert unique, sans
+     dégradé de teinte — est désormais la base par défaut de l'appli, pas
+     seulement un thème optionnel parmi d'autres. --accent et --accent-2
+     sont volontairement identiques : un seul accent, réservé à la
+     navigation et à la sélection ; la couleur vive reste dédiée aux statuts. */
+  --accent:#123528;
+  --accent-2:#123528;
 }
 
 /* ============================================================
@@ -605,6 +613,17 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 }
 .app{display:flex;height:100vh;overflow:hidden}
 .sidebar{width:272px;min-width:272px;background:#fff;border-right:1px solid #E2E8F0;display:flex;flex-direction:column;overflow:hidden}
+/* --- Repli du menu de gauche (desktop uniquement) : plus de place pour l'appro --- */
+.sb-collapse-btn{display:none;position:fixed;top:14px;left:14px;z-index:500;width:34px;height:34px;border-radius:9px;background:#fff;border:1px solid #E2E8F0;color:#64748B;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 10px -4px rgba(15,23,42,.28);font-size:15px}
+.sb-collapse-btn:hover{color:var(--accent,#6D28D9);border-color:var(--accent,#6D28D9)}
+.sb-fold-btn{background:rgba(255,255,255,.14);border:none;color:#fff;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;opacity:.75}
+.sb-fold-btn:hover{opacity:1;background:rgba(255,255,255,.24)}
+@media(min-width:769px){
+  .sidebar{transition:width .22s ease,min-width .22s ease,opacity .16s ease}
+  .app.sb-collapsed .sidebar{width:0;min-width:0;border-right:none;overflow:hidden;opacity:0;pointer-events:none}
+  .app.sb-collapsed .sb-collapse-btn{display:flex}
+}
+@media(max-width:768px){.sb-collapse-btn{display:none!important}}
 .sb-brand{background:var(--accent,#0F172A);padding:14px 16px;display:flex;align-items:center;gap:10px}
 .sb-brand img{width:72px;border-radius:8px}
 .sb-brand-name{font-size:13px;font-weight:700;color:#F1F5F9}
@@ -634,8 +653,8 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .cat-arr{font-size:11px;color:#CBD5E1;transition:transform .2s}
 .cat-arr.open{transform:rotate(90deg)}
 .cat-cards{display:flex;flex-direction:column;gap:4px;padding-left:6px;border-left:2px solid #F1F5F9}
-.sc{border:1px solid #E2E8F0;border-radius:8px 8px 16px 6px;padding:10px 11px;cursor:pointer;background:#FAFBFF;transition:border-color .15s,transform .2s var(--spring),box-shadow .18s var(--ease),border-radius .25s var(--spring)}
-.sc:hover{border-color:#94A3B8;transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,23,42,.08);border-radius:16px 6px 8px 8px}
+.sc{border:1px solid #E2E8F0;border-radius:10px;padding:10px 11px;cursor:pointer;background:#FAFBFF;transition:border-color .15s,transform .2s var(--spring),box-shadow .18s var(--ease)}
+.sc:hover{border-color:#94A3B8;transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,23,42,.08)}
 .sc:active{transform:scale(.99)}
 .sc.active{border-color:#3B82F6;background:#EFF6FF}
 .sc-name{font-size:13px;font-weight:600;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -680,14 +699,14 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .card-num{width:24px;height:24px;border-radius:50%;background:color-mix(in srgb,var(--accent,#6D28D9) 13%,transparent);color:var(--accent,#6D28D9);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;margin-right:2px}
 .card-hint{font-size:11.5px;color:#94A3B8;font-weight:400;margin-left:4px}
 /* bandeau prochaine étape */
-.next-step{position:sticky;bottom:14px;z-index:29;margin:16px auto 0;max-width:560px;background:linear-gradient(135deg,var(--accent,#6D28D9),var(--accent-2,#7C3AED));color:#fff;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:13px;box-shadow:0 12px 30px -10px color-mix(in srgb,var(--accent,#6D28D9) 60%,transparent)}
-.next-step-ic{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.next-step{position:sticky;bottom:14px;z-index:29;margin:16px auto 0;max-width:560px;background:linear-gradient(135deg,var(--accent,#6D28D9),var(--accent-2,#7C3AED));color:#fff;border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:13px;box-shadow:0 12px 30px -10px color-mix(in srgb,var(--accent,#6D28D9) 60%,transparent)}
+.next-step-ic{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .next-step-ic i{font-size:20px}
 .next-step-txt{flex:1;min-width:0}
 .next-step-t{font-size:11px;font-weight:600;opacity:.8;text-transform:uppercase;letter-spacing:.5px}
 .next-step-d{font-size:14px;font-weight:700;margin-top:1px}
 .next-step-btn{background:#fff;color:var(--accent,#6D28D9);border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0;transition:all .26s var(--spring)}
-.next-step-btn:hover{padding-left:20px;padding-right:20px;border-radius:16px;box-shadow:0 6px 16px -6px rgba(0,0,0,.25);transform:translateY(-2px)}
+.next-step-btn:hover{box-shadow:0 6px 16px -6px rgba(0,0,0,.25);transform:translateY(-2px)}
 .next-step-btn:active{transform:scale(.96)}
 @media print{.appro-steps,.next-step{display:none!important}}
 @media(max-width:640px){.next-step{max-width:none;margin-left:8px;margin-right:8px}.next-step-d{font-size:13px}}
@@ -715,7 +734,21 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
    normale toute seule, sans rien à retoucher ici. */
 .info-grid>.info-sec:nth-child(3):nth-last-child(1){grid-column:1/-1}
 }
-@media print{.info-grid{display:block!important}}
+/* --- Sections d'articles (Consommables/Fournitures/Outillage) côte à côte
+   quand la largeur le permet, typiquement une fois le menu de gauche replié.
+   Une seule colonne tant qu'il n'y a pas la place, jamais de tableau écrasé. */
+.sec-grid{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
+@media(min-width:1500px){
+  .fv{max-width:1560px}
+  .sec-grid{grid-template-columns:1fr 1fr}
+  .info-grid{grid-template-columns:1fr 1fr 1fr}
+  .info-grid>.info-sec:nth-child(3):nth-last-child(1){grid-column:auto}
+}
+@media(min-width:2000px){
+  .fv{max-width:2040px}
+  .sec-grid{grid-template-columns:1fr 1fr 1fr}
+}
+@media print{.info-grid{display:block!important}.sec-grid{display:block!important}}
 .sc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
 .sc-acts{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
 .sc-btn{background:#fff;border:1px solid #E2E8F0;border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;color:#64748B;font-family:inherit;display:inline-flex;align-items:center;gap:3px}
@@ -883,10 +916,10 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 /* --- actions rapides --- */
 .home-sec-t{font-size:12px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.7px;margin:0 2px 12px}
 .home-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:26px}
-.qa{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #E8EDF4;border-radius:24px 12px 24px 12px;padding:18px;cursor:pointer;text-align:left;font-family:inherit;transition:transform .28s var(--spring),box-shadow .25s var(--ease),border-color .18s,border-radius .28s var(--spring)}
-.qa:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.1);border-radius:12px 24px 12px 24px}
+.qa{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #E8EDF4;border-radius:10px;padding:18px;cursor:pointer;text-align:left;font-family:inherit;transition:transform .28s var(--spring),box-shadow .25s var(--ease),border-color .18s}
+.qa:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.1)}
 .qa:active{transform:scale(.98)}
-.qa-ic{width:44px;height:44px;border-radius:50% 50% 50% 10px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:border-radius .28s var(--spring)}
+.qa-ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
 .qa:hover .qa-ic{border-radius:10px 50% 50% 50%}
 .qa-t{font-size:15px;font-weight:700;color:#0F172A}
 .qa-d{font-size:12px;color:#94A3B8;line-height:1.4}
@@ -910,7 +943,7 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 /* état vide accueil */
 /* ═══ Squelette de chargement (\u00e9vite le blanc pendant que les donn\u00e9es arrivent) ═══ */
 .skel-wrap{padding:18px;display:flex;flex-direction:column;gap:10px;max-width:900px;margin:0 auto;width:100%}
-.skel-row{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid #F1F5F9;border-radius:12px 12px 18px 8px;background:#fff}
+.skel-row{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid #F1F5F9;border-radius:10px;background:#fff}
 .skel-box{border-radius:8px;background:linear-gradient(90deg,#F1F5F9 25%,#E8EDF4 37%,#F1F5F9 63%);background-size:400% 100%;animation:shimmer 1.6s ease-in-out infinite}
 @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
 .skel-ic{width:40px;height:40px;flex-shrink:0;border-radius:10px}
@@ -918,7 +951,7 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .skel-l1{height:13px;width:55%}
 .skel-l2{height:10px;width:35%}
 @media(prefers-reduced-motion:reduce){.skel-box{animation:none;background:#EEF1F5}}
-.home-empty{position:relative;overflow:hidden;text-align:center;padding:50px 20px;background:#fff;border:1px dashed #D8E0EA;border-radius:18px 18px 30px 10px}
+.home-empty{position:relative;overflow:hidden;text-align:center;padding:50px 20px;background:#fff;border:1px dashed #D8E0EA;border-radius:10px}
 .home-empty::before{content:"";position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(109,40,217,.08),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-60%);animation:emptyFloat 5s ease-in-out infinite;pointer-events:none}
 .home-empty i{position:relative;font-size:52px;color:#CBD5E1;animation:floaty 3s ease-in-out infinite;display:inline-block}
 .home-empty-t{position:relative;font-size:17px;font-weight:700;color:#334155;margin-top:14px}
@@ -1244,7 +1277,7 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .ui-sec-hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#0F172A;margin-bottom:14px}
 .ui-in{border:1px solid #E2E8F0;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;outline:none;background:#fff}
 /* ═══ PARAMÉTRAGE INTERFACE — DA actuelle ═══ */
-.ui-sec{background:#fff;border:1px solid #E8EDF4;border-radius:16px 16px 24px 10px;padding:0;margin-bottom:14px;box-shadow:0 4px 18px -13px rgba(15,23,42,.4);overflow:hidden;transition:box-shadow .25s var(--ease),border-radius .3s var(--spring)}
+.ui-sec{background:#fff;border:1px solid #E8EDF4;border-radius:10px;padding:0;margin-bottom:14px;overflow:hidden;transition:border-color .18s var(--ease)}
 .ui-sec:hover{box-shadow:0 10px 26px -16px rgba(15,23,42,.45)}
 .ui-sec>*:not(.ui-sec-hd){padding-left:16px;padding-right:16px}
 .ui-sec>*:last-child{padding-bottom:16px}
@@ -1268,8 +1301,8 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 0}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748B}
 .leg-sw{width:12px;height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.1)}
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:14px 14px 22px 8px;overflow:hidden;transition:box-shadow .25s var(--ease),border-color .18s var(--ease),border-radius .3s var(--spring)}
-.card:hover{border-radius:14px 14px 8px 22px;box-shadow:0 6px 18px -10px rgba(15,23,42,.18)}
+.card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;overflow:hidden;transition:border-color .18s var(--ease)}
+.card:hover{border-color:#DDE4EE}
 .fv .card:hover{border-color:#DDE4EE;box-shadow:0 6px 18px rgba(15,23,42,.05)}
 .card-hd{padding:13px 18px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center}
 .card-hd-t{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#0F172A}
@@ -1447,7 +1480,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .cp-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#0F172A}
 .btn-cp-close{background:none;border:1px solid #E2E8F0;border-radius:8px;padding:5px 8px;cursor:pointer;color:#64748B;line-height:1}
 .cp-body{flex:1;padding:14px;display:flex;flex-direction:column;gap:14px}
-.cp-sec{border:1px solid #E2E8F0;border-radius:12px 12px 20px 8px;overflow:hidden;transition:border-radius .3s var(--spring)}
+.cp-sec{border:1px solid #E2E8F0;border-radius:10px;overflow:hidden}
 .cp-sec-hd{background:#F8FAFC;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E2E8F0}
 .cp-sec-title{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:#0F172A;text-transform:uppercase;letter-spacing:.4px}
 .btn-all{background:none;border:none;font-size:11px;color:#6D28D9;cursor:pointer;font-family:inherit;font-weight:600;padding:2px 6px;border-radius:4px}
@@ -1703,8 +1736,8 @@ table.at tr.kit-row td.td-d{position:relative}
 .tk-sec{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#334155;margin:20px 0 9px}
 .tk-sec-n{background:#F1F5F9;color:#64748B;border-radius:20px;padding:1px 9px;font-size:11px}
 .tk-list{display:flex;flex-direction:column;gap:10px}
-.tk-card{position:relative;background:#fff;border:1px solid #E8EDF4;border-left:4px solid var(--ac,#D97706);border-radius:6px 13px 13px 6px;padding:13px 15px;box-shadow:0 4px 16px -12px rgba(15,23,42,.4);transition:transform .22s var(--spring),box-shadow .25s var(--ease),opacity .3s,border-radius .25s var(--spring)}
-.tk-card:hover{transform:translateY(-2px);box-shadow:0 10px 22px -12px rgba(15,23,42,.35);border-radius:6px 18px 18px 6px}
+.tk-card{position:relative;background:#fff;border:1px solid #E8EDF4;border-left:4px solid var(--ac,#D97706);border-radius:10px;padding:13px 15px;transition:transform .22s var(--spring),opacity .3s}
+.tk-card:hover{transform:translateY(-2px)}
 .tk-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(15,23,42,.45)}
 .tk-card.done{background:#FBFCFE;opacity:.9}
 .tk-card.tk-removing{opacity:0;transform:translateX(-24px) scale(.97)}
@@ -1773,7 +1806,7 @@ table.at tr.kit-row td.td-d{position:relative}
 @media(max-width:640px){.cp-fab{right:14px;bottom:16px;padding:14px;border-radius:50%}.cp-fab .cp-fab-t{display:none}}
 @media print{.cp-fab{display:none!important}}
 /* ═══ Fil de discussion ═══ */
-.thread-card{background:#fff;border:1px solid #E2E8F0;border-radius:14px 14px 22px 8px;overflow:hidden;transition:border-radius .3s var(--spring)}
+.thread-card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;overflow:hidden}
 .thread-hd{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid #F1F5F9;font-size:14px;font-weight:700;color:#0F172A}
 .thread-sub{font-size:11.5px;font-weight:500;color:#94A3B8}
 .thread-cnt{margin-left:auto;font-size:11px;font-weight:700;color:#6D28D9;background:#F3EEFF;padding:2px 9px;border-radius:20px;min-width:22px;text-align:center}
@@ -2073,24 +2106,24 @@ table.at tr.kit-row td.td-d{position:relative}
 
 .depot-wrap{display:flex;flex-direction:column;gap:16px;padding:20px 24px}
 .depot-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
-/* Grille sur ordinateur uniquement (Su : "seulement sur ordinateur") — les
-   cartes se placent plusieurs par ligne au lieu de s'empiler une par une,
-   comme la section "Sur chantier" juste en dessous le fait déjà. Les deux
-   sections sont aussi empilées en pleine largeur l'une sur l'autre (plus
-   côte à côte à moitié largeur) pour que cette grille ait vraiment la place
-   de s'étaler — sinon la grille existait déjà mais restait coincée dans une
-   colonne trop étroite pour afficher plus d'une carte par ligne. Mobile
-   garde l'empilement à une seule carte par ligne, plus adapté à un petit
-   écran. */
-/* Seuil volontairement plus bas que le 760px utilisé pour la navigation
-   mobile (menu du bas, etc.) : deux préoccupations différentes. La barre du
-   bas a vraiment besoin d'un écran de taille téléphone. Cette grille, elle,
-   n'a besoin que d'assez de place pour deux cartes de 240px côte à côte —
-   une fenêtre de bureau pas maximisée tombe souvent sous les 760px sans
-   être un téléphone pour autant. */
+/* Sur grand écran, les 3 colonnes (À préparer / Prêtes / Retours) sont vraiment
+   côte à côte, comme un tableau de bord de préparation qu'on lit d'un coup
+   d'œil — plutôt qu'empilées en pleine largeur les unes sous les autres.
+   Chaque colonne garde sa propre grille interne de cartes en dessous de ce
+   seuil, pour ne pas écraser les cartes sur une largeur de colonne trop
+   étroite. Mobile garde l'empilement complet. */
 @media(min-width:560px){
   .depot-col{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));align-items:start;gap:12px}
   .depot-col-hd,.depot-empty{grid-column:1/-1}
+}
+/* Au-delà de 901px, les 3 colonnes (À préparer / Prêtes / Retours) passent
+   côte à côte (règle appliquée plus bas, bloc "DA actuelle"), comme un
+   tableau de bord de préparation qu'on lit d'un coup d'œil, plutôt
+   qu'empilées en pleine largeur les unes sous les autres. Chacune redevient
+   alors une seule sous-colonne de cartes (sinon 3 colonnes de 2 cartes
+   chacune = 6 cartes de front, illisible). Mobile garde l'empilement complet. */
+@media(min-width:901px){
+  .depot-col{max-width:none;grid-template-columns:1fr}
 }
 .depot-col-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14px}
 .depot-col-hd .dch-n{margin-left:auto;font-size:12px;background:rgba(255,255,255,.5);padding:2px 9px;border-radius:10px}
@@ -2111,6 +2144,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .depot-col-hd i{font-size:18px}
 .depot-col-hd.dc-prep{background:linear-gradient(135deg,#FFF7ED,#FFEDD5);color:#9A3412;border:1px solid #FED7AA}
 .depot-col-hd.dc-ready{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);color:#166534;border:1px solid #BBF7D0}
+.depot-col-hd.dc-retour{background:linear-gradient(135deg,#FEF2F2,#FEE2E2);color:#B91C1C;border:1px solid #FECACA}
 .dch-n{margin-left:auto;background:rgba(255,255,255,.75);border-radius:20px;padding:1px 10px;font-size:12px;font-weight:800}
 .depot-card{border:1px solid #E8EDF4;border-radius:14px;padding:14px 15px;box-shadow:0 4px 16px -13px rgba(15,23,42,.4);transition:transform .16s var(--ease),box-shadow .2s}
 .depot-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(15,23,42,.45);border-color:#E2E8F0}
@@ -2118,11 +2152,12 @@ table.at tr.kit-row td.td-d{position:relative}
 .depot-card-sub{font-size:11.5px;color:#94A3B8;margin-top:2px}
 .depot-card-items{background:#F8FAFC;border:1px solid #F1F5F9;border-radius:10px;padding:9px 11px;margin-top:10px;font-size:12.5px;color:#475569;line-height:1.75}
 .depot-btn{width:100%;border:none;border-radius:10px;padding:10px 0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:11px;transition:all .22s var(--spring)}
-.depot-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px -8px rgba(15,23,42,.3);border-radius:14px}
+.depot-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px -8px rgba(15,23,42,.3)}
 .depot-btn:active{transform:scale(.97)}
-.depot-empty{position:relative;overflow:hidden;text-align:center;padding:44px 16px;color:#94A3B8;font-size:13px;background:#fff;border:1px dashed #E2E8F0;border-radius:14px 14px 22px 8px}
+.depot-empty{position:relative;overflow:hidden;text-align:center;padding:44px 16px;color:#94A3B8;font-size:13px;background:#fff;border:1px dashed #E2E8F0;border-radius:10px}
 .depot-empty::before{content:"";position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(109,40,217,.07),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-60%);animation:emptyFloat 5s ease-in-out infinite;pointer-events:none}
 .depot-empty i{position:relative;color:#CBD5E1}
+@media(min-width:901px){.depot-wrap{flex-direction:row}}
 @media(max-width:900px){.depot-wrap{flex-direction:column;padding:4px 12px 30px}.depot-col-hd{position:static}}
 
 .auth-screen{position:fixed;inset:0;background:#0F172A;display:flex;align-items:center;justify-content:center;z-index:3000;flex-direction:column;gap:22px;padding:20px}
@@ -2207,12 +2242,12 @@ table.at tr.kit-row td.td-d{position:relative}
 .btn-admin{position:relative;overflow:hidden;background:transparent;border:none;border-radius:10px;padding:9px 12px 9px 14px;font-size:13.5px;font-weight:600;color:#475569;cursor:pointer;width:100%;text-align:left;display:flex;align-items:center;gap:9px;font-family:inherit;transition:background .18s var(--ease),color .18s var(--ease),transform .1s var(--ease)}
 .btn-admin i{color:#94A3B8;transition:color .18s var(--ease);font-size:16px}
 .btn-admin::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:3px;height:60%;border-radius:3px;background:var(--c,#6D28D9);transition:transform .2s var(--spring)}
-.btn-admin:hover{background:color-mix(in srgb,var(--c,#6D28D9) 9%,transparent);color:var(--c,#334155)}
-.btn-admin:hover i{color:var(--c,#6D28D9)}
+.btn-admin:hover{background:color-mix(in srgb,var(--accent) 9%,transparent);color:var(--accent)}
+.btn-admin:hover i{color:var(--accent)}
 .btn-admin:hover::before{transform:translateY(-50%) scaleY(.7)}
 .btn-admin:active{transform:scale(.98)}
-.btn-admin.active{background:color-mix(in srgb,var(--c,#6D28D9) 13%,transparent);color:var(--c,#334155)}
-.btn-admin.active i{color:var(--c,#6D28D9)}
+.btn-admin.active{background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent)}
+.btn-admin.active i{color:var(--accent)}
 .btn-admin.active::before{transform:translateY(-50%) scaleY(1)}
 .adm-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:600;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .adm-overlay.open{display:flex;animation:jScrimIn .26s var(--ease)}
@@ -2528,10 +2563,12 @@ try{var _amb=localStorage.getItem("appro_amb");if(_amb&&_amb!=="none")document.d
 </div>
 
 <div class="app" id="app" style="display:none">
+  <button class="sb-collapse-btn" id="sb-collapse-btn" onclick="toggleSidebarCollapse()" title="Afficher le menu"><i class="ti ti-layout-sidebar-left-expand"></i></button>
   <aside class="sidebar" id="sidebar">
     <div class="sb-brand">
       <img data-jlogo="1" alt="JARNIAS"/>
-      <div><div class="sb-brand-name">AppROVISIO</div><div class="sb-brand-tag">Les experts de la hauteur</div></div>
+      <div style="flex:1;min-width:0"><div class="sb-brand-name">AppROVISIO</div><div class="sb-brand-tag">Les experts de la hauteur</div></div>
+      <button class="sb-fold-btn" onclick="toggleSidebarCollapse()" title="Replier le menu"><i class="ti ti-layout-sidebar-left-collapse"></i></button>
     </div>
     <div class="sb-user">
       <div class="sb-user-info">
@@ -2577,21 +2614,21 @@ try{var _amb=localStorage.getItem("appro_amb");if(_amb&&_amb!=="none")document.d
     
     <div class="sb-body">
       <input class="sb-search" type="search" id="srch" placeholder="Rechercher dans mes appros..." oninput="renderList()"/>
-      <button class="btn-admin" id="btn-home" onclick="goHome()" style="--c:#475569"><i class="ti ti-home" style="font-size:15px"></i> Accueil</button>
+      <button class="btn-admin" id="btn-home" onclick="goHome()"><i class="ti ti-home" style="font-size:15px"></i> Accueil</button>
       <button class="btn-new-sb" onclick="openNew()"><i class="ti ti-plus" style="font-size:16px"></i> Nouvelle appro</button>
-      <button class="btn-admin" id="btn-biblio" onclick="switchTab('biblio')" style="--c:#15803D"><i class="ti ti-books" style="font-size:15px"></i> Biblioth&#232;que</button>
-      <button class="btn-admin" id="btn-terrain" onclick="renderTerrainDemande()" style="display:none;--c:#1D4ED8"><i class="ti ti-message-report" style="font-size:15px"></i> Demande du terrain</button>
-      <button class="btn-admin" id="btn-admin" onclick="showAdmin()" style="display:none;--c:#DC2626"><i class="ti ti-shield-lock" style="font-size:15px"></i> Administration</button>
-      <button class="btn-admin" id="btn-dash" onclick="renderDashboard()" style="display:none;--c:#1D4ED8"><i class="ti ti-chart-bar" style="font-size:15px"></i> Tableau de bord</button>
-      <button class="btn-admin" id="btn-ui" onclick="renderUISettings()" style="display:none;--c:#6D28D9"><i class="ti ti-adjustments" style="font-size:15px"></i> Param&#233;trage interface</button>
-      <button class="btn-admin" id="btn-alo" onclick="renderAlobeesSettings()" style="display:none;--c:#0E7490"><i class="ti ti-plug-connected" style="font-size:15px"></i> Gestion lien Alobees</button>
-      <button class="btn-admin" id="btn-trucks" onclick="renderTrucksSettings()" style="display:none;--c:#A16207"><i class="ti ti-truck" style="font-size:15px"></i> Gestion des camions</button>
-      <button class="btn-admin" id="btn-cmd" onclick="renderCommandes()" style="display:none;--c:#6D28D9"><i class="ti ti-clipboard-list" style="font-size:15px"></i> Commande</button>
-      <button class="btn-admin" id="btn-annonce" onclick="renderAnnonces()" style="display:none;--c:#BE123C"><i class="ti ti-speakerphone" style="font-size:15px"></i> Annonces</button>
-      <button class="btn-admin" id="btn-tickets" onclick="renderTickets()" style="display:none;--c:#1D4ED8"><i class="ti ti-ticket" style="font-size:15px"></i> <span id="tk-lbl">Demandes dépôt</span></button>
-      <button class="btn-admin" id="btn-pending" onclick="renderPending()" style="--c:#B91C1C"><i class="ti ti-message-report" style="font-size:15px"></i> Messages en attente<span class="pending-badge" id="pending-badge" style="display:none">0</span></button>
-      <button class="btn-admin" id="btn-notifs" onclick="renderNotifSettings()" style="--c:#6D28D9"><i class="ti ti-bell-cog" style="font-size:15px"></i> Notifications</button>
-      <button class="btn-admin" id="btn-perso" onclick="renderPersonnalisation()" style="display:none;--c:#6D28D9"><i class="ti ti-settings" style="font-size:15px"></i> Réglages généraux</button>
+      <button class="btn-admin" id="btn-biblio" onclick="switchTab('biblio')"><i class="ti ti-books" style="font-size:15px"></i> Biblioth&#232;que</button>
+      <button class="btn-admin" id="btn-terrain" onclick="renderTerrainDemande()" style="display:none"><i class="ti ti-message-report" style="font-size:15px"></i> Demande du terrain</button>
+      <button class="btn-admin" id="btn-admin" onclick="showAdmin()" style="display:none"><i class="ti ti-shield-lock" style="font-size:15px"></i> Administration</button>
+      <button class="btn-admin" id="btn-dash" onclick="renderDashboard()" style="display:none"><i class="ti ti-chart-bar" style="font-size:15px"></i> Tableau de bord</button>
+      <button class="btn-admin" id="btn-ui" onclick="renderUISettings()" style="display:none"><i class="ti ti-adjustments" style="font-size:15px"></i> Param&#233;trage interface</button>
+      <button class="btn-admin" id="btn-alo" onclick="renderAlobeesSettings()" style="display:none"><i class="ti ti-plug-connected" style="font-size:15px"></i> Gestion lien Alobees</button>
+      <button class="btn-admin" id="btn-trucks" onclick="renderTrucksSettings()" style="display:none"><i class="ti ti-truck" style="font-size:15px"></i> Gestion des camions</button>
+      <button class="btn-admin" id="btn-cmd" onclick="renderCommandes()" style="display:none"><i class="ti ti-clipboard-list" style="font-size:15px"></i> Commande</button>
+      <button class="btn-admin" id="btn-annonce" onclick="renderAnnonces()" style="display:none"><i class="ti ti-speakerphone" style="font-size:15px"></i> Annonces</button>
+      <button class="btn-admin" id="btn-tickets" onclick="renderTickets()" style="display:none"><i class="ti ti-ticket" style="font-size:15px"></i> <span id="tk-lbl">Demandes dépôt</span></button>
+      <button class="btn-admin" id="btn-pending" onclick="renderPending()"><i class="ti ti-message-report" style="font-size:15px"></i> Messages en attente<span class="pending-badge" id="pending-badge" style="display:none">0</span></button>
+      <button class="btn-admin" id="btn-notifs" onclick="renderNotifSettings()"><i class="ti ti-bell-cog" style="font-size:15px"></i> Notifications</button>
+      <button class="btn-admin" id="btn-perso" onclick="renderPersonnalisation()" style="display:none"><i class="ti ti-settings" style="font-size:15px"></i> Réglages généraux</button>
       <div id="sheets-list"></div>
     </div>
   </aside>
@@ -3188,6 +3225,25 @@ var AP=[
 ];
 var DEPOT_C={bg:"#E2E8F0",left:"#475569",text:"#334155",label:"D\u00e9p\u00f4t"};
 var TECH_C={bg:"#ECFEFF",left:"#0891B2",text:"#155E75",label:"Technicien"};
+var COND_C={bg:"#F5F3FF",left:"#7C3AED",text:"#5B21B6",label:"Conducteur"};
+var RESOLVED_C={bg:"#F8FAFC",left:"#CBD5E1",text:"#94A3B8",label:"Ajout d\u00e9j\u00e0 int\u00e9gr\u00e9"};
+/* Une appro est « déjà faite » (en circulation) dès qu'elle n'est plus un
+   brouillon fraîchement créé et attendant sa première préparation. Sert à
+   déclencher automatiquement la coloration « ajout » du conducteur/admin,
+   sans bouton — exactement comme le fait déjà chaque tape du dépôt/technicien. */
+function _isLiveAppro(){return !!(cur&&!cur.draft&&cur.statut!=="en_attente");}
+/* Une fois que le dépôt a traité les ajouts (ré-préparation, rendu complet),
+   ils passent en gris : ils ont été pris en compte, la couleur du poste ne
+   sert plus qu'à signaler « nouveau, pas encore vu ». Un futur ajout après ce
+   point reprendra la couleur de son poste, normalement. */
+function _resolveAdditions(s){
+  if(!s)return;
+  ["consommables","fournitures","outillage"].forEach(function(k){
+    (s[k]||[]).forEach(function(r){
+      if((r.depotAdded||r.techAdded||r.condAdded)&&!r.addResolved)r.addResolved=true;
+    });
+  });
+}
 var TRUCKS=[];
 var COMMANDES=[];
 var ANNONCES=[];
@@ -3788,13 +3844,13 @@ function mig(s){
   if(!s.dateChantier)s.dateChantier="";
   if(!s.additionDates)s.additionDates=[];
   ["consommables","fournitures","outillage"].forEach(function(k){
-    if(s[k])s[k]=s[k].map(function(r){r=Object.assign({addBatch:null,returned:false,depotAdded:false,techAdded:false,commentaire:""},r);if(r.disponibilite==="\u00c0 commander")r.disponibilite="En commande";return r;});
+    if(s[k])s[k]=s[k].map(function(r){r=Object.assign({addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false,commentaire:""},r);if(r.disponibilite==="\u00c0 commander")r.disponibilite="En commande";return r;});
   });
   return s;
 }
 function persist(){/* remplac\u00e9 par sync serveur */}
 function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
-function mkR(n,q){return{id:uid(),designation:n||"",quantite:q||"",disponibilite:"",commentaire:"",addBatch:null,returned:false,depotAdded:false,techAdded:false};}
+function mkR(n,q){return{id:uid(),designation:n||"",quantite:q||"",disponibilite:"",commentaire:"",addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false};}
 function mkS(){
   return{id:uid(),
     reference:(function(){var n=new Date();var pfx=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.refPrefix)?CONFIG.refPrefix:"REFJA";return pfx+n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0");})(),
@@ -4875,7 +4931,7 @@ function addKit(cat){
     var row=mkR(it.n,it.q||"1");row.kit=cat;
     if(currentRole==="depot")row.depotAdded=true;
     else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
-    if(addMode&&addDate){row.addBatch=addDate;if(!cur.additionDates)cur.additionDates=[];if(cur.additionDates.indexOf(addDate)<0)cur.additionDates.push(addDate);}
+    else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro())row.condAdded=true;
     if(cur[it.sec]&&cur[it.sec].length&&!cur[it.sec][cur[it.sec].length-1].designation)cur[it.sec].splice(cur[it.sec].length-1,1);
     if(!cur[it.sec])cur[it.sec]=[];
     cur[it.sec].push(row);
@@ -4899,11 +4955,7 @@ function insertCp(){
     if(window._cpKit[i])row.kit=window._cpKit[i];
     if(currentRole==="depot"){row.depotAdded=true;}
     else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
-    if(addMode&&addDate){
-      row.addBatch=addDate;
-      if(!cur.additionDates)cur.additionDates=[];
-      if(cur.additionDates.indexOf(addDate)<0)cur.additionDates.push(addDate);
-    }
+    else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro()){row.condAdded=true;}
     var res=_mergeOrPushRow(sec,row);
     if(res.merged)mergedCnt++;
     cnt++;
@@ -5011,6 +5063,9 @@ function renderDepot(){
   // List 2: au depot (prete, sans modif en attente)
   var auDepot=sheets.filter(function(s){return !s.draft&&s.statut==="prete"&&!s.modifPrep;});
   auDepot.sort(function(a,b){return (b.preparedAt||"").localeCompare(a.preparedAt||"");});
+  // List 3: retours à traiter (le TL a rendu, le dépôt doit valider)
+  var renduATraiter=sheets.filter(function(s){return !s.draft&&s.statut==="rendu";});
+  renduATraiter.sort(function(a,b){return (b.renduAt||"").localeCompare(a.renduAt||"");});
 
   var h=_dashHeader("Poste de pilotage \u2014 D\u00e9p\u00f4t","Ce qu'il y a \u00e0 pr\u00e9parer et ce qui est pr\u00eat \u00e0 partir.");
   h+=(typeof dashLiveKPIs==="function"?dashLiveKPIs():"");
@@ -5067,6 +5122,27 @@ function renderDepot(){
   }
   h+="</div>";
 
+  // COLUMN 3 - RETOURS À TRAITER (le TL a rendu, le dépôt doit valider)
+  h+="<div class=\"depot-col stagger\">";
+  h+="<div class=\"depot-col-hd dc-retour\"><i class=\"ti ti-package-export\"></i> Retours<span class=\"dch-n\">"+renduATraiter.length+"</span></div>";
+  if(!renduATraiter.length){
+    h+="<div class=\"depot-empty\"><i class=\"ti ti-truck-return\" style=\"font-size:32px\"></i><div style=\"margin-top:8px\">Aucun retour \u00e0 traiter</div></div>";
+  } else if(_depotView==="list"){
+    h+="<div class=\"lib-list stagger\">"+renduATraiter.map(function(s){return depotRowHTML(s,"renduFinal");}).join("")+"</div>";
+  } else {
+    renduATraiter.forEach(function(s){
+      h+="<div class=\"depot-card\" data-id=\""+s.id+"\" style=\"border-left:4px solid #B91C1C;padding-left:9px\">";
+      h+="<div onclick=\"openFromDepot('"+s.id+"')\">";
+      h+="<div class=\"depot-card-name\">"+esc(s.nomChantier||"Sans titre")+"</div>";
+      h+="<div class=\"depot-card-sub\">"+(s.tlName?"<i class=\"ti ti-user\" style=\"font-size:11px\"></i> Rendu par "+esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.renduAt?" \u00b7 rendu le "+s.renduAt:"")+"</div>";
+      h+="<div class=\"depot-card-items\">"+depotItemsPreview(s)+"</div>";
+      h+="</div>";
+      h+="<button class=\"depot-btn depot-btn-rendu\" onclick=\"depotMarkRendu('"+s.id+"')\"><i class=\"ti ti-checks\" style=\"font-size:15px\"></i> Valider le rendu (chantier fini)</button>";
+      h+="</div>";
+    });
+  }
+  h+="</div>";
+
   h+="</div>";
 
   // SECTION SUR CHANTIER (TL ont pris l'appro)
@@ -5085,31 +5161,6 @@ function renderDepot(){
       h+="<div class=\"depot-card-sub\">"+(s.tlName?"<i class=\"ti ti-user\" style=\"font-size:11px\"></i> "+esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.surChantierAt?" \u00b7 pris le "+s.surChantierAt:"")+"</div>";
       h+="<div class=\"depot-card-items\">"+depotItemsPreview(s)+"</div>";
       h+="<div style=\"display:flex;align-items:center;gap:5px;font-size:11px;color:#1D4ED8;font-weight:600\"><i class=\"ti ti-clock\" style=\"font-size:13px\"></i> En cours chez le Team Leader</div>";
-      h+="</div>";
-    });
-    h+="</div>";
-    }
-    h+="</div>";
-  }
-
-  // SECTION RENDU A TRAITER (TL a rendu, depot doit valider)
-  var renduATraiter=sheets.filter(function(s){return !s.draft&&s.statut==="rendu";});
-  renduATraiter.sort(function(a,b){return (b.renduAt||"").localeCompare(a.renduAt||"");});
-  if(renduATraiter.length){
-    h+="<div style=\"padding:0 24px 18px\">";
-    h+="<div style=\"display:flex;align-items:center;gap:8px;padding:10px 14px;background:#FFEDD5;border-radius:10px;margin-bottom:12px\"><i class=\"ti ti-package-export\" style=\"font-size:18px;color:#9A3412\"></i><span style=\"font-weight:700;font-size:14px;color:#9A3412\">Rendu \u00e0 traiter</span><span style=\"font-size:12px;background:#fff;color:#9A3412;padding:2px 9px;border-radius:10px\">"+renduATraiter.length+"</span></div>";
-    if(_depotView==="list"){
-      h+="<div class=\"lib-list stagger\">"+renduATraiter.map(function(s){return depotRowHTML(s,"renduFinal");}).join("")+"</div>";
-    } else {
-    h+="<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px\">";
-    renduATraiter.forEach(function(s){
-      h+="<div class=\"depot-card\" data-id=\""+s.id+"\" style=\"border-left:4px solid #EA580C;padding-left:9px\">";
-      h+="<div onclick=\"openFromDepot('"+s.id+"')\">";
-      h+="<div class=\"depot-card-name\">"+esc(s.nomChantier||"Sans titre")+"</div>";
-      h+="<div class=\"depot-card-sub\">"+(s.tlName?"<i class=\"ti ti-user\" style=\"font-size:11px\"></i> Rendu par "+esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.renduAt?" \u00b7 rendu le "+s.renduAt:"")+"</div>";
-      h+="<div class=\"depot-card-items\">"+depotItemsPreview(s)+"</div>";
-      h+="</div>";
-      h+="<button class=\"depot-btn depot-btn-rendu\" onclick=\"depotMarkRendu('"+s.id+"')\"><i class=\"ti ti-checks\" style=\"font-size:15px\"></i> Valider le rendu (chantier fini)</button>";
       h+="</div>";
     });
     h+="</div>";
@@ -5161,12 +5212,14 @@ function depotMarkPrete(id){
   if(s.statut==="sur_chantier"&&s.addToPrepare){
     // L'ajout est pr\u00eat : l'appro reste SUR CHANTIER (les gars viennent r\u00e9cup\u00e9rer l'ajout)
     s.addToPrepare=false;
+    _resolveAdditions(s);
     apiCall("PUT","/appros/"+s._id,s).then(function(){
       renderDepot();toast("Ajout pr\u00eat \u2014 \u00e0 r\u00e9cup\u00e9rer sur place","ti-package-import");
     }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
     return;
   }
   s.statut="prete";s.preparedAt=new Date().toLocaleDateString("fr-FR");s.modifPrep=false;
+  _resolveAdditions(s);
   apiCall("PUT","/appros/"+s._id,s).then(function(){
     renderDepot();toast("Appro pr\u00eate au d\u00e9p\u00f4t","ti-package-import");
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
@@ -5181,6 +5234,7 @@ function depotMarkRendu(id){
   ["consommables","fournitures","outillage"].forEach(function(k){
     s[k].forEach(function(r){if(r.designation)r.returned=true;});
   });
+  _resolveAdditions(s);
   apiCall("PUT","/appros/"+s._id,s).then(function(){
     renderDepot();toast("Appro compl\u00e8tement rendue","ti-checks");
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
@@ -5513,9 +5567,9 @@ function takeBaseFromLib(id){
   var s=null;sheets.forEach(function(x){if(x.id===id)s=x;});
   if(!s)return;
   var ns=mkS();
-  ns.consommables=s.consommables.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false});});
-  ns.fournitures=s.fournitures.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false});});
-  ns.outillage=s.outillage.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false});});
+  ns.consommables=s.consommables.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
+  ns.fournitures=s.fournitures.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
+  ns.outillage=s.outillage.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
   ns.typeChantiers=getTypes(s).slice();ns.typeConfirmed=s.typeConfirmed;
   /* Le conducteur par d\u00e9faut, c'est TOUJOURS celui qui \u00e9crit la fiche, jamais
      celui de l'appro copi\u00e9e \u2014 modifiable ensuite si besoin (ex. il la r\u00e9dige
@@ -5604,7 +5658,7 @@ function renderList(){
       var cl={dot:isNone?"#CBD5E1":_condColor(key)};
       var cid="c_"+key.replace(/[^a-z0-9]/gi,"_");
       var isOpen=openC[key]!==false;
-      html+="<div class=\"cat-group\"><div class=\"cat-hd\" onclick=\"togC('"+cid+"','"+key+"')\"><span class=\"cat-dot\" style=\"background:"+cl.dot+"\"></span><span class=\"cat-lbl\">"+label+"</span><span class=\"cat-cnt\">"+list.length+"</span><i class=\"ti ti-chevron-right cat-arr"+(isOpen?" open":"'")+" id=\""+cid+"_a\"></i></div><div class=\"cat-cards stagger\" id=\""+cid+"_c\" style=\"display:"+(isOpen?"flex":"none")+";flex-direction:column;gap:4px\">";
+      html+="<div class=\"cat-group\"><div class=\"cat-hd\" onclick=\"togC('"+cid+"','"+key+"')\"><span class=\"cat-dot\" style=\"background:"+cl.dot+"\"></span><span class=\"cat-lbl\">"+label+"</span><span class=\"cat-cnt\">"+list.length+"</span><i class=\"ti ti-chevron-right cat-arr"+(isOpen?" open":"")+"\" id=\""+cid+"_a\"></i></div><div class=\"cat-cards stagger\" id=\""+cid+"_c\" style=\"display:"+(isOpen?"flex":"none")+";flex-direction:column;gap:4px\">";
       list.forEach(function(s){
         var active=cur&&cur.id===s.id?" active":"";
         var hasAj=s.additionDates&&s.additionDates.length>0;
@@ -5866,9 +5920,12 @@ function tblH(sec,secColor){
     var isRTL=(r.returnedTL===true)&&!isR;
     var isDep=r.depotAdded===true;
     var isTech=r.techAdded===true;
+    var isCond=r.condAdded===true;
+    var isResolved=r.addResolved===true;
     var retCol=isR?"#EF4444":(isRTL?"#EA580C":"");
-    var bg=isR?"#FFF5F5":(isRTL?"#FFF7ED":(isDep?DEPOT_C.bg:(isTech?TECH_C.bg:(ac?ac.bg:""))));
-    var lb=retCol?("3px solid "+retCol):(isDep?"3px solid "+DEPOT_C.left:(isTech?"3px solid "+TECH_C.left:(ac?"3px solid "+ac.left:"none")));
+    var addC=isResolved?RESOLVED_C:(isDep?DEPOT_C:(isTech?TECH_C:(isCond?COND_C:null)));
+    var bg=isR?"#FFF5F5":(isRTL?"#FFF7ED":(addC?addC.bg:(ac?ac.bg:"")));
+    var lb=retCol?("3px solid "+retCol):(addC?"3px solid "+addC.left:(ac?"3px solid "+ac.left:"none"));
     var isKit=!!r.kit;var ks=isKit?_kitStyle(r.kit):null;
     if(isKit&&!bg)bg="#FBFCFE"; /* teinte de kit tr\u00e8s sobre (une seule couleur d'accent : le liser\u00e9) */
     var dLeft=(lb!=="none")?lb:(isKit?("3px solid "+ks.spine):"none");
@@ -5918,11 +5975,6 @@ function tblH(sec,secColor){
     html+=row;
   });
   var addLbl="";
-  if(addMode&&addDate){
-    var ai=(cur.additionDates||[]).indexOf(addDate);
-    var ac=ai>=0?AP[ai%AP.length]:AP[0];
-    addLbl=" <span style=\"font-size:10px;background:"+ac.left+";color:#fff;padding:1px 6px;border-radius:4px\">Ajout "+fdB(addDate)+"</span>";
-  }
   var out="";
   out+="<div class=\"tbl-wrap\">";
   out+="<table class=\"at\" style=\"--sec:"+secColor+"\"><thead><tr>";
@@ -5941,9 +5993,12 @@ function tblH(sec,secColor){
 
 function legH(){
   var dates=cur.additionDates||[];
-  var hasR=[].concat(cur.consommables,cur.fournitures,cur.outillage).some(function(r){return r.returned;});
-  var hasD=[].concat(cur.consommables,cur.fournitures,cur.outillage).some(function(r){return r.depotAdded;});
-  if(!dates.length&&!hasR&&!hasD)return"";
+  var allRows=[].concat(cur.consommables,cur.fournitures,cur.outillage);
+  var hasR=allRows.some(function(r){return r.returned;});
+  var hasD=allRows.some(function(r){return r.depotAdded;});
+  var hasC=allRows.some(function(r){return r.condAdded;});
+  var hasRes=allRows.some(function(r){return r.addResolved;});
+  if(!dates.length&&!hasR&&!hasD&&!hasC&&!hasRes)return"";
   var h="<div class=\"legend\">";
   h+="<span style=\"font-size:11px;color:#94A3B8;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">L&#233;gende :</span>";
   h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:#F8FAFC;border-color:#CBD5E1\"></span> Original</span>";
@@ -5952,10 +6007,11 @@ function legH(){
     h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+c.bg+";border-color:"+c.left+"\"></span> Ajout du "+fdB(d)+" ("+c.label+")</span>";
   });
   if(hasR)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:#FEE2E2;border-color:#FECACA\"></span> Retourn&#233; d&#233;p&#244;t</span>";
-  var hasDep=[].concat(cur.consommables,cur.fournitures,cur.outillage).some(function(r){return r.depotAdded;});
-  if(hasDep)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+DEPOT_C.bg+";border-color:"+DEPOT_C.left+"\"></span> Ajout/modif d&#233;p&#244;t</span>";
-  var hasTech=[].concat(cur.consommables,cur.fournitures,cur.outillage).some(function(r){return r.techAdded;});
-  if(hasTech)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+TECH_C.bg+";border-color:"+TECH_C.left+"\"></span> Ajout/modif technicien</span>";
+  if(hasD)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+DEPOT_C.bg+";border-color:"+DEPOT_C.left+"\"></span> Ajout d&#233;p&#244;t</span>";
+  var hasTech=allRows.some(function(r){return r.techAdded;});
+  if(hasTech)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+TECH_C.bg+";border-color:"+TECH_C.left+"\"></span> Ajout technicien</span>";
+  if(hasC)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+COND_C.bg+";border-color:"+COND_C.left+"\"></span> Ajout conducteur</span>";
+  if(hasRes)h+="<span class=\"leg-item\"><span class=\"leg-sw\" style=\"background:"+RESOLVED_C.bg+";border-color:"+RESOLVED_C.left+"\"></span> Ajout d&#233;j&#224; int&#233;gr&#233;</span>";
   return h+"</div>";
 }
 
@@ -6165,14 +6221,6 @@ function _approNextStepHTML(){
 }
 function renderForm(){
   if(typeof closeSidebar==="function")closeSidebar();
-  var ai=(cur.additionDates||[]).indexOf(addDate);
-  var ac=ai>=0?AP[ai%AP.length]:AP[0];
-  var addBtn=addMode
-    ?"<button class=\"tbtxt\" style=\"color:#fff;background:"+ac.left+";border-color:"+ac.left+"\" title=\"Terminer le mode ajout\" onclick=\"togAdd()\"><i class=\"ti ti-pencil\"></i> Mode Ajout</button>"
-    :"<button class=\"tbtxt\" style=\"color:#15803D;background:#F0FDF4;border-color:#BBF7D0\" title=\"Mode Ajout (lignes dat\u00e9es)\" onclick=\"togAdd()\"><i class=\"ti ti-circle-plus\"></i> Mode Ajout</button>";
-  var addBanner=addMode
-    ?"<div class=\"add-banner\" style=\"background:"+ac.bg+";border-color:"+ac.left+"\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"width:10px;height:10px;border-radius:50%;background:"+ac.left+";flex-shrink:0;display:inline-block\"></span><div><strong style=\"font-size:13px;color:"+ac.text+"\">Mode Ajout actif</strong><div style=\"font-size:11px;color:"+ac.text+";opacity:.8\">Nouvelles lignes en "+ac.label+" &#8212; "+fdB(addDate)+"</div></div></div><button style=\"background:rgba(0,0,0,.12);border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:"+ac.text+"\" onclick=\"togAdd()\">Terminer</button></div>"
-    :"";
   var tplNotice=tpl?"<div class=\"notice\"><i class=\"ti ti-copy\" style=\"font-size:15px\"></i> Bas&#233;e sur <strong style=\"margin-left:3px\">"+esc(tpl)+"</strong> &#8212; l&#39;original n&#39;a pas &#233;t&#233; modifi&#233;</div>":"";
   var _showAuto=!isField()&&(cur.draft||cur.statut==="en_attente"||!cur.statut);
   var autoInd=_showAuto?"<span id=\"autosave-ind\" class=\"autosave-ind\" data-state=\""+(saved?"saved":"dirty")+"\">"+(saved?"<i class=\"ti ti-cloud-check\"></i> Enregistr\u00e9":"<i class=\"ti ti-cloud\"></i> Brouillon")+"</span>":"";
@@ -6188,10 +6236,11 @@ function renderForm(){
   var secs=[{k:"consommables",l:"Consommables",i:"ti-flask",c:"#1D4ED8"},{k:"fournitures",l:"Fournitures",i:"ti-bolt",c:"#B45309"},{k:"outillage",l:"Outillage",i:"ti-tool",c:"#0F766E"}];
   var _totalArts=0;secs.forEach(function(s){_totalArts+=cur[s.k].filter(function(r){return r.designation&&(""+r.designation).trim();}).length;});
   var secH="";
+  var emptyBanner="";
   if(_totalArts===0&&!isField()){
-    secH+="<div class=\"art-empty\"><div class=\"art-empty-ic\"><i class=\"ti ti-package\"></i></div><div class=\"art-empty-t\">Ajoutez votre premier article</div><div class=\"art-empty-d\">Tapez le nom d'un produit dans le tableau ci-dessous (il se complète tout seul), ou ouvrez le catalogue pour piocher dedans.</div><button class=\"art-empty-btn liv\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Ouvrir le catalogue</button></div>";
+    emptyBanner="<div class=\"art-empty\"><div class=\"art-empty-ic\"><i class=\"ti ti-package\"></i></div><div class=\"art-empty-t\">Ajoutez votre premier article</div><div class=\"art-empty-d\">Tapez le nom d'un produit dans le tableau ci-dessous (il se complète tout seul), ou ouvrez le catalogue pour piocher dedans.</div><button class=\"art-empty-btn liv\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Ouvrir le catalogue</button></div>";
   }
-  secH+=secs.map(function(s){
+  secH=emptyBanner+"<div class=\"sec-grid\">"+secs.map(function(s){
     var cnt=cur[s.k].filter(function(r){return r.designation;}).length;
     /* Su : pouvoir décocher tout ce qui a été rendu par erreur, sans repasser
        ligne par ligne. N'apparaît que s'il y a vraiment quelque chose à
@@ -6199,7 +6248,7 @@ function renderForm(){
     var hasRet=cur[s.k].some(function(r){return r.returned||r.returnedTL;});
     var bulkBtn=hasRet?"<button class=\"sec-unret\" onclick=\"event.stopPropagation();togRAllOff('"+s.k+"')\" title=\"Annuler tous les retours de cette section\"><i class=\"ti ti-rotate\"></i> Tout annuler</button>":"";
     return "<div class=\"card sec-card\" style=\"border-top:3px solid "+s.c+"\"><div class=\"card-hd\" style=\"background:"+s.c+"0F\"><div class=\"card-hd-t\" style=\"color:"+s.c+"\"><i class=\"ti "+s.i+"\" style=\"font-size:17px;color:"+s.c+"\"></i> "+s.l+"<span class=\"card-hd-n\" style=\"background:"+s.c+"1A;color:"+s.c+"\">"+cnt+" article"+(cnt!==1?"s":"")+"</span></div>"+bulkBtn+"</div>"+tblH(s.k,s.c)+"</div>";
-  }).join("");
+  }).join("")+"</div>";
 
   var h="<div class=\"fv\">";
   var canDelCur=(cur&&cur.id&&typeof sheets!=="undefined"&&sheets.some(function(x){return x.id===cur.id;})&&currentUser&&currentUser.role!=="technicien"&&(currentUser.role==="admin"||currentUser.role==="depot"||!cur._createdBy||_isMyAppro(cur)));
@@ -6215,10 +6264,10 @@ function renderForm(){
   ):"";
   var moreItems=pdfItem+pdfOptsItems+shareBtn+delBtn;
   var moreBtn=moreItems?("<div class=\"tb-more-wrap\"><button class=\"tbi\" title=\"Plus d'actions\" onclick=\"toggleTbMore(event)\"><i class=\"ti ti-dots-vertical\"></i></button><div class=\"tb-more-pop\" id=\"tb-more-pop\">"+moreItems+"</div></div>"):"";
-  h+="<div class=\"topbar\"><button class=\"btn-back\" onclick=\"goBack()\"><i class=\"ti ti-arrow-left\" style=\"font-size:13px\"></i> Retour</button><div class=\"tb-right\"><button class=\"tbtxt\" style=\"color:#6D28D9;background:#F5F3FF;border-color:#EDE4FF\" title=\"Catalogue\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Catalogue</button>"+_threadJumpBtn()+addBtn+moreBtn+saveBtn+"</div></div>";
+  h+="<div class=\"topbar\"><button class=\"btn-back\" onclick=\"goBack()\"><i class=\"ti ti-arrow-left\" style=\"font-size:13px\"></i> Retour</button><div class=\"tb-right\"><button class=\"tbtxt\" style=\"color:#6D28D9;background:#F5F3FF;border-color:#EDE4FF\" title=\"Catalogue\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Catalogue</button>"+_threadJumpBtn()+moreBtn+saveBtn+"</div></div>";
   _mountCpFab();
   if(typeof _unmountScanFab==="function")_unmountScanFab();
-  h+=tplNotice+addBanner;
+  h+=tplNotice;
   h+=_approStepperHTML();
   h+="<div class=\"since-visit\" id=\"since-visit\" style=\"display:none\"><i class=\"ti ti-history\"></i><span id=\"since-visit-txt\"></span><button onclick=\"markThreadRead()\">Marquer comme vu</button></div>";
   h+="<div class=\"presence-ind\" id=\"presence-ind\" style=\"display:none\"></div>";
@@ -6321,17 +6370,6 @@ function togRAllOff(sec){
   saved=false;renderForm();
   toast(n+" retour"+(n>1?"s":"")+" annul\u00e9"+(n>1?"s":""),"ti-rotate");
   toastUndo("Retours annul\u00e9s",function(){_restoreSections(snap);});
-}
-function togAdd(){
-  addMode=!addMode;
-  if(addMode){
-    addDate=new Date().toISOString();
-    if(!cur.additionDates)cur.additionDates=[];
-    if(cur.additionDates.indexOf(addDate)<0){cur.additionDates.push(addDate);saved=false;}
-    var ai=cur.additionDates.indexOf(addDate);
-    toast("Mode Ajout &#8212; "+(AP[ai%AP.length]||AP[0]).label,"ti-circle-plus");
-  } else toast("Mode Ajout termin&#233;","ti-check");
-  renderForm();
 }
 function togR(sec,i){
   var it=cur[sec][i];
@@ -6444,10 +6482,8 @@ function upR(sec,i,f,v){
       row.depotAdded=true;
     } else if(isField()&&featureOn("tech_signature")){
       row.techAdded=true;_techMarkDirty();
-    } else if(addMode&&addDate&&!row.addBatch&&!row.depotAdded){
-      row.addBatch=addDate;
-      if(!cur.additionDates)cur.additionDates=[];
-      if(cur.additionDates.indexOf(addDate)<0)cur.additionDates.push(addDate);
+    } else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro()&&!row.condAdded){
+      row.condAdded=true;
     }
     // Mise \u00e0 jour visuelle imm\u00e9diate de la ligne sans tout reconstruire
     var tr=document.getElementById("tr_"+sec+"_"+i);
@@ -6456,6 +6492,7 @@ function upR(sec,i,f,v){
       if(row.addBatch){var ai=cur.additionDates.indexOf(row.addBatch);if(ai>=0)ac=AP[ai%AP.length];}
       if(row.depotAdded){tr.style.background=DEPOT_C.bg;var td0=tr.querySelector("td");if(td0)td0.style.borderLeft="3px solid "+DEPOT_C.left;}
       else if(row.techAdded){tr.style.background=TECH_C.bg;var tdT=tr.querySelector("td");if(tdT)tdT.style.borderLeft="3px solid "+TECH_C.left;}
+      else if(row.condAdded){tr.style.background=COND_C.bg;var tdC=tr.querySelector("td");if(tdC)tdC.style.borderLeft="3px solid "+COND_C.left;}
       else if(ac){tr.style.background=ac.bg;var td1=tr.querySelector("td");if(td1)td1.style.borderLeft="3px solid "+ac.left;}
     }
   }
@@ -6486,8 +6523,8 @@ function _rowEnter(sec,i){
 function addR(sec){
   if(!cur)return;var r=mkR();
   if(currentRole==="depot"){r.depotAdded=true;}
-  if(isField()&&featureOn("tech_signature")){r.techAdded=true;_techMarkDirty();}
-  if(addMode&&addDate){r.addBatch=addDate;if(!cur.additionDates)cur.additionDates=[];if(cur.additionDates.indexOf(addDate)<0)cur.additionDates.push(addDate);}
+  else if(isField()&&featureOn("tech_signature")){r.techAdded=true;_techMarkDirty();}
+  else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro()){r.condAdded=true;}
   if(cur.statut==="prete")cur.modifPrep=true;else if(cur.statut==="sur_chantier")cur.addToPrepare=true;
   cur[sec].push(r);renderForm();
   _rowEnter(sec,cur[sec].length-1);
@@ -6597,9 +6634,9 @@ function takeBase(id){
   var s=null;sheets.forEach(function(x){if(x.id===id)s=x;});
   if(!s)return;
   var ns=mkS();
-  ns.consommables=s.consommables.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false});});
-  ns.fournitures=s.fournitures.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false});});
-  ns.outillage=s.outillage.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false});});
+  ns.consommables=s.consommables.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
+  ns.fournitures=s.fournitures.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
+  ns.outillage=s.outillage.map(function(r){return Object.assign({},r,{id:uid(),addBatch:null,returned:false,depotAdded:false,techAdded:false,condAdded:false,addResolved:false});});
   ns.typeChantiers=getTypes(s).slice();ns.typeConfirmed=s.typeConfirmed;
   /* Le conducteur par d&#233;faut, c'est TOUJOURS celui qui &#233;crit la fiche, jamais
      celui de l'appro copi&#233;e. */
@@ -6793,6 +6830,7 @@ function setStatut(st){
   if(isField()&&(st==="sur_chantier"||st==="rendu")&&currentUser.name)cur.tlName=currentUser.name;
   if(isField())_techMarkDirty();
   if(st==="prete"&&!cur.preparedAt)cur.preparedAt=new Date().toLocaleDateString("fr-FR");
+  if(st==="prete"){cur.modifPrep=false;cur.addToPrepare=false;_resolveAdditions(cur);}
   if(st==="en_attente")cur.preparedAt=null;
   if(st==="sur_chantier")cur.surChantierAt=new Date().toLocaleDateString("fr-FR");
   if(st==="rendu")cur.renduAt=new Date().toLocaleDateString("fr-FR");
@@ -6894,8 +6932,9 @@ function buildPZ(s){
       }
       shown++;
       var ai=r.addBatch?dates.indexOf(r.addBatch):-1,ac=ai>=0?AP[ai%AP.length]:null;
-      var rs=ac?"background:"+ac.bg+";border-left:3px solid "+ac.left:(r.kit?"border-left:2px solid #CBD5E1":"");
-      var al=ac?"<span style=\"font-size:9px;background:"+ac.left+";color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px\">"+fdB(r.addBatch)+"</span>":"";
+      var addC=r.addResolved?RESOLVED_C:(r.depotAdded?DEPOT_C:(r.techAdded?TECH_C:(r.condAdded?COND_C:null)));
+      var rs=addC?"background:"+addC.bg+";border-left:3px solid "+addC.left:(ac?"background:"+ac.bg+";border-left:3px solid "+ac.left:(r.kit?"border-left:2px solid #CBD5E1":""));
+      var al=(!addC&&ac)?"<span style=\"font-size:9px;background:"+ac.left+";color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px\">"+fdB(r.addBatch)+"</span>":"";
       var dt=r.disponibilite?"<span style=\"background:"+(DB[r.disponibilite]||"#F1F5F9")+";color:"+(DC[r.disponibilite]||"#64748B")+";padding:2px 6px;border-radius:8px;font-size:10px;font-weight:600\">"+esc(r.disponibilite)+"</span>":"—";
       var qd=(esc(r.quantite)||"—");
       if(r.truckQ){
@@ -6914,7 +6953,14 @@ function buildPZ(s){
   var retH=retTotal>0?"<div style=\"margin-top:8px;border:1px dashed #FCA5A5;background:#FFF5F5;border-radius:8px;padding:9px 13px;font-size:11px;color:#B91C1C;display:flex;align-items:center;gap:8px\"><span style=\"font-size:15px\">&#8617;</span><span><b>"+retTotal+" article"+(retTotal>1?"s":"")+" rendu"+(retTotal>1?"s":"")+" au d&#233;p&#244;t</b> &#8212; d&#233;duit"+(retTotal>1?"s":"")+" du stock, non d&#233;taill&#233;"+(retTotal>1?"s":"")+" ci-dessus.</span></div>":"";
   var tTag="";
   var pTag="";var prioFlag="";var dRow=(s.dateAppro||s.dateChantier)?"<div class=\"pz-bt\">Planning</div><div class=\"pz-dates\"><div class=\"pz-fi\"><label>&#128197; Date limite d&#39;appro</label><span style=\"color:#C2410C\">"+(s.dateAppro?fd(s.dateAppro):"Non d&#233;finie")+"</span></div><div class=\"pz-fi\"><label>&#127959; D&#233;but de chantier</label><span style=\"color:#1D4ED8\">"+(s.dateChantier?fd(s.dateChantier):"Non d&#233;fini")+"</span></div></div>":"";
-  var legH=dates.length?"<div style=\"margin-bottom:8px;padding:6px 10px;border:1px solid #E2E8F0;border-radius:6px;font-size:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap\"><strong>L&#233;gende :</strong>"+dates.map(function(d,i){var c=AP[i%AP.length];return"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+c.bg+";border:1px solid "+c.left+";border-radius:2px\"></span> Ajout "+fdB(d)+" ("+c.label+")</span>";}).join("")+"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:2px\"></span> Retourn&#233; d&#233;p&#244;t</span></div>":"";
+  var _allRowsPZ=[].concat(s.consommables,s.fournitures,s.outillage);
+  var _hasDepPZ=_allRowsPZ.some(function(r){return r.depotAdded;}),_hasTechPZ=_allRowsPZ.some(function(r){return r.techAdded;}),_hasCondPZ=_allRowsPZ.some(function(r){return r.condAdded;}),_hasResPZ=_allRowsPZ.some(function(r){return r.addResolved;});
+  var legH=(dates.length||_hasDepPZ||_hasTechPZ||_hasCondPZ||_hasResPZ)?"<div style=\"margin-bottom:8px;padding:6px 10px;border:1px solid #E2E8F0;border-radius:6px;font-size:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap\"><strong>L&#233;gende :</strong>"+dates.map(function(d,i){var c=AP[i%AP.length];return"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+c.bg+";border:1px solid "+c.left+";border-radius:2px\"></span> Ajout "+fdB(d)+" ("+c.label+")</span>";}).join("")+
+    (_hasDepPZ?"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+DEPOT_C.bg+";border:1px solid "+DEPOT_C.left+";border-radius:2px\"></span> Ajout d&#233;p&#244;t</span>":"")+
+    (_hasTechPZ?"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+TECH_C.bg+";border:1px solid "+TECH_C.left+";border-radius:2px\"></span> Ajout technicien</span>":"")+
+    (_hasCondPZ?"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+COND_C.bg+";border:1px solid "+COND_C.left+";border-radius:2px\"></span> Ajout conducteur</span>":"")+
+    (_hasResPZ?"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+RESOLVED_C.bg+";border:1px solid "+RESOLVED_C.left+";border-radius:2px\"></span> Ajout d&#233;j&#224; int&#233;gr&#233;</span>":"")+
+    "<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:2px\"></span> Retourn&#233; d&#233;p&#244;t</span></div>":"";
   var obsH=s.observation?"<div class=\"pz-sec\"><div class=\"pz-sec-t\">Observation</div><div class=\"pz-obs\">"+esc(s.observation)+"</div></div>":"";
   var camH=s.camionSujet?"<div style=\"margin-bottom:10px;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:8px;padding:9px 13px;font-size:11px;color:#B91C1C;display:flex;align-items:center;gap:8px\"><span style=\"font-size:15px\">&#9888;</span><span><b>Sujet camion</b> &#8212; "+(s.camionSujetNote?esc(s.camionSujetNote):((s.tlCamion||s.tlName)?("le camion de "+esc(s.tlCamion||s.tlName)+" pose probl\u00e8me, solution \u00e0 trouver."):"le technicien en charge n'a peut-\u00eatre pas de camion, solution \u00e0 trouver."))+"</span></div>":"";
   var _qr=s._id?qrDataURL(window.location.origin+"/?appro="+s._id):"";var _qrB=_qr?"<img src=\""+_qr+"\" style=\"width:82px;height:82px;background:#fff;border-radius:8px;padding:3px\" alt=\"QR\"/>":"";return "<div class=\"pz-hd\"><div class=\"pz-hd-l\"><img src=\"data:image/png;base64,"+LB64+"\" alt=\"JARNIAS\"/>"+_qrB+"</div><div class=\"pz-hd-c\"><div class=\"pz-hd-title\">Feuille d&#39;approvisionnement</div><div class=\"pz-hd-sub\">"+(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.tagline?esc(CONFIG.tagline):"Les experts de la hauteur")+"</div><div style=\"margin-top:5px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap\">"+tTag+"</div></div><div class=\"pz-hd-flag\">"+prioFlag+"</div></div><div class=\"pz-ref\"><div class=\"pz-ri\"><div class=\"pz-rl\">R&#233;f&#233;rence</div><div class=\"pz-rv\">"+esc(s.reference)+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Cr&#233;&#233; le</div><div class=\"pz-rv\">"+s.dateCreation+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Mis &#224; jour</div><div class=\"pz-rv\">"+s.dateMiseAJour+"</div></div></div><div class=\"pz-bt\">Informations chantier</div><div class=\"pz-info\"><div class=\"pz-fi\"><label>N&#176; Affaire</label><span>"+(esc(s.noAffaire)||"—")+"</span></div><div class=\"pz-fi\"><label>Charg&#233; d&#39;affaires</label><span>"+(esc(s.chargeAffaires)||"—")+"</span></div><div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Nom du chantier</label><span>"+(esc(s.nomChantier)||"—")+"</span></div>"+(s.tlCamion?"<div class=\"pz-fi\"><label>Team Leader / Camion</label><span>"+esc(s.tlCamion)+"</span></div>":"")+(s.conducteur?"<div class=\"pz-fi\"><label>Conducteur de travaux</label><span>"+esc(s.conducteur)+"</span></div>":"")+(s.clientSite?"<div class=\"pz-fi\"><label>Client / Site</label><span>"+esc(s.clientSite)+"</span></div>":"")+(s.adresseChantier?"<div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Adresse du chantier</label><span style=\"white-space:pre-wrap\">"+esc(s.adresseChantier)+"</span></div>":"")+(s.coordClient?"<div class=\"pz-fi\"><label>Coordonn&#233;es client</label><span style=\"white-space:pre-wrap\">"+esc(s.coordClient)+"</span></div>":"")+"</div>"+camH+dRow+legH+"<div class=\"pz-secwrap\">"+secH+"</div>"+retH+obsH+"<div class=\"pz-foot\"><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Charg&#233; d&#39;affaires</label></div><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Visa client</label></div></div>";
@@ -6957,7 +7003,9 @@ function _bkSections(s){
           qd="<b style=\"color:#15803D\">"+net+"</b><div style=\"font-size:7.5px;color:#A16207;font-weight:600\">\uD83D\uDE9A "+r.truckQ+" au camion</div>";
         }
       }
-      rH+="<tr"+(r.kit?" style=\"padding-left:6px\"":"")+"><td"+(r.kit?" style=\"padding-left:14px\"":"")+">"+esc(r.designation)+"</td><td class=\"q\">"+qd+"</td><td>"+dt+"</td><td style=\"color:#94A3B8\">"+(esc(r.commentaire||"")||"\u2014")+"</td></tr>";
+      var addC=r.addResolved?RESOLVED_C:(r.depotAdded?DEPOT_C:(r.techAdded?TECH_C:(r.condAdded?COND_C:null)));
+      var trStyle=(r.kit?"padding-left:6px;":"")+(addC?"background:"+addC.bg+";border-left:2px solid "+addC.left+";":"");
+      rH+="<tr"+(trStyle?" style=\""+trStyle+"\"":"")+"><td"+(r.kit?" style=\"padding-left:14px\"":"")+">"+esc(r.designation)+"</td><td class=\"q\">"+qd+"</td><td>"+dt+"</td><td style=\"color:#94A3B8\">"+(esc(r.commentaire||"")||"\u2014")+"</td></tr>";
     });
     if(!shown)return;
     out.push({sec:sec,shown:shown,rows:rH});
@@ -10566,6 +10614,23 @@ function toggleNews(){
     }
   }
 }
+/* Repli du menu de gauche, desktop uniquement : pour avoir l'appro en grand.
+   Persiste le choix (comme le mode d'affichage des tableaux) et permet aux
+   cartes de l'appro de se réorganiser côte à côte via le CSS associé. */
+function applySidebarCollapse(){
+  var collapsed=false;
+  try{collapsed=localStorage.getItem("sb_collapsed")==="1";}catch(e){}
+  var app=document.getElementById("app");
+  if(app)app.classList.toggle("sb-collapsed",collapsed);
+}
+function toggleSidebarCollapse(){
+  var app=document.getElementById("app");
+  if(!app)return;
+  var collapsed=!app.classList.contains("sb-collapsed");
+  app.classList.toggle("sb-collapsed",collapsed);
+  try{localStorage.setItem("sb_collapsed",collapsed?"1":"0");}catch(e){}
+}
+if(document.readyState!=="loading")applySidebarCollapse();else document.addEventListener("DOMContentLoaded",applySidebarCollapse);
 function openSidebar(){
   var s=document.getElementById("sidebar"),o=document.getElementById("sb-overlay");
   if(s)s.classList.add("open");if(o)o.classList.add("open");
