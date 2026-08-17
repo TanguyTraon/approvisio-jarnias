@@ -106,6 +106,16 @@ async function logEvent(approId, type, actorName) {
   } catch (e) { /* historique non bloquant */ }
 }
 
+// Quand une appro passe "sur chantier", ses filets suivent automatiquement (Su :
+// "un filet passe au dépôt → sur chantier automatiquement, lié au statut de l'appro").
+// Centralisé ici plutôt que dupliqué dans chaque endroit qui peut faire passer une
+// appro sur chantier (bouton rapide dépôt, fiche complète, bascule libre du statut).
+async function cascadeFiletsToChantier(approId) {
+  try {
+    await pool.query("UPDATE filets SET statut = 'chantier', updated_at = NOW() WHERE appro_id = $1 AND statut != 'chantier'", [approId]);
+  } catch (e) { /* non bloquant : un souci ici ne doit jamais empêcher l'appro elle-même d'être sauvegardée */ }
+}
+
 async function notify(userId, type, title, body, approId, emailSubject, emailHtml) {
   try {
     await pool.query(
@@ -220,6 +230,23 @@ async function initDB() {
       created_at  TIMESTAMP DEFAULT NOW()
     );
 
+    CREATE TABLE IF NOT EXISTS filets (
+      id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      type              VARCHAR(80),
+      largeur           NUMERIC NOT NULL,
+      hauteur           NUMERIC NOT NULL,
+      statut            VARCHAR(20) NOT NULL DEFAULT 'depot',
+      appro_id          UUID,
+      no_affaire        VARCHAR(80),
+      notes             TEXT,
+      is_anticute       BOOLEAN NOT NULL DEFAULT FALSE,
+      date_certification DATE,
+      date_expiration   DATE,
+      created_by        UUID REFERENCES users(id) ON DELETE SET NULL,
+      created_at        TIMESTAMP DEFAULT NOW(),
+      updated_at        TIMESTAMP DEFAULT NOW()
+    );
+
     CREATE TABLE IF NOT EXISTS appro_team_leaders (
       appro_id    UUID,
       user_id     UUID REFERENCES users(id) ON DELETE CASCADE,
@@ -315,6 +342,19 @@ async function initDB() {
   // La signature est passée d'un nom tapé à un vrai tracé (Su) : la table existant déjà
   // en production, CREATE TABLE IF NOT EXISTS ne suffit pas à ajouter la colonne.
   await pool.query(`ALTER TABLE appro_signatures ADD COLUMN IF NOT EXISTS signature_image TEXT;`);
+  // Certification des filets anti-chute (Su : "savoir s'ils sont encore certifiés
+  // ou non, pour les antichute homme") — la table filets existe déjà en
+  // production depuis le tour précédent, il faut donc l'ALTER, pas juste le
+  // CREATE TABLE IF NOT EXISTS qui ne touche pas une table déjà créée.
+  await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS is_anticute BOOLEAN NOT NULL DEFAULT FALSE;`);
+  await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_certification DATE;`);
+  await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_expiration DATE;`);
+  // Fusion des rôles terrain : "team_leader" (comptes créés via lien/QR) n'existe
+  // plus en tant que catégorie séparée, tout devient "technicien". Leur accès
+  // reste inchangé : il dépend désormais de la table appro_team_leaders, pas du
+  // nom du rôle (voir technicienCanAccess). Migration idempotente, sans risque
+  // à rejouer à chaque démarrage.
+  await pool.query(`UPDATE users SET role = 'technicien' WHERE role = 'team_leader';`);
   console.log('Base de données prête.');
 }
 
@@ -535,10 +575,37 @@ app.delete('/api/users/:id', auth, adminOnly, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
 
+// ── ACCÈS TERRAIN (rôle unique "technicien") ───────────────────
+// Historiquement il existait deux rôles côté terrain : "technicien" (inscrit
+// normalement, sans code, accès large filtré côté client par nom) et
+// "team_leader" (créé via un lien/QR, restreint aux appros explicitement
+// rattachées). Les deux sont désormais fondus dans le seul rôle "technicien" :
+// - un technicien inscrit normalement (aucune ligne dans appro_team_leaders)
+//   garde l'accès large historique ;
+// - un technicien venu d'un lien/QR (au moins une ligne dans appro_team_leaders)
+//   reste restreint aux seules appros auxquelles il a été rattaché.
+// Cette table interne garde son nom d'origine ; elle ne représente plus qu'un
+// mécanisme de rattachement, plus une catégorie de compte.
+async function technicienIsRestricted(userId) {
+  const { rows } = await pool.query('SELECT 1 FROM appro_team_leaders WHERE user_id = $1 LIMIT 1', [userId]);
+  return !!rows[0];
+}
+async function technicienCanAccess(userId, approId) {
+  const { rows } = await pool.query(
+    `SELECT
+       EXISTS(SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2) AS linked,
+       EXISTS(SELECT 1 FROM appro_team_leaders WHERE user_id = $2) AS restricted`,
+    [approId, userId]
+  );
+  const r = rows[0];
+  if (!r.restricted) return true; // technicien "ouvert" (inscrit normalement)
+  return r.linked; // technicien "lié" (venu d'un lien/QR) : uniquement ses appros liées
+}
+
 // ── APPROS (partagées, tous rôles connectés) ──────────────────
 app.get('/api/appros', auth, async (req, res) => {
   try {
-    if (req.user.role === 'team_leader') {
+    if (req.user.role === 'technicien' && await technicienIsRestricted(req.user.id)) {
       const { rows } = await pool.query(
         `SELECT a.id, a.data, a.created_by, a.created_at, a.updated_at
          FROM appros a JOIN appro_team_leaders tl ON tl.appro_id = a.id
@@ -552,8 +619,8 @@ app.get('/api/appros', auth, async (req, res) => {
   } catch (e) { res.status(500).json({ error: 'Erreur lecture' }); }
 });
 
-// ── ACC\u00c8S PAR LIEN / QR (Team Leaders) ─────────────────────────
-// Un visiteur non connect\u00e9 rejoint une appro en donnant son nom \u2192 devient Team Leader
+// ── ACCÈS PAR LIEN / QR (techniciens terrain) ──────────────────
+// Un visiteur non connecté rejoint une appro en donnant son nom → devient technicien
 app.post('/api/tl/join', async (req, res) => {
   const client = await pool.connect();
   try {
@@ -564,11 +631,11 @@ app.post('/api/tl/join', async (req, res) => {
     const ap = await client.query('SELECT id FROM appros WHERE id = $1', [approId]);
     if (!ap.rows[0]) return res.status(404).json({ error: 'Appro introuvable' });
     await client.query('BEGIN');
-    // Cr\u00e9er un compte Team Leader l\u00e9ger (pseudo unique, pas de mot de passe utilisable)
-    const uname = 'tl_' + crypto.randomBytes(4).toString('hex');
+    // Créer un compte technicien léger (pseudo unique, pas de mot de passe utilisable)
+    const uname = 'tec_' + crypto.randomBytes(4).toString('hex');
     const randomHash = await bcrypt.hash(crypto.randomBytes(8).toString('hex'), 10);
     const ins = await client.query(
-      "INSERT INTO users (username, password_hash, name, role) VALUES ($1,$2,$3,'team_leader') RETURNING id, username, name, role",
+      "INSERT INTO users (username, password_hash, name, role) VALUES ($1,$2,$3,'technicien') RETURNING id, username, name, role",
       [uname, randomHash, name]
     );
     const u = ins.rows[0];
@@ -586,10 +653,10 @@ app.post('/api/tl/join', async (req, res) => {
     res.status(500).json({ error: 'Erreur' });
   } finally { client.release(); }
 });
-// Un Team Leader d\u00e9j\u00e0 connect\u00e9 rejoint une nouvelle appro (via un autre lien/QR)
+// Un technicien déjà connecté rejoint une nouvelle appro (via un autre lien/QR)
 app.post('/api/tl/link', auth, async (req, res) => {
   try {
-    if (req.user.role !== 'team_leader') return res.status(403).json({ error: 'R\u00e9serv\u00e9 aux Team Leaders' });
+    if (req.user.role !== 'technicien') return res.status(403).json({ error: 'Réservé aux techniciens' });
     const approId = req.body && req.body.approId;
     if (!approId) return res.status(400).json({ error: 'Appro manquante' });
     const ap = await pool.query('SELECT id FROM appros WHERE id = $1', [approId]);
@@ -599,20 +666,21 @@ app.post('/api/tl/link', auth, async (req, res) => {
     res.json({ ok: true, approId: approId });
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
-// R\u00e9cup\u00e9rer une seule appro (pour ouvrir un lien direct quand on est conducteur/d\u00e9p\u00f4t/admin)
+// Récupérer une seule appro (pour ouvrir un lien direct quand on est conducteur/dépôt/admin)
 // ═══ MESSAGES EN ATTENTE ═══
 // « En attente » = le DERNIER message d'une appro vient de l'autre bord et personne
 // n'a répondu depuis. Dès qu'on répond, l'appro sort de la liste. Aucun « lu » à gérer :
+
 // c'est un simple « la balle est dans mon camp », calculé sur le dernier message.
-// Deux bords : {depot, admin} d'un côté, {conducteur, team_leader} de l'autre.
+// Deux bords : {depot, admin} d'un côté, {conducteur, technicien} de l'autre.
 /* Une appro est « en attente » quand le DERNIER message n'est pas de moi.
    L'ancien découpage par « bord » (dépôt et admin comptés ensemble) faisait qu'un
    compte admin ne voyait jamais les messages du dépôt : sa liste restait vide. */
 app.get('/api/appros/pending-messages', auth, async (req, res) => {
   try {
-    // Le technicien ne voit que ses appros rattachées ; les autres voient tout.
+    // Le technicien "lié" (venu d'un lien/QR) ne voit que ses appros rattachées ; les autres voient tout.
     var appros;
-    if (req.user.role === 'team_leader') {
+    if (req.user.role === 'technicien' && await technicienIsRestricted(req.user.id)) {
       appros = await pool.query(
         `SELECT a.id, a.data FROM appros a
          JOIN appro_team_leaders tl ON tl.appro_id = a.id WHERE tl.user_id = $1`, [req.user.id]);
@@ -680,14 +748,13 @@ app.get('/api/appros/:id', auth, async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT id, data, created_by, updated_at FROM appros WHERE id = $1', [req.params.id]);
     if (!rows[0]) return res.status(404).json({ error: 'Appro introuvable' });
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Acc\u00e8s refus\u00e9' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Acc\u00e8s refus\u00e9' });
     }
     res.json({ ...rows[0].data, _id: rows[0].id, _createdBy: rows[0].created_by, _updatedAt: rows[0].updated_at });
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
-// Liste des Team Leaders li\u00e9s \u00e0 une appro (visible par les comptes internes)
+// Liste des techniciens li\u00e9s \u00e0 une appro via un lien/QR (visible par les comptes internes)
 app.get('/api/appros/:id/team-leaders', auth, async (req, res) => {
   try {
     const { rows } = await pool.query(
@@ -703,9 +770,8 @@ app.get('/api/appros/:id/team-leaders', auth, async (req, res) => {
 // être écrasé quand les deux côtés enregistrent l'appro en même temps.
 app.get('/api/appros/:id/comments', auth, async (req, res) => {
   try {
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Accès refusé' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
     }
     const { rows } = await pool.query(
       `SELECT id, user_id, author_name, author_role, body, created_at
@@ -731,9 +797,8 @@ app.get('/api/appros/:id/comments', auth, async (req, res) => {
    serait de répondre, ce qui mettrait l'autre en attente à son tour, sans fin. */
 app.post('/api/appros/:id/read', auth, async (req, res) => {
   try {
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Accès refusé' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
     }
     const { rows } = await pool.query(
       `INSERT INTO appro_reads (appro_id, user_id, read_at) VALUES ($1,$2,NOW())
@@ -853,17 +918,26 @@ app.post('/api/catalogue-suggestions', auth, async (req, res) => {
   try {
     const name = ('' + (req.body && req.body.name || '')).trim().slice(0, 160);
     if (!name) return res.status(400).json({ error: 'Nom manquant' });
-    const key = name.toLowerCase();
-    const existing = await pool.query('SELECT id, status, count FROM catalogue_suggestions WHERE lower(name) = $1', [key]);
-    if (existing.rows[0]) {
+    const key = normCatName(name);
+    const existing = await pool.query('SELECT id, status, count, name FROM catalogue_suggestions WHERE name IS NOT NULL');
+    const match = existing.rows.find(r => normCatName(r.name) === key);
+    if (match) {
       // Une suggestion déjà tranchée (approuvée/rejetée) reste telle quelle : on ne
       // la relance pas dans les jambes de l'admin à chaque nouvelle utilisation.
-      if (existing.rows[0].status === 'pending') {
+      if (match.status === 'pending') {
         await pool.query(
           'UPDATE catalogue_suggestions SET count = count + 1, suggested_by_name = $2, updated_at = NOW() WHERE id = $1',
-          [existing.rows[0].id, req.user.name]);
+          [match.id, req.user.name]);
       }
       return res.json({ ok: true });
+    }
+    // Le client vérifie déjà que l'article n'est pas au catalogue avant d'envoyer
+    // la suggestion, mais sur sa copie locale — qui peut être périmée si quelqu'un
+    // vient de l'ajouter entre-temps. On revérifie côté serveur, sur les données réelles.
+    const catRows = await pool.query("SELECT data FROM app_lists WHERE name = 'catalogue'");
+    const catalogue = (catRows.rows[0] && Array.isArray(catRows.rows[0].data)) ? catRows.rows[0].data : [];
+    if (catalogue.some(it => it && normCatName(it.n) === key)) {
+      return res.json({ ok: true, alreadyPresent: true });
     }
     await pool.query(
       `INSERT INTO catalogue_suggestions (name, suggested_by_name, count, status) VALUES ($1,$2,1,'pending')`,
@@ -879,14 +953,34 @@ app.get('/api/catalogue-suggestions', auth, adminOrDepot, async (req, res) => {
     res.json(rows);
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
+// Normalisation partagée avec le front (_cpNorm côté client) : accents, casse et
+// espaces ignorés, pour comparer deux noms d'articles de façon fiable.
+function normCatName(s) {
+  return ('' + (s || ''))
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9 ]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 app.post('/api/catalogue-suggestions/:id/approve', auth, adminOrDepot, async (req, res) => {
   try {
     const sug = await pool.query('SELECT name FROM catalogue_suggestions WHERE id = $1', [req.params.id]);
     if (!sug.rows[0]) return res.status(404).json({ error: 'Suggestion introuvable' });
+    const name = sug.rows[0].name;
+    const catRows = await pool.query("SELECT data FROM app_lists WHERE name = 'catalogue'");
+    const catalogue = (catRows.rows[0] && Array.isArray(catRows.rows[0].data)) ? catRows.rows[0].data : [];
+    const nameKey = normCatName(name);
+    // Déjà présent dans le catalogue (ajouté depuis entre-temps, par Excel, ou sous
+    // une casse/accent différent) : on ne duplique pas, on marque juste traité.
+    if (catalogue.some(it => it && normCatName(it.n) === nameKey)) {
+      await pool.query("UPDATE catalogue_suggestions SET status = 'approved', updated_at = NOW() WHERE id = $1", [req.params.id]);
+      return res.json({ ok: true, catalogue, alreadyPresent: true });
+    }
     const item = {
       cat: ('' + (req.body && req.body.cat || 'Divers')).trim().slice(0, 80),
       sec: ['consommables', 'fournitures', 'outillage'].includes(req.body && req.body.sec) ? req.body.sec : 'consommables',
-      n: sug.rows[0].name,
+      n: name,
       q: ('' + (req.body && req.body.q || '1')).trim().slice(0, 20) || '1'
     };
     await pool.query(
@@ -924,9 +1018,8 @@ app.post('/api/appros/:id/signatures', auth, async (req, res) => {
     if (!sigImage.startsWith('data:image/')) return res.status(400).json({ error: 'Format de signature invalide' });
     if (sigImage.length > 500000) return res.status(400).json({ error: 'Signature trop volumineuse' });
     if (comment.length > 1000) return res.status(400).json({ error: 'Commentaire trop long (1000 caractères max)' });
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Accès refusé' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
     }
     const ins = await pool.query(
       `INSERT INTO appro_signatures (appro_id, user_id, author_name, signed_name, signature_image, comment)
@@ -988,9 +1081,8 @@ app.post('/api/appros/:id/presence/leave', auth, (req, res) => {
 
 app.get('/api/appros/:id/signatures', auth, async (req, res) => {
   try {
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Accès refusé' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
     }
     const { rows } = await pool.query(
       `SELECT id, user_id, author_name, signed_name, signature_image, comment, created_at
@@ -1005,9 +1097,8 @@ app.post('/api/appros/:id/comments', auth, async (req, res) => {
     const body = (req.body && req.body.body || '').trim();
     if (!body) return res.status(400).json({ error: 'Message vide' });
     if (body.length > 2000) return res.status(400).json({ error: 'Message trop long' });
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Accès refusé' });
+    if (req.user.role === 'technicien' && !(await technicienCanAccess(req.user.id, req.params.id))) {
+      return res.status(403).json({ error: 'Accès refusé' });
     }
     const ins = await pool.query(
       `INSERT INTO appro_comments (appro_id, user_id, author_name, author_role, body)
@@ -1219,17 +1310,18 @@ app.put('/api/appros/:id', auth, async (req, res) => {
     const oldData = before.rows[0] ? before.rows[0].data : null;
     const createdBy = before.rows[0] ? before.rows[0].created_by : null;
 
-    // Garde-fou Team Leader : doit \u00eatre li\u00e9 \u00e0 l'appro, et ne peut pas la marquer "rendue"
-    if (req.user.role === 'team_leader') {
-      const lk = await pool.query('SELECT 1 FROM appro_team_leaders WHERE appro_id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-      if (!lk.rows[0]) return res.status(403).json({ error: 'Acc\u00e8s refus\u00e9' });
-      if (req.body && req.body.statut === 'sortie') return res.status(403).json({ error: 'Un Team Leader ne peut pas marquer une appro rendue' });
+    // Garde-fou technicien : doit être lié à l'appro (s'il est venu par lien/QR),
+    // et ne peut pas finaliser lui-même la fin de chantier ("sortie") — seul le
+    // dépôt/admin valide un rendu comme définitivement clos.
+    if (req.user.role === 'technicien') {
+      if (!(await technicienCanAccess(req.user.id, req.params.id))) return res.status(403).json({ error: 'Accès refusé' });
+      if (req.body && req.body.statut === 'sortie') return res.status(403).json({ error: 'Un technicien ne peut pas marquer une appro comme chantier fini — le dépôt doit valider le rendu' });
     }
 
     await pool.query('UPDATE appros SET data = $1, updated_at = NOW() WHERE id = $2', [req.body, req.params.id]);
     res.json({ ok: true });
 
-    // HISTORIQUE : enregistrer les \u00e9tapes cl\u00e9s
+    // HISTORIQUE : enregistrer les étapes clés
     {
       const oS = oldData ? oldData.statut : null;
       const nS = req.body ? req.body.statut : null;
@@ -1237,13 +1329,13 @@ app.put('/api/appros/:id', auth, async (req, res) => {
       const nM = req.body ? req.body.modifPrep : false;
       if (nS === 'prete' && oS !== 'prete') logEvent(req.params.id, 'preparee', req.user.name);
       else if (nS === 'sortie' && oS !== 'sortie') logEvent(req.params.id, 'sortie', req.user.name);
-      if (nS === 'sur_chantier' && oS !== 'sur_chantier') logEvent(req.params.id, 'tl_pris', req.user.name);
+      if (nS === 'sur_chantier' && oS !== 'sur_chantier') { logEvent(req.params.id, 'tl_pris', req.user.name); cascadeFiletsToChantier(req.params.id); }
       if (nS === 'rendu' && oS !== 'rendu') logEvent(req.params.id, 'tl_rendu', req.user.name);
       if (nM && !oM) logEvent(req.params.id, 'modifiee', req.user.name);
-      // Un Team Leader a modifi\u00e9 l'appro depuis le terrain
-      if (req.user.role === 'team_leader') logEvent(req.params.id, 'tl_modif', req.user.name);
+      // Un technicien a modifié l'appro depuis le terrain
+      if (req.user.role === 'technicien') logEvent(req.params.id, 'tl_modif', req.user.name);
     }
-    // NOTIFICATION : passage brouillon \u2192 production \u2192 pr\u00e9venir le d\u00e9p\u00f4t
+    // NOTIFICATION : passage brouillon → production → prévenir le dépôt
     const wasDraft = oldData ? oldData.draft : false;
     const nowDraft = req.body ? req.body.draft : false;
     if (wasDraft && !nowDraft) {
@@ -1360,6 +1452,48 @@ app.get('/api/stats', auth, adminOnly, async (req, res) => {
 
 // ── LISTES PARTAG\u00c9ES (types / catalogue / clients) ─────────────
 const LIST_NAMES = ['types', 'catalogue', 'clients', 'trucks', 'commandes', 'annonces', 'tickets', 'config'];
+// ── FILETS (stock au dépôt + suivi chantier) ─────────────────────────
+app.get('/api/filets', auth, async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM filets ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (e) { res.status(500).json({ error: 'Erreur' }); }
+});
+app.post('/api/filets', auth, async (req, res) => {
+  try {
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration } = req.body || {};
+    const l = parseFloat(largeur), h = parseFloat(hauteur);
+    if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
+    const { rows } = await pool.query(
+      `INSERT INTO filets (type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration, created_by)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, !!is_anticute, date_certification || null, date_expiration || null, req.user.id]
+    );
+    res.json(rows[0]);
+  } catch (e) { res.status(500).json({ error: 'Erreur de création', detail: e.message }); }
+});
+app.put('/api/filets/:id', auth, async (req, res) => {
+  try {
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration } = req.body || {};
+    const l = parseFloat(largeur), h = parseFloat(hauteur);
+    if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
+    const { rows } = await pool.query(
+      `UPDATE filets SET type=$1, largeur=$2, hauteur=$3, statut=$4, appro_id=$5, no_affaire=$6, notes=$7,
+       is_anticute=$8, date_certification=$9, date_expiration=$10, updated_at=NOW()
+       WHERE id=$11 RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, !!is_anticute, date_certification || null, date_expiration || null, req.params.id]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Filet introuvable' });
+    res.json(rows[0]);
+  } catch (e) { res.status(500).json({ error: 'Erreur de mise à jour', detail: e.message }); }
+});
+app.delete('/api/filets/:id', auth, async (req, res) => {
+  try {
+    await pool.query('DELETE FROM filets WHERE id = $1', [req.params.id]);
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ error: 'Erreur' }); }
+});
+
 app.get('/api/lists', auth, async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT name, data FROM app_lists');
