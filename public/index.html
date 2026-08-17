@@ -1082,6 +1082,8 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .cmd-wrap{max-width:940px;margin:0 auto;padding:24px 20px 70px;width:100%}
 .cmd-add{background:#fff;border:1px solid #E8EDF4;border-radius:15px;padding:16px 18px;margin-bottom:22px;position:relative;overflow:hidden}
 .cmd-add-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--accent,#6D28D9);margin-bottom:12px}
+.cmd-filet-chk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#64748B;font-weight:600;margin-top:10px;cursor:pointer}
+.cmd-filet-chk input{width:16px;height:16px;cursor:pointer}
 .cmd-add-hd i{font-size:17px}
 .cmd-add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .cmd-add .ui-in{border:1px solid #E4E9F1;border-radius:9px;background:#F8FAFC;font-family:inherit;outline:none;padding:9px 11px;font-size:13px;color:#1E293B;transition:border-color .15s,background .15s,box-shadow .16s}
@@ -2198,6 +2200,55 @@ table.at tr.kit-row td.td-d{position:relative}
 .depot-btn{width:100%;border:none;border-radius:10px;padding:10px 0;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:11px;transition:all .22s var(--spring)}
 .depot-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px -8px rgba(15,23,42,.3)}
 .depot-btn:active{transform:scale(.97)}
+
+/* ═══ FILETS ═══ */
+.fil-wrap{max-width:1100px;margin:0 auto;padding:4px 24px 40px}
+.fil-search-box{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:14px;padding:18px 20px;margin-bottom:6px}
+.fil-search-t{font-size:14px;font-weight:700;color:#334155;display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.fil-search-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fil-x{color:#94A3B8;font-weight:700;font-size:15px}
+.fil-results{margin-top:16px;padding-top:16px;border-top:1px dashed #E2E8F0}
+.fil-res-ok{display:flex;align-items:center;gap:7px;color:#059669;font-size:13px;font-weight:700;margin-bottom:10px}
+.fil-res-combo{display:flex;align-items:center;gap:7px;color:#7C3AED;font-size:13px;font-weight:700;margin-bottom:10px}
+.fil-res-none{display:flex;align-items:center;gap:7px;color:#B45309;font-size:13px;font-weight:600;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:11px 14px}
+.fil-combo-pair{background:#F5F3FF;border:1px solid #DDD6FE;border-radius:10px;padding:10px 14px;font-size:13px;color:#4C1D95;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fil-sec-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14px;margin:22px 0 14px}
+.fil-sec-n{margin-left:auto;font-size:12px;background:rgba(255,255,255,.6);padding:2px 9px;border-radius:10px}
+.fil-empty{color:#94A3B8;font-size:13px;padding:16px 4px}
+.fil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.fil-card{position:relative;border:1px solid #E8EDF4;border-radius:12px;padding:14px 15px;background:#fff;box-shadow:0 2px 10px -8px rgba(15,23,42,.3)}
+.fil-dim{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
+.fil-type{font-size:12px;color:#7C3AED;font-weight:700;background:#F5F3FF;display:inline-block;padding:2px 9px;border-radius:8px;margin-top:6px}
+.fil-aff{font-size:11.5px;color:#94A3B8;margin-top:7px;display:flex;align-items:center;gap:5px}
+.fil-notes{font-size:11.5px;color:#64748B;margin-top:5px;font-style:italic}
+.fil-acts{display:flex;gap:6px;margin-top:11px}
+.fil-acts button{background:#F8FAFC;border:1px solid #E8EDF4;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748B;font-size:14px}
+.fil-acts button:hover{background:#EEF2F6}
+.fil-acts button.danger:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px}
+.fil-cert{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;margin-top:7px}
+.fil-cert-ok{background:#ECFDF5;color:#059669}
+.fil-cert-soon{background:#FFFBEB;color:#B45309}
+.fil-cert-expired{background:#FEF2F2;color:#DC2626}
+.fil-cert-unknown{background:#F1F5F9;color:#64748B}
+.fil-downgrade{font-size:10.5px;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.5}
+.fil-diagram{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px 10px;margin-top:12px;text-align:center}
+.fil-diagram-t{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;text-align:left}
+.fil-diag-net{fill:#DDD6FE;stroke:#7C3AED;stroke-width:1.5}
+.fil-diag-a{fill:#DDD6FE;stroke:#7C3AED}
+.fil-diag-b{fill:#BFDBFE;stroke:#2563EB}
+.fil-diag-need{fill:none;stroke:#0F172A;stroke-width:2;stroke-dasharray:6 4}
+.fil-diag-surplus{fill:#FEE2E2;fill-opacity:.55;stroke:#FCA5A5;stroke-width:1;stroke-dasharray:3 3}
+.fil-diag-lbl{font-size:11px;font-weight:700;fill:#1E293B}
+.fil-diag-legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px}
+.fil-diag-legend span{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#64748B}
+.fil-diag-sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex-shrink:0}
+.fil-diag-sw-need{border:2px dashed #0F172A}
+.fil-diag-sw-a{background:#DDD6FE;border:1px solid #7C3AED}
+.fil-diag-sw-surplus{background:#FEE2E2;border:1px dashed #FCA5A5}
+.fil-ov{position:fixed;inset:0;z-index:4200;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;animation:jScrimIn .22s var(--ease)}
+.fil-modal{width:min(400px,100%);background:#fff;border-radius:18px;padding:24px}
+.fil-modal-t{font-size:16px;font-weight:800;color:#0F172A;margin-bottom:16px}
 .depot-empty{position:relative;overflow:hidden;text-align:center;padding:44px 16px;color:#94A3B8;font-size:13px;background:#fff;border:1px dashed #E2E8F0;border-radius:10px}
 .depot-empty::before{content:"";position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(109,40,217,.07),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-60%);animation:emptyFloat 5s ease-in-out infinite;pointer-events:none}
 .depot-empty i{position:relative;color:#CBD5E1}
@@ -2667,6 +2718,7 @@ try{var _amb=localStorage.getItem("appro_amb");if(_amb&&_amb!=="none")document.d
       <button class="btn-admin" id="btn-ui" onclick="renderUISettings()" style="display:none"><i class="ti ti-adjustments" style="font-size:15px"></i> Param&#233;trage interface</button>
       <button class="btn-admin" id="btn-alo" onclick="renderAlobeesSettings()" style="display:none"><i class="ti ti-plug-connected" style="font-size:15px"></i> Gestion lien Alobees</button>
       <button class="btn-admin" id="btn-trucks" onclick="renderTrucksSettings()" style="display:none"><i class="ti ti-truck" style="font-size:15px"></i> Gestion des camions</button>
+      <button class="btn-admin" id="btn-filets" onclick="renderFilets()" style="display:none"><i class="ti ti-grid-dots" style="font-size:15px"></i> Filets</button>
       <button class="btn-admin" id="btn-cmd" onclick="renderCommandes()" style="display:none"><i class="ti ti-clipboard-list" style="font-size:15px"></i> Commande</button>
       <button class="btn-admin" id="btn-annonce" onclick="renderAnnonces()" style="display:none"><i class="ti ti-speakerphone" style="font-size:15px"></i> Annonces</button>
       <button class="btn-admin" id="btn-tickets" onclick="renderTickets()" style="display:none"><i class="ti ti-ticket" style="font-size:15px"></i> <span id="tk-lbl">Demandes dépôt</span></button>
@@ -3290,6 +3342,7 @@ function _resolveAdditions(s){
 }
 var TRUCKS=[];
 var COMMANDES=[];
+var FILETS=[]; // stock de filets (dépôt + suivi chantier)
 var ANNONCES=[];
 var TICKETS=[];
 var CONFIG={};
@@ -3312,7 +3365,9 @@ var FEATURES=[
   {key:"commandes",label:"Commandes",role:"Conducteur / Dépôt",ic:"ti-clipboard-list",
    d:"L'écran de suivi des commandes fournisseurs."},
   {key:"terrain_requests",label:"Demandes du terrain",role:"Technicien / Dépôt",ic:"ti-message-report",
-   d:"Permet à un technicien de réclamer du matériel depuis le chantier, et au dépôt de les traiter. Désactiver coupe les deux côtés ensemble."}
+   d:"Permet à un technicien de réclamer du matériel depuis le chantier, et au dépôt de les traiter. Désactiver coupe les deux côtés ensemble."},
+  {key:"filets",label:"Gestion des filets",role:"Dépôt",ic:"ti-grid-dots",
+   d:"Le stock de filets au dépôt, leur suivi automatique sur chantier, et la recherche intelligente qui propose des combinaisons de filets jumelables quand la taille exacte n'est pas en stock."}
 ];
 function featureOn(key){
   if(!CONFIG||!CONFIG.features)return true;
@@ -7466,6 +7521,283 @@ function _getListsWithRetry(n){
 /* loadLists() n'\u00e9choue jamais (catch silencieux voulu au d\u00e9marrage) : ce t\u00e9moin dit
    si le dernier chargement a r\u00e9ellement abouti, pour ne pas annoncer \u00ab \u00e0 jour \u00bb \u00e0 tort. */
 var _listsOk=false;
+/* Filets : table dédiée côté serveur (pas la mécanique générique de listes en
+   un seul bloc JSON) — plusieurs personnes peuvent ajouter/modifier un filet
+   en même temps sans se marcher dessus, contrairement à un "tout réécrire"
+   partagé. */
+/* ═══ FILETS — stock au dépôt + suivi chantier + recherche intelligente ═══ */
+var _filSearchW="",_filSearchH="",_filSearchAnticute=false;
+function renderFilets(){
+  try{setActiveNav("btn-filets");}catch(e){}
+  var h=_dashHeader("Filets","Stock au d\u00e9p\u00f4t, suivi automatique sur chantier.");
+  var certIssues=FILETS.filter(function(f){var c=_filCertStatus(f);return c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown");});
+  if(certIssues.length){
+    var nExp=certIssues.filter(function(f){return _filCertStatus(f).level==="expired";}).length;
+    var nSoon=certIssues.filter(function(f){return _filCertStatus(f).level==="soon";}).length;
+    var nUnk=certIssues.filter(function(f){return _filCertStatus(f).level==="unknown";}).length;
+    var parts=[];
+    if(nExp)parts.push(nExp+" expir\u00e9"+(nExp>1?"s":""));
+    if(nSoon)parts.push(nSoon+" bient\u00f4t \u00e0 renouveler");
+    if(nUnk)parts.push(nUnk+" sans date connue");
+    h+="<div class=\"fil-cert-alert\"><i class=\"ti ti-alert-triangle\"></i> Certification antichute \u00e0 v\u00e9rifier : "+parts.join(", ")+"</div>";
+  }
+  h+="<div class=\"fil-wrap\">";
+
+  // Recherche intelligente
+  h+="<div class=\"fil-search-box\">";
+  h+="<div class=\"fil-search-t\"><i class=\"ti ti-search\"></i> Besoin d'une taille pr\u00e9cise ?</div>";
+  h+="<div class=\"fil-search-row\">";
+  h+="<input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" placeholder=\"Largeur (m)\" value=\""+esc(_filSearchW)+"\" oninput=\"_filSearchW=this.value\" style=\"max-width:130px\"/>";
+  h+="<span class=\"fil-x\">\u00d7</span>";
+  h+="<input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" placeholder=\"Hauteur (m)\" value=\""+esc(_filSearchH)+"\" oninput=\"_filSearchH=this.value\" style=\"max-width:130px\"/>";
+  h+="<button class=\"btn-cta\" style=\"padding:9px 20px;font-size:13px\" onclick=\"renderFilets()\">Chercher</button>";
+  h+="</div>";
+  h+="<label class=\"cmd-filet-chk\" style=\"margin-top:10px\"><input type=\"checkbox\" id=\"fil-search-anticute\""+(_filSearchAnticute?" checked":"")+" onchange=\"_filSearchAnticute=this.checked;renderFilets()\"/> Usage antichute homme (protection de personnes) \u2014 n'accepte que des filets certifi\u00e9s valides</label>";
+  var w=parseFloat((_filSearchW||"").replace(",",".")),hh=parseFloat((_filSearchH||"").replace(",","."));
+  if(w>0&&hh>0)h+=_filSearchResultsHTML(w,hh,_filSearchAnticute);
+  h+="</div>";
+
+  h+="<button class=\"btn-cta\" style=\"margin:16px 0\" onclick=\"openFiletForm()\"><i class=\"ti ti-plus\"></i> Ajouter un filet au stock</button>";
+
+  var depotF=FILETS.filter(function(f){return f.statut==="depot";});
+  var chantierF=FILETS.filter(function(f){return f.statut==="chantier";});
+  h+=_filSectionHTML("D\u00e9p\u00f4t","ti-building-warehouse","#EFF6FF","#1D4ED8",depotF,"Aucun filet au d\u00e9p\u00f4t.");
+  h+=_filSectionHTML("Sur chantier","ti-tool","#FFF7ED","#D97706",chantierF,"Aucun filet actuellement sur chantier.");
+
+  h+="</div>";
+  document.getElementById("main-area").innerHTML=h;
+}
+function _filSectionHTML(title,ic,bg,col,list,emptyMsg){
+  var h="<div class=\"fil-sec-hd\" style=\"background:"+bg+";color:"+col+"\"><i class=\"ti "+ic+"\"></i> "+title+" <span class=\"fil-sec-n\">"+list.length+"</span></div>";
+  if(!list.length){h+="<div class=\"fil-empty\">"+emptyMsg+"</div>";return h;}
+  h+="<div class=\"fil-grid\">";
+  list.forEach(function(f){h+=_filCardHTML(f);});
+  h+="</div>";
+  return h;
+}
+/* Statut de certification (Su : "savoir s'ils sont encore certifiés ou non,
+   pour les antichute homme") — seuls les filets anti-chute sont concernés,
+   les autres (anti-pigeon, etc.) n'ont pas cette contrainte réglementaire.
+   La date d'expiration est saisie directement (pas calculée à partir d'une
+   périodicité supposée) : les règles de vérification périodique varient, et
+   je préfère que ce soit la personne qui la connaît qui la renseigne plutôt
+   que le logiciel qui suppose une durée qu'il ne connaît pas avec certitude. */
+function _filCertStatus(f){
+  if(!f.is_anticute)return null;
+  if(!f.date_expiration)return {level:"unknown",label:"Certification inconnue"};
+  var exp=new Date(f.date_expiration+"T00:00:00");
+  var now=new Date();now.setHours(0,0,0,0);
+  var days=Math.round((exp-now)/86400000);
+  if(days<0)return {level:"expired",label:"Certification expir\u00e9e"};
+  if(days<=30)return {level:"soon",label:"Expire dans "+days+" j"};
+  return {level:"ok",label:"Certifi\u00e9 jusqu'au "+fd(f.date_expiration)};
+}
+function _filCardHTML(f){
+  var cert=_filCertStatus(f);
+  var h="<div class=\"fil-card\">";
+  h+="<div class=\"fil-dim\">"+_filDimTxt(f)+"</div>";
+  if(f.type)h+="<div class=\"fil-type\">"+esc(f.type)+"</div>";
+  if(cert)h+="<div class=\"fil-cert fil-cert-"+cert.level+"\"><i class=\"ti "+(cert.level==="ok"?"ti-shield-check":cert.level==="soon"?"ti-clock-exclamation":cert.level==="expired"?"ti-shield-x":"ti-help-circle")+"\"></i> "+cert.label+"</div>";
+  if(cert&&(cert.level==="expired"||cert.level==="unknown"))h+="<div class=\"fil-downgrade\"><i class=\"ti ti-info-circle\"></i> Ancien filet antichute \u2014 usage objet uniquement (pare-gravat \u00e0 ajouter), plus pour de la protection de personnes</div>";
+  if(f.no_affaire)h+="<div class=\"fil-aff\"><i class=\"ti ti-briefcase\" style=\"font-size:11px\"></i> "+esc(f.no_affaire)+"</div>";
+  if(f.notes)h+="<div class=\"fil-notes\">"+esc(f.notes)+"</div>";
+  h+="<div class=\"fil-acts\"><button onclick=\"openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></div>";
+  h+="</div>";
+  return h;
+}
+function _filDimTxt(f){return (+f.largeur)+" \u00d7 "+(+f.hauteur)+" m";}
+
+/* Recherche intelligente : jumelage l\u00e9gal de filets pour couvrir une taille
+   (Su : "l\u00e9galement on a le droit de jumeler des filets pour avoir une plus
+   grande taille, donc si on a le stock pour faire comme \u00e7a, \u00e7a sert \u00e0 rien
+   d'en racheter"). Un filet peut \u00eatre orient\u00e9 dans les 2 sens ; deux filets
+   jumel\u00e9s c\u00f4te \u00e0 c\u00f4te \u00e9tendent une dimension pendant que l'autre doit d\u00e9j\u00e0
+   suffire des deux c\u00f4t\u00e9s. Uniquement le stock au d\u00e9p\u00f4t, pas d\u00e9j\u00e0 promis \u00e0
+   une affaire pr\u00e9cise. */
+function _filOrients(w,h){return [[w,h],[h,w]];}
+function _filSingleCovers(need,f){
+  return _filOrients(+f.largeur,+f.hauteur).some(function(o){return o[0]>=need.w&&o[1]>=need.h;});
+}
+function _filPairCovers(need,a,b){
+  var oa=_filOrients(+a.largeur,+a.hauteur),ob=_filOrients(+b.largeur,+b.hauteur);
+  for(var i=0;i<oa.length;i++)for(var j=0;j<ob.length;j++){
+    var A=oa[i],B=ob[j];
+    if(A[1]>=need.h&&B[1]>=need.h&&(A[0]+B[0])>=need.w)return true; // c\u00f4te \u00e0 c\u00f4te : largeurs cumul\u00e9es
+    if(A[0]>=need.w&&B[0]>=need.w&&(A[1]+B[1])>=need.h)return true; // l'un sur l'autre : hauteurs cumul\u00e9es
+  }
+  return false;
+}
+/* Retourne l'agencement gagnant (pas juste oui/non) : indispensable pour
+   dessiner le schéma ensuite, et pour appliquer le bon axe de jumelage. */
+function _filPairArrangement(need,a,b){
+  var oa=_filOrients(+a.largeur,+a.hauteur),ob=_filOrients(+b.largeur,+b.hauteur);
+  for(var i=0;i<oa.length;i++)for(var j=0;j<ob.length;j++){
+    var A=oa[i],B=ob[j];
+    if(A[1]>=need.h&&B[1]>=need.h&&(A[0]+B[0])>=need.w)return {axis:"w",a:{w:A[0],h:A[1]},b:{w:B[0],h:B[1]},totalW:A[0]+B[0],totalH:Math.max(A[1],B[1])};
+    if(A[0]>=need.w&&B[0]>=need.w&&(A[1]+B[1])>=need.h)return {axis:"h",a:{w:A[0],h:A[1]},b:{w:B[0],h:B[1]},totalW:Math.max(A[0],B[0]),totalH:A[1]+B[1]};
+  }
+  return null;
+}
+function _filPairCovers(need,a,b){return !!_filPairArrangement(need,a,b);}
+/* forAnticute : Su — "quand j'exclus des filets antichute homme qui ne sont
+   plus certifiés, je veux que tu les ajoutes aux filets normaux (mais laisse
+   l'indication que c'était des antichute homme)". Deux usages bien distincts :
+   - usage antichute (protection de personnes) : UNIQUEMENT des filets marqués
+     antichute, avec une certification valide — jamais un doute possible ici.
+   - usage général (sécurisation d'objets, pare-gravat, etc.) : n'importe quel
+     filet dispo, y compris un ancien antichute dont la certification a
+     expiré — il reste utile, juste plus pour de la protection humaine. La
+     carte garde la mention de son passé antichute (voir _filCardHTML). */
+function searchFilets(needW,needH,forAnticute){
+  var need={w:needW,h:needH};
+  var avail=FILETS.filter(function(f){
+    if(f.statut!=="depot"||f.appro_id)return false;
+    if(forAnticute){
+      if(!f.is_anticute)return false;
+      var cert=_filCertStatus(f);
+      if(!cert||cert.level!=="ok")return false; // expiré OU date inconnue : jamais pour de la protection humaine
+      return true;
+    }
+    return true; // usage général : tout est éligible, un ancien antichute expiré y compris
+  });
+  var exact=avail.filter(function(f){return _filSingleCovers(need,f);});
+  var combos=[];
+  if(!exact.length){
+    for(var i=0;i<avail.length;i++)for(var j=i+1;j<avail.length;j++){
+      var arr=_filPairArrangement(need,avail[i],avail[j]);
+      if(arr)combos.push({a:avail[i],b:avail[j],arr:arr});
+    }
+  }
+  return {exact:exact,combos:combos};
+}
+/* Petit sch\u00e9ma \u00e0 l'\u00e9chelle (Su : "afin que l'on soit s\u00fbr d'\u00eatre tous les
+   deux sur la m\u00eame longueur d'onde") \u2014 montre concr\u00e8tement comment le ou
+   les filets recouvrent le besoin, et o\u00f9 il y a du surplus \u00e0 replier
+   (bourrelet) plut\u00f4t que de le laisser \u00e0 l'imagination. Se reconstruit \u00e0
+   chaque recherche, \u00e0 partir du premier r\u00e9sultat trouv\u00e9. */
+function _filDiagramHTML(need,result){
+  var W,H,parts;
+  if(result.type==="single"){
+    var f=result.f;
+    var ov=_filOrients(+f.largeur,+f.hauteur).filter(function(o){return o[0]>=need.w&&o[1]>=need.h;})[0]||[+f.largeur,+f.hauteur];
+    W=ov[0];H=ov[1];
+    parts=[{x:0,y:0,w:ov[0],h:ov[1],label:ov[0]+"\u00d7"+ov[1],cls:"fil-diag-net fil-diag-a"}];
+  } else {
+    var arr=result.c.arr;
+    W=arr.totalW;H=arr.totalH;
+    if(arr.axis==="w"){
+      parts=[
+        {x:0,y:0,w:arr.a.w,h:arr.a.h,label:arr.a.w+"\u00d7"+arr.a.h,cls:"fil-diag-net fil-diag-a"},
+        {x:arr.a.w,y:0,w:arr.b.w,h:arr.b.h,label:arr.b.w+"\u00d7"+arr.b.h,cls:"fil-diag-net fil-diag-b"}
+      ];
+    } else {
+      parts=[
+        {x:0,y:0,w:arr.a.w,h:arr.a.h,label:arr.a.w+"\u00d7"+arr.a.h,cls:"fil-diag-net fil-diag-a"},
+        {x:0,y:arr.a.h,w:arr.b.w,h:arr.b.h,label:arr.b.w+"\u00d7"+arr.b.h,cls:"fil-diag-net fil-diag-b"}
+      ];
+    }
+  }
+  var maxDim=Math.max(W,H,need.w,need.h)||1;
+  var scale=230/maxDim,pad=26;
+  var svgW=W*scale+pad*2,svgH=H*scale+pad*2;
+  var svg="<svg viewBox=\"0 0 "+svgW+" "+svgH+"\" width=\"100%\" style=\"max-width:320px;height:auto;display:block;margin:6px auto\">";
+  parts.forEach(function(p){
+    svg+="<rect x=\""+(pad+p.x*scale)+"\" y=\""+(pad+p.y*scale)+"\" width=\""+(p.w*scale)+"\" height=\""+(p.h*scale)+"\" class=\""+p.cls+"\"/>";
+    svg+="<text x=\""+(pad+p.x*scale+p.w*scale/2)+"\" y=\""+(pad+p.y*scale+p.h*scale/2)+"\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"fil-diag-lbl\">"+p.label+" m</text>";
+  });
+  // Contour du besoin, en pointill\u00e9s, par-dessus les filets
+  svg+="<rect x=\""+pad+"\" y=\""+pad+"\" width=\""+(need.w*scale)+"\" height=\""+(need.h*scale)+"\" class=\"fil-diag-need\"/>";
+  // Surplus (bourrelet \u00e0 replier) : la partie des filets qui d\u00e9passe le besoin, en forme de L si les 2 sens d\u00e9passent
+  if(W>need.w)svg+="<rect x=\""+(pad+need.w*scale)+"\" y=\""+pad+"\" width=\""+((W-need.w)*scale)+"\" height=\""+(H*scale)+"\" class=\"fil-diag-surplus\"/>";
+  if(H>need.h)svg+="<rect x=\""+pad+"\" y=\""+(pad+need.h*scale)+"\" width=\""+(Math.min(W,need.w)*scale)+"\" height=\""+((H-need.h)*scale)+"\" class=\"fil-diag-surplus\"/>";
+  svg+="</svg>";
+  var legend="<div class=\"fil-diag-legend\">";
+  legend+="<span><i class=\"fil-diag-sw fil-diag-sw-need\"></i> Besoin demand\u00e9 : "+need.w+" \u00d7 "+need.h+" m</span>";
+  if(result.type==="pair")legend+="<span><i class=\"fil-diag-sw fil-diag-sw-a\"></i> Jointure entre les 2 filets</span>";
+  if(W>need.w||H>need.h)legend+="<span><i class=\"fil-diag-sw fil-diag-sw-surplus\"></i> Surplus \u00e0 replier (bourrelet)</span>";
+  legend+="</div>";
+  return "<div class=\"fil-diagram\"><div class=\"fil-diagram-t\">Sch\u00e9ma \u00e0 l'\u00e9chelle</div>"+svg+legend+"</div>";
+}
+function _filSearchResultsHTML(w,hh,forAnticute){
+  var r=searchFilets(w,hh,forAnticute);
+  var need={w:w,h:hh};
+  var h="<div class=\"fil-results\">";
+  if(r.exact.length){
+    h+="<div class=\"fil-res-ok\"><i class=\"ti ti-circle-check\"></i> "+r.exact.length+" filet"+(r.exact.length>1?"s":"")+" au d\u00e9p\u00f4t couvre"+(r.exact.length>1?"nt":"")+" ce besoin directement</div>";
+    r.exact.forEach(function(f){h+=_filCardHTML(f);});
+    h+=_filDiagramHTML(need,{type:"single",f:r.exact[0]});
+  } else if(r.combos.length){
+    h+="<div class=\"fil-res-combo\"><i class=\"ti ti-git-merge\"></i> Aucun filet seul ne suffit, mais "+r.combos.length+" combinaison"+(r.combos.length>1?"s":"")+" jumel\u00e9e"+(r.combos.length>1?"s":"")+" couvre"+(r.combos.length>1?"nt":"")+" "+w+" \u00d7 "+hh+" m \u2014 pas besoin d'en racheter</div>";
+    r.combos.slice(0,5).forEach(function(c){
+      h+="<div class=\"fil-combo-pair\">"+_filDimTxt(c.a)+(c.a.type?" ("+esc(c.a.type)+")":"")+" <i class=\"ti ti-plus\" style=\"font-size:12px\"></i> "+_filDimTxt(c.b)+(c.b.type?" ("+esc(c.b.type)+")":"")+"</div>";
+    });
+    h+=_filDiagramHTML(need,{type:"pair",c:r.combos[0]});
+  } else {
+    h+="<div class=\"fil-res-none\"><i class=\"ti ti-alert-triangle\"></i> Rien au d\u00e9p\u00f4t ne couvre "+w+" \u00d7 "+hh+" m, seul ou combin\u00e9"+(forAnticute?" (en antichute homme certifi\u00e9)":"")+" \u2014 il faudra en commander.</div>";
+  }
+  h+="</div>";
+  return h;
+}
+
+function toggleFiletAnticuteFields(){
+  var chk=document.getElementById("filf-anticute");
+  var row=document.getElementById("filf-cert-row");
+  if(row)row.style.display=(chk&&chk.checked)?"block":"none";
+}
+function openFiletForm(id){
+  closeFiletForm();
+  var f=id?FILETS.filter(function(x){return x.id===id;})[0]:null;
+  var h="<div class=\"fil-ov\" id=\"fil-ov\"><div class=\"fil-modal j-card\">";
+  h+="<div class=\"fil-modal-t\">"+(f?"Modifier le filet":"Ajouter un filet au stock")+"</div>";
+  h+="<div class=\"fg\"><label>Type</label><input class=\"fin\" id=\"filf-type\" value=\""+esc(f?f.type||"":"")+"\" placeholder=\"Ex: anti-pigeon, s\u00e9curit\u00e9...\"/></div>";
+  h+="<div style=\"display:flex;gap:10px\"><div class=\"fg\" style=\"flex:1\"><label>Largeur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-w\" value=\""+(f?esc(""+f.largeur):"")+"\"/></div><div class=\"fg\" style=\"flex:1\"><label>Hauteur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-h\" value=\""+(f?esc(""+f.hauteur):"")+"\"/></div></div>";
+  h+="<div class=\"fg\"><label>Statut</label><select class=\"fin\" id=\"filf-statut\"><option value=\"depot\""+((!f||f.statut==="depot")?" selected":"")+">Au d\u00e9p\u00f4t</option><option value=\"chantier\""+(f&&f.statut==="chantier"?" selected":"")+">Sur chantier</option></select></div>";
+  h+="<div class=\"fg\"><label>N\u00b0 d'affaire (si li\u00e9 \u00e0 un chantier)</label><input class=\"fin\" id=\"filf-aff\" value=\""+esc(f?f.no_affaire||"":"")+"\"/></div>";
+  h+="<label class=\"cmd-filet-chk\" style=\"margin:2px 0 12px\"><input type=\"checkbox\" id=\"filf-anticute\" "+(f&&f.is_anticute?"checked":"")+" onchange=\"toggleFiletAnticuteFields()\"/> Filet anti-chute (n\u00e9cessite une certification)</label>";
+  h+="<div id=\"filf-cert-row\" style=\""+((f&&f.is_anticute)?"":"display:none")+"\">";
+  h+="<div style=\"display:flex;gap:10px\"><div class=\"fg\" style=\"flex:1\"><label>Date de certification</label><input type=\"date\" class=\"fin\" id=\"filf-datecert\" value=\""+esc(f&&f.date_certification?(""+f.date_certification).slice(0,10):"")+"\"/></div><div class=\"fg\" style=\"flex:1\"><label>Expire le</label><input type=\"date\" class=\"fin\" id=\"filf-dateexp\" value=\""+esc(f&&f.date_expiration?(""+f.date_expiration).slice(0,10):"")+"\"/></div></div>";
+  h+="</div>";
+  h+="<div class=\"fg\"><label>Notes</label><input class=\"fin\" id=\"filf-notes\" value=\""+esc(f?f.notes||"":"")+"\"/></div>";
+  h+="<div style=\"display:flex;gap:10px;margin-top:6px\"><button class=\"btn-clr\" onclick=\"closeFiletForm()\" style=\"flex:1\">Annuler</button><button class=\"btn-cta\" onclick=\"saveFilet('"+(f?f.id:"")+"')\" style=\"flex:1\">Enregistrer</button></div>";
+  h+="</div></div>";
+  var d=document.createElement("div");d.innerHTML=h;
+  document.body.appendChild(d.firstElementChild);
+}
+function closeFiletForm(){var ov=document.getElementById("fil-ov");if(ov)ov.remove();}
+function saveFilet(id){
+  var type=(document.getElementById("filf-type")||{}).value||"";
+  var w=parseFloat((document.getElementById("filf-w")||{}).value);
+  var hh=parseFloat((document.getElementById("filf-h")||{}).value);
+  var statut=(document.getElementById("filf-statut")||{}).value||"depot";
+  var aff=(document.getElementById("filf-aff")||{}).value||"";
+  var notes=(document.getElementById("filf-notes")||{}).value||"";
+  var isAnticute=!!(document.getElementById("filf-anticute")||{}).checked;
+  var dateCert=isAnticute?((document.getElementById("filf-datecert")||{}).value||""):"";
+  var dateExp=isAnticute?((document.getElementById("filf-dateexp")||{}).value||""):"";
+  if(!w||!hh||w<=0||hh<=0){toast("Largeur et hauteur doivent \u00eatre des nombres positifs","ti-alert-circle");return;}
+  var body={type:type,largeur:w,hauteur:hh,statut:statut,no_affaire:aff,notes:notes,is_anticute:isAnticute,date_certification:dateCert||null,date_expiration:dateExp||null,appro_id:id?(FILETS.filter(function(x){return x.id===id;})[0]||{}).appro_id||null:null};
+  var p=id?apiCall("PUT","/filets/"+id,body):apiCall("POST","/filets",body);
+  p.then(function(saved){
+    if(id){var i=FILETS.findIndex(function(f){return f.id===id;});if(i>=0)FILETS[i]=saved;}
+    else FILETS.unshift(saved);
+    closeFiletForm();
+    renderFilets();
+    toast(id?"Filet modifi\u00e9":"Filet ajout\u00e9 au stock","ti-check");
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+function delFilet(id){
+  if(!confirm("Supprimer ce filet du stock ?"))return;
+  apiCall("DELETE","/filets/"+id).then(function(){
+    FILETS=FILETS.filter(function(f){return f.id!==id;});
+    renderFilets();
+    toast("Filet supprim\u00e9","ti-trash");
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+
+function loadFilets(){
+  if(!authToken)return Promise.resolve();
+  return apiCall("GET","/filets").then(function(d){FILETS=d||[];}).catch(function(){});
+}
 function loadLists(){
   _listsOk=false;
   if(!authToken)return Promise.resolve();
@@ -8775,7 +9107,16 @@ function renderCommandes(){try{setActiveNav('btn-cmd');}catch(e){}if(typeof _mou
   h+="<input id=\"cmd-chan\" placeholder=\"Chantier (option)\" class=\"ui-in\" style=\"flex:1;min-width:120px\"/>";
   h+="<input id=\"cmd-tl\" placeholder=\"Team Leader (option)\" class=\"ui-in\" style=\"flex:1;min-width:120px\"/>";
   h+="<button class=\"cmd-add-btn liv\" onclick=\"addCommandeManual()\"><i class=\"ti ti-plus\"></i> Ajouter</button>";
-  h+="</div></div>";
+  h+="</div>";
+  if(featureOn("filets")){
+    h+="<label class=\"cmd-filet-chk\"><input type=\"checkbox\" id=\"cmd-isfilet\" onchange=\"toggleCmdFiletFields()\"/> C'est un filet \u2014 ira au stock d\u00e8s r\u00e9ception</label>";
+    h+="<div class=\"cmd-add-row\" id=\"cmd-filet-row\" style=\"display:none;margin-top:8px\">";
+    h+="<input id=\"cmd-filet-type\" placeholder=\"Type (anti-pigeon, s\u00e9curit\u00e9...)\" class=\"ui-in\" style=\"flex:2;min-width:160px\"/>";
+    h+="<input id=\"cmd-filet-w\" type=\"number\" step=\"0.1\" min=\"0\" placeholder=\"Largeur (m)\" class=\"ui-in\" style=\"width:100px\"/>";
+    h+="<input id=\"cmd-filet-h\" type=\"number\" step=\"0.1\" min=\"0\" placeholder=\"Hauteur (m)\" class=\"ui-in\" style=\"width:100px\"/>";
+    h+="</div>";
+  }
+  h+="</div>";
 
   if(!_cmdList().length){
     h+="<div class=\"cmd-empty\"><i class=\"ti ti-clipboard-off\"></i><div class=\"cmd-empty-t\">Aucune commande en cours</div><div class=\"cmd-empty-d\">Les articles marqu\u00e9s \u00ab En commande \u00bb dans une appro appara\u00eetront ici, ou ajoutez-en un manuellement ci-dessus.</div></div></div>";
@@ -8833,6 +9174,11 @@ function openAffaireFromCmd(aff){
   else if(typeof openSheet==="function")openSheet(s.id);
 }
 function c_hasAff(aff){if(!aff||aff.indexOf("Sans N")>=0)return false;return _approsForAffaire(aff).length>0;}
+function toggleCmdFiletFields(){
+  var chk=document.getElementById("cmd-isfilet");
+  var row=document.getElementById("cmd-filet-row");
+  if(row)row.style.display=(chk&&chk.checked)?"flex":"none";
+}
 function addCommandeManual(){
   var prod=(document.getElementById("cmd-prod")||{}).value||"";prod=prod.trim();
   if(!prod){toast("Indiquez un produit","ti-alert-circle");return;}
@@ -8840,8 +9186,14 @@ function addCommandeManual(){
   var aff=((document.getElementById("cmd-aff")||{}).value||"").trim();
   var chan=((document.getElementById("cmd-chan")||{}).value||"").trim();
   var ctl=((document.getElementById("cmd-tl")||{}).value||"").trim();
+  var isFilet=!!(document.getElementById("cmd-isfilet")||{}).checked;
+  var filetType=isFilet?((document.getElementById("cmd-filet-type")||{}).value||"").trim():"";
+  var filetW=isFilet?parseFloat((document.getElementById("cmd-filet-w")||{}).value):null;
+  var filetH=isFilet?parseFloat((document.getElementById("cmd-filet-h")||{}).value):null;
+  if(isFilet&&(!filetW||!filetH||filetW<=0||filetH<=0)){toast("Indiquez la largeur et la hauteur du filet","ti-alert-circle");return;}
   /* auteur/createdBy indispensables : sans eux _cmdVisible() masque la commande \u00e0 son propre cr\u00e9ateur. */
   COMMANDES.push({id:uid(),produit:prod,qty:qty,noAffaire:aff,chantier:chan,tl:ctl,statut:"en_attente",origine:"manuel",approId:null,sec:null,fournisseur:"",
+    isFilet:isFilet,filetType:filetType,filetW:filetW,filetH:filetH,
     auteur:(currentUser&&(currentUser.name||currentUser.username))||"",createdBy:(currentUser&&currentUser.id)||null,
     createdAt:new Date().toISOString()});
   /* Affichage imm\u00e9diat : si le r\u00e9seau flanche, l'utilisateur voit quand m\u00eame sa commande
@@ -8871,6 +9223,18 @@ function toggleCommandeRecu(id){
       });
       if(touched){apiCall("PUT","/appros/"+(ap._id||ap.id),ap).catch(function(){});if(cur&&(cur._id||cur.id)===(ap._id||ap.id))renderForm();}
     }
+  }
+  /* Filets (Su : "quand on commande un filet, ça le met dans le stock des
+     filets avec l'affaire qui lui est attribuée") : à réception, une seule
+     fois par commande (filetCreated évite un doublon si on décoche puis
+     recoche "reçu" plus tard). */
+  if(wasPending&&c.statut==="recu"&&c.isFilet&&!c.filetCreated&&typeof apiCall==="function"){
+    c.filetCreated=true;
+    apiCall("POST","/filets",{type:c.filetType||"",largeur:c.filetW,hauteur:c.filetH,statut:"depot",no_affaire:c.noAffaire||"",appro_id:c.approId||null,
+      notes:"Re\u00e7u via commande"+(c.produit?" \u00ab "+c.produit+" \u00bb":"")}).then(function(saved){
+      if(typeof FILETS!=="undefined")FILETS.unshift(saved);
+      if(typeof toast==="function")toast("Filet ajout\u00e9 au stock d\u00e9p\u00f4t","ti-grid-dots");
+    }).catch(function(){c.filetCreated=false;});
   }
   // laisser l'onde se jouer avant le re-render
   setTimeout(function(){saveCommandes(function(){renderCommandes();});}, wasPending?420:0);
@@ -9290,8 +9654,8 @@ function tlTicketSection(){
 // ═══ PERSONNALISATION ═══
 
 // ═══ MENU DE GAUCHE — ordre personnalisable ═══
-var MENU_KEYS=["btn-new-sb","btn-pending","btn-terrain","btn-admin","btn-dash","btn-ui","btn-alo","btn-trucks","btn-cmd","btn-annonce","btn-tickets","btn-notifs","btn-perso"];
-var MENU_LABELS={"btn-new-sb":"Nouvelle appro","btn-terrain":"Demande du terrain","btn-admin":"Administration","btn-dash":"Tableau de bord","btn-ui":"Param\u00e9trage interface","btn-alo":"Lien Alobees","btn-trucks":"Gestion des camions","btn-cmd":"Commandes","btn-annonce":"Annonces","btn-pending":"Messages en attente","btn-notifs":"Notifications","btn-tickets":"Demandes d\u00e9p\u00f4t","btn-perso":"Réglages généraux"};
+var MENU_KEYS=["btn-new-sb","btn-pending","btn-terrain","btn-admin","btn-dash","btn-ui","btn-alo","btn-trucks","btn-filets","btn-cmd","btn-annonce","btn-tickets","btn-notifs","btn-perso"];
+var MENU_LABELS={"btn-new-sb":"Nouvelle appro","btn-terrain":"Demande du terrain","btn-admin":"Administration","btn-dash":"Tableau de bord","btn-ui":"Param\u00e9trage interface","btn-alo":"Lien Alobees","btn-trucks":"Gestion des camions","btn-filets":"Filets","btn-cmd":"Commandes","btn-annonce":"Annonces","btn-pending":"Messages en attente","btn-notifs":"Notifications","btn-tickets":"Demandes d\u00e9p\u00f4t","btn-perso":"Réglages généraux"};
 function _menuOrder(){var mo=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.menuOrder)?CONFIG.menuOrder.slice():[];MENU_KEYS.forEach(function(k){if(mo.indexOf(k)<0)mo.push(k);});return mo;}
 function applyMenuOrder(){try{var body=document.querySelector(".sb-body");var anchor=document.getElementById("sheets-list");if(!body||!anchor)return;_menuOrder().forEach(function(k){var el=document.getElementById(k);if(el)body.insertBefore(el,anchor);});}catch(e){}}
 function moveMenu(i,dir){var mo=_menuOrder();var j=i+dir;if(j<0||j>=mo.length)return;var t=mo[i];mo[i]=mo[j];mo[j]=t;if(typeof CONFIG==="undefined"||!CONFIG)CONFIG={};CONFIG.menuOrder=mo;applyMenuOrder();saveConfig(function(){});renderPersonnalisation();}
@@ -11956,6 +12320,11 @@ function _syncMenuVisibility(){
   var bui=document.getElementById("btn-ui");if(bui)bui.style.display=canManage()?"flex":"none";
   var balo=document.getElementById("btn-alo");if(balo)balo.style.display=(currentUser.role==="admin")?"flex":"none";
   var btr=document.getElementById("btn-trucks");if(btr)btr.style.display=(canManage()&&featureOn("depot_trucks"))?"flex":"none";
+  /* Su : "les conducteurs y ont accès aussi, c'est pour eux qu'est le plus
+     important avec la recherche intelligente" — élargi ici précisément,
+     sans toucher à canManage() lui-même (utilisé ailleurs pour des écrans
+     qui, eux, doivent vraiment rester réservés dépôt/admin). */
+  var bfl=document.getElementById("btn-filets");if(bfl)bfl.style.display=((canManage()||(currentUser&&currentUser.role==="conducteur"))&&featureOn("filets"))?"flex":"none";
   var bcmd=document.getElementById("btn-cmd");if(bcmd)bcmd.style.display=(currentUser.role!=="technicien"&&featureOn("commandes"))?"flex":"none";
   var bann=document.getElementById("btn-annonce");if(bann)bann.style.display=(canManage()&&featureOn("annonces"))?"flex":"none";
   var btk=document.getElementById("btn-tickets");if(btk)btk.style.display=(canManage()&&featureOn("terrain_requests"))?"flex":"none";
@@ -12028,6 +12397,7 @@ function enterApp(){
   loadUserNames();
   fetch("/api/alobees/status",{headers:{Authorization:"Bearer "+authToken}}).then(function(r){return r.json();}).then(function(d){window.alobeesOn=!!(d&&d.configured);if(cur)renderForm();}).catch(function(){window.alobeesOn=false;});
   loadLists().then(function(){if(cur)renderForm();});
+  loadFilets();
   startNotifPolling();
   startSheetsPolling();
 }
