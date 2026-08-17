@@ -6138,7 +6138,6 @@ function truckSelectorHTML(){
   _allAssignNames().forEach(function(nm){dlOpts+="<option value=\""+esc(nm)+"\"></option>";});
   var h="<div class=\"fg fg-full\"><label style=\"display:flex;align-items:center;gap:6px\"><i class=\"ti ti-truck\" style=\"font-size:12px;color:#A16207\"></i> Team Leader / Camion <span style=\"font-size:10px;color:#94A3B8;font-weight:400\">(camion enregistr\u00e9 ou nom libre)</span></label><input class=\"fin\" list=\"tl-camion-list\" value=\""+esc(cur.tlCamion||"")+"\" placeholder=\"Choisir un camion ou saisir un nom\u2026\" onchange=\"setTlCamion(this.value)\"/><datalist id=\"tl-camion-list\">"+dlOpts+"</datalist></div>";
   h+="<div class=\"fg fg-full\"><button onclick=\"toggleCamionSujet()\" style=\"background:"+(cur.camionSujet?"#B91C1C":"#fff")+";color:"+(cur.camionSujet?"#fff":"#B91C1C")+";border:1px solid #FCA5A5;border-radius:8px;padding:8px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-alert-triangle\"></i> "+(cur.camionSujet?"Sujet camion signal\u00e9 \u00b7 cliquer pour retirer":"Sujet camion (technicien sans camion ?)")+"</button>"+(cur.camionSujet?"<div style=\"margin-top:7px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:9px 12px;font-size:12px;color:#B91C1C\"><i class=\"ti ti-alert-triangle\"></i> <b>Sujet camion :</b> "+(cur.camionSujetNote?esc(cur.camionSujetNote):"le technicien en charge n'a peut-\u00eatre pas de camion \u2014 solution \u00e0 trouver.")+"</div>":"")+"</div>";
-  h+=_filApproSectionHTML();
   var t=truckByTL(cur.tlCamion);
   if(t){
     h+="<div class=\"fg fg-full\" style=\"background:#FEFCE8;border:1px solid #FEF08A;border-radius:10px;padding:12px\">";
@@ -6596,6 +6595,7 @@ h+="";
   } else {
     h+=_infoSummaryHTML();
   }
+  h+=_filApproSectionHTML();
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
@@ -7598,15 +7598,16 @@ function _filTableHTML(list){
   var byCat={};
   list.forEach(function(f){var k=f.type||"Sans cat\u00e9gorie";(byCat[k]=byCat[k]||[]).push(f);});
   var cats=Object.keys(byCat).sort();
-  var h="<table class=\"fil-table\"><thead><tr><th>Dimensions</th><th>Statut</th><th>Certification</th><th>Affaire</th><th></th></tr></thead>";
+  var h="<table class=\"fil-table\"><thead><tr><th>Dimensions</th><th>Statut</th><th>Achet\u00e9 le</th><th>Certification</th><th>Affaire</th><th></th></tr></thead>";
   cats.forEach(function(cat){
-    h+="<tbody><tr class=\"fil-table-cat\"><td colspan=\"5\">"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span></td></tr>";
+    h+="<tbody><tr class=\"fil-table-cat\"><td colspan=\"6\">"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span></td></tr>";
     byCat[cat].forEach(function(f){
       var rs=_filReserveStatus(f);
       var cert=_filCertStatus(f);
       h+="<tr>";
       h+="<td class=\"fil-table-dim\">"+_filDimTxt(f)+"</td>";
       h+="<td><span class=\"fil-table-badge fil-table-badge-"+rs.level+"\">"+rs.label+"</span></td>";
+      h+="<td>"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
       h+="<td>"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>":"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
       h+="<td>"+(f.no_affaire?esc(f.no_affaire):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
       h+="<td class=\"fil-table-acts\"><button onclick=\"openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></td>";
@@ -7686,7 +7687,7 @@ function closeFiletPicker(){var ov=document.getElementById("fil-picker-ov");if(o
 function reserveFilet(id){
   if(!cur||!cur._id)return;
   var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
-  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:cur._id,no_affaire:cur.noAffaire||f.no_affaire||""};
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:cur._id,no_affaire:cur.noAffaire||f.no_affaire||""};
   apiCall("PUT","/filets/"+id,body).then(function(saved){
     var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
     closeFiletPicker();
@@ -7698,7 +7699,7 @@ function unreserveFilet(id){
   var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
   var msg=(f.statut==="chantier")?"Ce filet est d\u00e9j\u00e0 marqu\u00e9 sur chantier \u2014 retirer seulement le lien avec cette appro ?":"Retirer ce filet de cette appro ? Il redeviendra libre au d\u00e9p\u00f4t.";
   if(!confirm(msg))return;
-  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:null,no_affaire:""};
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:null,no_affaire:""};
   apiCall("PUT","/filets/"+id,body).then(function(saved){
     var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
     renderForm();
@@ -7955,6 +7956,7 @@ function openFiletForm(id){
   h+="<div class=\"fg\"><label>Cat\u00e9gorie</label><select class=\"fin\" id=\"filf-type\">"+_typeOpts.map(function(t){return "<option value=\""+esc(t)+"\""+(f&&f.type===t?" selected":"")+">"+esc(t)+"</option>";}).join("")+"</select></div>";
   h+="<div style=\"display:flex;gap:10px\"><div class=\"fg\" style=\"flex:1\"><label>Largeur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-w\" value=\""+(f?esc(""+f.largeur):"")+"\"/></div><div class=\"fg\" style=\"flex:1\"><label>Hauteur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-h\" value=\""+(f?esc(""+f.hauteur):"")+"\"/></div></div>";
   h+="<div class=\"fg\"><label>Statut</label><select class=\"fin\" id=\"filf-statut\"><option value=\"depot\""+((!f||f.statut==="depot")?" selected":"")+">Au d\u00e9p\u00f4t</option><option value=\"chantier\""+(f&&f.statut==="chantier"?" selected":"")+">Sur chantier</option></select></div>";
+  h+="<div class=\"fg\"><label>Date d'achat</label><input type=\"date\" class=\"fin\" id=\"filf-dateachat\" value=\""+esc(f&&f.date_achat?(""+f.date_achat).slice(0,10):"")+"\"/></div>";
   h+="<div class=\"fg\"><label>N\u00b0 d'affaire (si li\u00e9 \u00e0 un chantier)</label><input class=\"fin\" id=\"filf-aff\" value=\""+esc(f?f.no_affaire||"":"")+"\"/></div>";
   h+="<label class=\"cmd-filet-chk\" style=\"margin:2px 0 12px\"><input type=\"checkbox\" id=\"filf-anticute\" "+(f&&f.is_anticute?"checked":"")+" onchange=\"toggleFiletAnticuteFields()\"/> Filet anti-chute (n\u00e9cessite une certification)</label>";
   h+="<div id=\"filf-cert-row\" style=\""+((f&&f.is_anticute)?"":"display:none")+"\">";
@@ -7973,12 +7975,13 @@ function saveFilet(id){
   var hh=parseFloat((document.getElementById("filf-h")||{}).value);
   var statut=(document.getElementById("filf-statut")||{}).value||"depot";
   var aff=(document.getElementById("filf-aff")||{}).value||"";
+  var dateAchat=(document.getElementById("filf-dateachat")||{}).value||"";
   var notes=(document.getElementById("filf-notes")||{}).value||"";
   var isAnticute=!!(document.getElementById("filf-anticute")||{}).checked;
   var dateCert=isAnticute?((document.getElementById("filf-datecert")||{}).value||""):"";
   var dateExp=isAnticute?((document.getElementById("filf-dateexp")||{}).value||""):"";
   if(!w||!hh||w<=0||hh<=0){toast("Largeur et hauteur doivent \u00eatre des nombres positifs","ti-alert-circle");return;}
-  var body={type:type,largeur:w,hauteur:hh,statut:statut,no_affaire:aff,notes:notes,is_anticute:isAnticute,date_certification:dateCert||null,date_expiration:dateExp||null,appro_id:id?(FILETS.filter(function(x){return x.id===id;})[0]||{}).appro_id||null:null};
+  var body={type:type,largeur:w,hauteur:hh,statut:statut,no_affaire:aff,notes:notes,date_achat:dateAchat||null,is_anticute:isAnticute,date_certification:dateCert||null,date_expiration:dateExp||null,appro_id:id?(FILETS.filter(function(x){return x.id===id;})[0]||{}).appro_id||null:null};
   var p=id?apiCall("PUT","/filets/"+id,body):apiCall("POST","/filets",body);
   p.then(function(saved){
     if(id){var i=FILETS.findIndex(function(f){return f.id===id;});if(i>=0)FILETS[i]=saved;}
