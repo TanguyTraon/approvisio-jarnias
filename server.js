@@ -239,6 +239,7 @@ async function initDB() {
       appro_id          UUID,
       no_affaire        VARCHAR(80),
       notes             TEXT,
+      date_achat        DATE,
       is_anticute       BOOLEAN NOT NULL DEFAULT FALSE,
       date_certification DATE,
       date_expiration   DATE,
@@ -349,6 +350,7 @@ async function initDB() {
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS is_anticute BOOLEAN NOT NULL DEFAULT FALSE;`);
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_certification DATE;`);
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_expiration DATE;`);
+  await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_achat DATE;`);
   // Fusion des rôles terrain : "team_leader" (comptes créés via lien/QR) n'existe
   // plus en tant que catégorie séparée, tout devient "technicien". Leur accès
   // reste inchangé : il dépend désormais de la table appro_team_leaders, pas du
@@ -1451,7 +1453,7 @@ app.get('/api/stats', auth, adminOnly, async (req, res) => {
 });
 
 // ── LISTES PARTAG\u00c9ES (types / catalogue / clients) ─────────────
-const LIST_NAMES = ['types', 'catalogue', 'clients', 'trucks', 'commandes', 'annonces', 'tickets', 'config'];
+const LIST_NAMES = ['types', 'catalogue', 'clients', 'trucks', 'commandes', 'annonces', 'tickets', 'config', 'filet_types'];
 // ── FILETS (stock au dépôt + suivi chantier) ─────────────────────────
 app.get('/api/filets', auth, async (req, res) => {
   try {
@@ -1461,27 +1463,27 @@ app.get('/api/filets', auth, async (req, res) => {
 });
 app.post('/api/filets', auth, async (req, res) => {
   try {
-    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration } = req.body || {};
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration } = req.body || {};
     const l = parseFloat(largeur), h = parseFloat(hauteur);
     if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
     const { rows } = await pool.query(
-      `INSERT INTO filets (type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
-      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, !!is_anticute, date_certification || null, date_expiration || null, req.user.id]
+      `INSERT INTO filets (type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration, created_by)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, date_certification || null, date_expiration || null, req.user.id]
     );
     res.json(rows[0]);
   } catch (e) { res.status(500).json({ error: 'Erreur de création', detail: e.message }); }
 });
 app.put('/api/filets/:id', auth, async (req, res) => {
   try {
-    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, is_anticute, date_certification, date_expiration } = req.body || {};
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration } = req.body || {};
     const l = parseFloat(largeur), h = parseFloat(hauteur);
     if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
     const { rows } = await pool.query(
       `UPDATE filets SET type=$1, largeur=$2, hauteur=$3, statut=$4, appro_id=$5, no_affaire=$6, notes=$7,
-       is_anticute=$8, date_certification=$9, date_expiration=$10, updated_at=NOW()
-       WHERE id=$11 RETURNING *`,
-      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, !!is_anticute, date_certification || null, date_expiration || null, req.params.id]
+       date_achat=$8, is_anticute=$9, date_certification=$10, date_expiration=$11, updated_at=NOW()
+       WHERE id=$12 RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, date_certification || null, date_expiration || null, req.params.id]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Filet introuvable' });
     res.json(rows[0]);
