@@ -493,18 +493,26 @@ async function initDB() {
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_achat DATE;`);
   // Import automatique du stock de filets existant (Su : "tu peux pas
   // intégrer tout ça sans que je n'aie à le faire ?") — se déclenche UNE
-  // SEULE FOIS, seulement si la table est encore vide, jamais en double même
-  // si le serveur redémarre plusieurs fois.
+  // SEULE FOIS. Marqueur dédié dans app_lists plutôt que "la table est
+  // vide" : un simple filet ajouté à la main avant le déploiement aurait
+  // suffi à bloquer l'import pour toujours, en silence, sans que personne
+  // ne puisse s'en rendre compte (exactement ce qui explique le rapport de
+  // Su : "l'écran s'ouvre mais le tableau est vide").
   try {
-    const { rows: filetCount } = await pool.query('SELECT COUNT(*) FROM filets');
-    if (parseInt(filetCount[0].count, 10) === 0 && FILETS_SEED.length) {
+    const { rows: marker } = await pool.query(`SELECT 1 FROM app_lists WHERE name = 'filets_seeded'`);
+    if (!marker.length && FILETS_SEED.length) {
+      let ok = 0, failed = 0;
       for (const f of FILETS_SEED) {
-        await pool.query(
-          `INSERT INTO filets (type, largeur, hauteur, statut, is_anticute, date_achat, notes) VALUES ($1,$2,$3,'depot',$4,$5,$6)`,
-          [f.type, f.largeur, f.hauteur, f.is_anticute, f.date_achat, f.notes]
-        );
+        try {
+          await pool.query(
+            `INSERT INTO filets (type, largeur, hauteur, statut, is_anticute, date_achat, notes) VALUES ($1,$2,$3,'depot',$4,$5,$6)`,
+            [f.type, f.largeur, f.hauteur, f.is_anticute, f.date_achat, f.notes]
+          );
+          ok++;
+        } catch (e) { failed++; console.error('Import filet échoué (ligne ignorée) :', e.message); }
       }
-      console.log(`Stock de filets importé : ${FILETS_SEED.length} filets.`);
+      await pool.query(`INSERT INTO app_lists (name, data) VALUES ('filets_seeded', $1) ON CONFLICT (name) DO NOTHING`, [JSON.stringify({ at: new Date().toISOString(), ok, failed })]);
+      console.log(`Stock de filets importé : ${ok} filets (${failed} échecs).`);
     }
   } catch (e) { console.error('Import des filets échoué (non bloquant) :', e.message); }
   // Fusion des rôles terrain : "team_leader" (comptes créés via lien/QR) n'existe
