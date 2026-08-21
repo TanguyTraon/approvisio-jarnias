@@ -3939,6 +3939,7 @@ function _rerenderCurrent(){
     else if(t==="trucks")renderTrucksSettings();
     else if(t==="annonces")renderAnnonces();
     else if(t==="terrain")renderTerrainDemande();
+    else if(t==="filets")renderFilets();
     else if(t==="mes")renderMesAppros();
     else renderWelcome();
   }catch(e){}
@@ -7723,6 +7724,7 @@ function unreserveFilet(id){
 
 function renderFilets(){
   try{setActiveNav("btn-filets");}catch(e){}
+  cur=null;currentTab="filets";
   var h=_dashHeader("Filets","Stock au d\u00e9p\u00f4t, suivi automatique sur chantier.");
   var certIssues=FILETS.filter(function(f){var c=_filCertStatus(f);return c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown");});
   if(certIssues.length){
