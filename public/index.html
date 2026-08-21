@@ -2227,8 +2227,12 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-table-wrap{background:#fff;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;margin-top:8px}
 .fil-table{width:100%;border-collapse:collapse;font-size:13px}
 .fil-table thead th{text-align:left;font-size:10.5px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;border-bottom:1px solid #E2E8F0;background:#F8FAFC}
-.fil-table-cat td{background:#F5F3FF;color:#5B21B6;font-weight:700;font-size:11.5px;padding:8px 14px;text-transform:uppercase;letter-spacing:.3px}
-.fil-table-cat-n{color:#8B5CF6;font-weight:600;margin-left:4px}
+.fil-table-cat{cursor:pointer;user-select:none}
+.fil-table-cat td{background:#F5F3FF;color:#5B21B6;font-weight:700;font-size:11.5px;padding:8px 14px;text-transform:uppercase;letter-spacing:.3px;display:flex;align-items:center;gap:7px}
+.fil-table-cat:hover td{background:#EDE9FE}
+.fil-cat-chev{font-size:12px;transition:transform .15s var(--ease);flex-shrink:0}
+.fil-table-cat.open .fil-cat-chev{transform:rotate(90deg)}
+.fil-table-cat-n{color:#8B5CF6;font-weight:600;margin-left:2px}
 .fil-table tbody tr:not(.fil-table-cat){border-bottom:1px solid #F1F5F9}
 .fil-table tbody tr:not(.fil-table-cat):hover{background:#FAFBFC}
 .fil-table td{padding:10px 14px;vertical-align:middle}
@@ -2237,27 +2241,27 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-table-badge-libre{background:#ECFDF5;color:#059669}
 .fil-table-badge-reserve{background:#FFFBEB;color:#B45309}
 .fil-table-badge-chantier{background:#FFF7ED;color:#D97706}
+.fil-downgrade{font-size:10px;color:#92400E;margin-top:4px;line-height:1.4;max-width:220px}
 .fil-table-acts{display:flex;gap:6px;justify-content:flex-end}
 .fil-table-acts button{background:#F8FAFC;border:1px solid #E8EDF4;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748B;font-size:13px}
 .fil-table-acts button:hover{background:#EEF2F6}
 .fil-table-acts button.danger:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+/* Correctif du vrai bug signalé : sur mobile, les cellules se repliaient en
+   flex-wrap SANS étiquette (les en-têtes de colonnes sont masqués) — les
+   valeurs s'alignaient en rangées de 2-3 sans qu'on sache ce qu'elles
+   représentaient ("l'affichage à trois colonnes devient illisible"). Chaque
+   cellule empile maintenant sur sa propre ligne, avec son étiquette visible
+   devant, comme le tableau du matériel d'appro le fait déjà ailleurs dans
+   l'appli — cohérent avec un patron déjà éprouvé, pas une nouvelle idée. */
 @media(max-width:700px){
   .fil-table thead{display:none}
-  .fil-table,.fil-table tbody,.fil-table tr,.fil-table td{display:block;width:100%}
-  .fil-table tbody tr:not(.fil-table-cat){padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
-  .fil-table td{padding:0}
-  .fil-table-acts{margin-left:auto}
+  .fil-table,.fil-table tbody,.fil-table tr{display:block;width:100%}
+  .fil-table tbody tr:not(.fil-table-cat){padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+  .fil-table td{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0}
+  .fil-table td[data-label]:not([data-label=""])::before{content:attr(data-label);font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
+  .fil-table-dim{justify-content:space-between}
+  .fil-table-acts{justify-content:flex-end;margin-left:0}
 }
-.fil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-.fil-card{position:relative;border:1px solid #E8EDF4;border-radius:12px;padding:14px 15px;background:#fff;box-shadow:0 2px 10px -8px rgba(15,23,42,.3)}
-.fil-dim{font-size:19px;font-weight:800;color:#0F172A;letter-spacing:-.3px}
-.fil-type{font-size:12px;color:#7C3AED;font-weight:700;background:#F5F3FF;display:inline-block;padding:2px 9px;border-radius:8px;margin-top:6px}
-.fil-aff{font-size:11.5px;color:#94A3B8;margin-top:7px;display:flex;align-items:center;gap:5px}
-.fil-notes{font-size:11.5px;color:#64748B;margin-top:5px;font-style:italic}
-.fil-acts{display:flex;gap:6px;margin-top:11px}
-.fil-acts button{background:#F8FAFC;border:1px solid #E8EDF4;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748B;font-size:14px}
-.fil-acts button:hover{background:#EEF2F6}
-.fil-acts button.danger:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
 .fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px}
 .fil-cert{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;margin-top:7px}
 .fil-cert-ok{background:#ECFDF5;color:#059669}
@@ -7593,6 +7597,12 @@ function _filReserveStatus(f){
    rapidement") \u2014 remplace les 2 sections cartes d\u00e9p\u00f4t/chantier s\u00e9par\u00e9es :
    le statut devient une colonne, pas une section \u00e0 elle seule, donc tout se
    scanne d'un coup d'\u0153il plut\u00f4t que de faire d\u00e9filer 2 grilles de cartes. */
+/* Cat\u00e9gories repliables (Su : "l'affichage \u00e0 trois colonnes devient
+   illisible" + audit demand\u00e9) \u2014 avec un vrai stock import\u00e9 (140 filets),
+   tout afficher \u00e0 plat en permanence rend le tableau ing\u00e9rable. Repli\u00e9es
+   par d\u00e9faut, on d\u00e9plie seulement ce qu'on regarde. */
+var _filCatOpen={};
+function toggleFilCat(cat){_filCatOpen[cat]=!_filCatOpen[cat];renderFilets();}
 function _filTableHTML(list){
   if(!list.length)return "<div class=\"fil-empty\">Aucun filet enregistr\u00e9.</div>";
   var byCat={};
@@ -7600,19 +7610,23 @@ function _filTableHTML(list){
   var cats=Object.keys(byCat).sort();
   var h="<table class=\"fil-table\"><thead><tr><th>Dimensions</th><th>Statut</th><th>Achet\u00e9 le</th><th>Certification</th><th>Affaire</th><th></th></tr></thead>";
   cats.forEach(function(cat){
-    h+="<tbody><tr class=\"fil-table-cat\"><td colspan=\"6\">"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span></td></tr>";
-    byCat[cat].forEach(function(f){
-      var rs=_filReserveStatus(f);
-      var cert=_filCertStatus(f);
-      h+="<tr>";
-      h+="<td class=\"fil-table-dim\">"+_filDimTxt(f)+"</td>";
-      h+="<td><span class=\"fil-table-badge fil-table-badge-"+rs.level+"\">"+rs.label+"</span></td>";
-      h+="<td>"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
-      h+="<td>"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>":"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
-      h+="<td>"+(f.no_affaire?esc(f.no_affaire):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
-      h+="<td class=\"fil-table-acts\"><button onclick=\"openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></td>";
-      h+="</tr>";
-    });
+    var open=!!_filCatOpen[cat];
+    var catId="fc"+cat.replace(/[^a-zA-Z0-9]/g,"");
+    h+="<tbody><tr class=\"fil-table-cat"+(open?" open":"")+"\" onclick=\"toggleFilCat('"+esc(cat).replace(/'/g,"\\'")+"')\"><td colspan=\"6\"><i class=\"ti ti-chevron-right fil-cat-chev\"></i>"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span></td></tr>";
+    if(open){
+      byCat[cat].forEach(function(f){
+        var rs=_filReserveStatus(f);
+        var cert=_filCertStatus(f);
+        h+="<tr>";
+        h+="<td class=\"fil-table-dim\" data-label=\"Dimensions\">"+_filDimTxt(f)+"</td>";
+        h+="<td data-label=\"Statut\"><span class=\"fil-table-badge fil-table-badge-"+rs.level+"\">"+rs.label+"</span></td>";
+        h+="<td data-label=\"Achet\u00e9 le\">"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
+        h+="<td data-label=\"Certification\">"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>"+((cert.level==="expired"||cert.level==="unknown")?"<div class=\"fil-downgrade\">Usage objet uniquement (pare-gravat), plus pour une personne</div>":""):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
+        h+="<td data-label=\"Affaire\">"+(f.no_affaire?esc(f.no_affaire):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
+        h+="<td class=\"fil-table-acts\" data-label=\"\"><button onclick=\"event.stopPropagation();openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"event.stopPropagation();delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></td>";
+        h+="</tr>";
+      });
+    }
     h+="</tbody>";
   });
   h+="</table>";
@@ -7766,19 +7780,6 @@ function _filCertStatus(f){
   if(days<0)return {level:"expired",label:"Certification expir\u00e9e"};
   if(days<=30)return {level:"soon",label:"Expire dans "+days+" j"};
   return {level:"ok",label:"Certifi\u00e9 jusqu'au "+fd(f.date_expiration)};
-}
-function _filCardHTML(f){
-  var cert=_filCertStatus(f);
-  var h="<div class=\"fil-card\">";
-  h+="<div class=\"fil-dim\">"+_filDimTxt(f)+"</div>";
-  if(f.type)h+="<div class=\"fil-type\">"+esc(f.type)+"</div>";
-  if(cert)h+="<div class=\"fil-cert fil-cert-"+cert.level+"\"><i class=\"ti "+(cert.level==="ok"?"ti-shield-check":cert.level==="soon"?"ti-clock-exclamation":cert.level==="expired"?"ti-shield-x":"ti-help-circle")+"\"></i> "+cert.label+"</div>";
-  if(cert&&(cert.level==="expired"||cert.level==="unknown"))h+="<div class=\"fil-downgrade\"><i class=\"ti ti-info-circle\"></i> Ancien filet antichute \u2014 usage objet uniquement (pare-gravat \u00e0 ajouter), plus pour de la protection de personnes</div>";
-  if(f.no_affaire)h+="<div class=\"fil-aff\"><i class=\"ti ti-briefcase\" style=\"font-size:11px\"></i> "+esc(f.no_affaire)+"</div>";
-  if(f.notes)h+="<div class=\"fil-notes\">"+esc(f.notes)+"</div>";
-  h+="<div class=\"fil-acts\"><button onclick=\"openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></div>";
-  h+="</div>";
-  return h;
 }
 function _filDimTxt(f){return (+f.largeur)+" \u00d7 "+(+f.hauteur)+" m";}
 
