@@ -715,7 +715,18 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 .next-step-btn:hover{box-shadow:0 6px 16px -6px rgba(0,0,0,.25);transform:translateY(-2px)}
 .next-step-btn:active{transform:scale(.96)}
 @media print{.appro-steps,.next-step{display:none!important}}
-@media(max-width:640px){.next-step{max-width:none;margin-left:8px;margin-right:8px}.next-step-d{font-size:13px}}
+@media(max-width:640px){
+  /* Su : "sur téléphone l'indication de l'étape prend trop de place
+     visuellement" — avant, seuls la largeur et la taille du texte
+     descriptif étaient ajustées ; l'icône, le remplissage et le bouton
+     restaient à leur taille bureau. Rétréci pour de vrai ici. */
+  .next-step{max-width:none;margin-left:8px;margin-right:8px;padding:9px 12px;gap:9px;bottom:8px}
+  .next-step-ic{width:30px;height:30px;border-radius:8px}
+  .next-step-ic i{font-size:15px}
+  .next-step-t{font-size:9.5px}
+  .next-step-d{font-size:12.5px}
+  .next-step-btn{padding:7px 11px;font-size:11.5px}
+}
 /* encart d'invitation quand aucun article */
 .art-empty{text-align:center;background:#fff;border:1.5px dashed #D8E0EA;border-radius:16px;padding:26px 22px;margin-bottom:14px}
 .art-empty-ic{width:56px;height:56px;border-radius:16px;margin:0 auto 12px;background:color-mix(in srgb,var(--accent,#6D28D9) 12%,transparent);color:var(--accent,#6D28D9);display:flex;align-items:center;justify-content:center}
@@ -1544,6 +1555,13 @@ table.at tr.kit-row td.td-d{position:relative}
 .cp-kit-x{font-size:12px;font-weight:800;color:#6D28D9;line-height:1}
 .cp-kit-n{width:40px;padding:4px;border:1px solid #C4B5FD;border-radius:6px;text-align:center;font-family:inherit;font-size:12px;color:#6D28D9;font-weight:700;background:#fff;outline:none}
 .btn-kit{background:#6D28D9;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;padding:5px 9px;display:inline-flex;align-items:center;gap:4px;transition:all .22s var(--spring)}
+.kit-sugg{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.kit-sugg-hd{font-size:12px;font-weight:700;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:9px}
+.kit-sugg-btn{display:inline-flex;align-items:center;gap:6px;background:#7C3AED;color:#fff;border:none;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin:0 6px 6px 0;transition:transform .15s var(--ease),box-shadow .2s}
+.kit-sugg-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px -5px rgba(124,58,237,.5)}
+.kit-sugg-btn:active{transform:scale(.97)}
+.kit-sugg-btn.added{background:#EDE9FE;color:#6D28D9}
+.kit-sugg-n{opacity:.85;font-weight:600;font-size:11px}
 .btn-kit:hover{background:#5B21B6;padding-left:12px;padding-right:12px;border-radius:9px;box-shadow:0 6px 14px -5px rgba(109,40,217,.5);transform:translateY(-1px)}
 @media(max-width:768px){.cp-panel{width:100vw}.cp-sec-hd{flex-wrap:wrap;gap:7px}.cp-sec-actions{width:100%;justify-content:flex-start}.cp-hd{padding-top:calc(16px + env(safe-area-inset-top))}}
 .cp-row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid #F8FAFC;gap:10px;transition:background .14s var(--ease)}
@@ -2283,15 +2301,22 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-cert-expired{background:#FEF2F2;color:#DC2626}
 .fil-cert-unknown{background:#F1F5F9;color:#64748B}
 .fil-downgrade{font-size:10.5px;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.5}
-.fil-diagram{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:14px 16px 10px;margin-top:12px;text-align:center}
-.fil-diagram-t{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;text-align:left}
-.fil-diag-net{fill:#DDD6FE;stroke:#7C3AED;stroke-width:1.5}
-.fil-diag-a{fill:#DDD6FE;stroke:#7C3AED}
-.fil-diag-b{fill:#BFDBFE;stroke:#2563EB}
+.fil-diagram{background:linear-gradient(160deg,#FAFAFF,#F5F3FF);border:1px solid #E9E4FB;border-radius:16px;padding:16px 18px 12px;margin-top:12px;text-align:center;box-shadow:0 8px 22px -14px rgba(109,40,217,.35)}
+.fil-diagram-t{font-size:11px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:.5px;text-align:left;display:flex;align-items:center;gap:5px}
+.fil-diagram-t::before{content:"";width:5px;height:5px;border-radius:50%;background:#8B5CF6}
+/* Palette variée pour distinguer chaque filet d'un groupe (jusqu'à N,
+   Su : "il ne devrait pas y avoir de limite" — le schéma doit rester lisible
+   même à 3, 4, 5 filets, pas juste 2 couleurs comme avant). */
+.fil-diag-c0{fill:#DDD6FE;stroke:#7C3AED}
+.fil-diag-c1{fill:#BFDBFE;stroke:#2563EB}
+.fil-diag-c2{fill:#BBF7D0;stroke:#059669}
+.fil-diag-c3{fill:#FED7AA;stroke:#EA580C}
+.fil-diag-c4{fill:#FBCFE8;stroke:#DB2777}
+.fil-diag-net{stroke-width:1.5}
 .fil-diag-need{fill:none;stroke:#0F172A;stroke-width:2;stroke-dasharray:6 4}
 .fil-diag-surplus{fill:#FEE2E2;fill-opacity:.55;stroke:#FCA5A5;stroke-width:1;stroke-dasharray:3 3}
 .fil-diag-lbl{font-size:11px;font-weight:700;fill:#1E293B}
-.fil-diag-legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px}
+.fil-diag-legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
 .fil-diag-legend span{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#64748B}
 .fil-diag-sw{width:11px;height:11px;border-radius:3px;display:inline-block;flex-shrink:0}
 .fil-diag-sw-need{border:2px dashed #0F172A}
@@ -5144,6 +5169,64 @@ function updN(){
   if(info)info.textContent=n===0?"S\u00e9lectionnez des articles":(n+" article"+(n>1?"s":"")+" s\u00e9lectionn\u00e9"+(n>1?"s":"")+(hidden>0?" (dont "+hidden+" hors recherche)":""));
 }
 function _kitBadge(r){if(!r||!r.kit)return "";return "<div style=\"display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;margin-top:3px;background:#F5F3FF;color:#6D28D9;padding:1px 8px;border-radius:20px\"><i class=\"ti ti-package\" style=\"font-size:10px\"></i> Kit "+esc(r.kit)+"</div>";}
+/* Suggestions rapides à partir du titre du chantier (Su : "je préfère
+   écrire, le catalogue ne sert que pour le TAB de l'écriture rapide... si ça
+   reconnaît la pose de filet, ça met sur un côté les raccourcis rapides des
+   kits en lien avec le domaine"). Mots-clés dérivés des noms de catégories
+   eux-mêmes + quelques synonymes de terrain — modifiable directement ici
+   si un mot manque, sans reconstruire le mécanisme. Réutilise addKit(cat)
+   telle quelle : un clic ajoute exactement comme depuis le catalogue. */
+var KIT_KEYWORDS={
+  "Ligne de vie / Ancrage":["ligne de vie","lignes de vie","ancrage","filet","filets","garde-corps","garde corps","antichute"],
+  "Cordes & Mousquetonnerie":["corde","cordes","cordiste","cordistes","rappel"],
+  "Protection cordes":["protection cordes","acrot\u00e8re","acroteres","acrot\u00e8res"],
+  "\u00c9tanch\u00e9it\u00e9":["\u00e9tanch\u00e9it\u00e9","etancheite","membrane","epdm","terrasse"],
+  "Couverture / Zinguerie":["couverture","zinguerie","toiture","toit","zinc"],
+  "Ma\u00e7onnerie":["ma\u00e7onnerie","maconnerie","b\u00e9ton","beton","cr\u00e9pi","crepi","fa\u00e7ade","facade"],
+  "Thermo / Isolation":["isolation","thermique","ite"],
+  "Nettoyage / D\u00e9moussage":["nettoyage","d\u00e9moussage","demoussage","d\u00e9mousser","demousser"]
+};
+/* Signal plus fiable que le titre libre : le "type de chantier" que la
+   personne coche explicitement dans la fiche (liste WT). Un type peut
+   correspondre à plusieurs catégories de kits (ex: "Isolation / Étanchéité"
+   couvre les deux côtés du catalogue). Combiné avec les mots-clés du titre
+   ci-dessus — les deux signaux se complètent, aucun ne remplace l'autre. */
+var WT_TO_KIT_CATS={
+  "Ligne de vie":["Ligne de vie / Ancrage"],
+  "Ligne de vie provisoire":["Ligne de vie / Ancrage"],
+  "Isolation / \u00c9tanch\u00e9it\u00e9":["\u00c9tanch\u00e9it\u00e9","Thermo / Isolation"],
+  "Ma\u00e7onnerie":["Ma\u00e7onnerie"],
+  "Nettoyage":["Nettoyage / D\u00e9moussage"]
+};
+function _suggestedKitsForChantier(nomChantier,typeChantiers){
+  var matches=[];
+  if(nomChantier){
+    var txt=_stripAccents((""+nomChantier).toLowerCase());
+    Object.keys(KIT_KEYWORDS).forEach(function(cat){
+      var hit=KIT_KEYWORDS[cat].some(function(kw){return txt.indexOf(_stripAccents(kw.toLowerCase()))>=0;});
+      if(hit&&CAT_ORDER.indexOf(cat)>=0&&matches.indexOf(cat)<0)matches.push(cat);
+    });
+  }
+  (typeChantiers||[]).forEach(function(t){
+    (WT_TO_KIT_CATS[t]||[]).forEach(function(cat){
+      if(CAT_ORDER.indexOf(cat)>=0&&matches.indexOf(cat)<0)matches.push(cat);
+    });
+  });
+  return matches;
+}
+function _kitSuggestionsHTML(){
+  if(!cur)return "";
+  var cats=_suggestedKitsForChantier(cur.nomChantier,getTypes(cur));
+  if(!cats.length)return "";
+  var h="<div class=\"kit-sugg\"><div class=\"kit-sugg-hd\"><i class=\"ti ti-bulb\"></i> Suggestions rapides d'apr\u00e8s le titre</div>";
+  cats.forEach(function(cat){
+    var n=CAT_ITEMS.filter(function(it){return it.cat===cat;}).length;
+    var already=["consommables","fournitures","outillage"].some(function(sec){return (cur[sec]||[]).some(function(r){return r.kit===cat;});});
+    h+="<button class=\"kit-sugg-btn"+(already?" added":"")+"\" onclick=\"addKit('"+cat.replace(/'/g,"\\'")+"')\" title=\""+(already?"D\u00e9j\u00e0 ajout\u00e9 \u2014 cliquer en ajoute de nouveau":"")+"\"><i class=\"ti ti-circle-plus\"></i> "+esc(cat)+" <span class=\"kit-sugg-n\">"+n+" articles"+(already?" \u00b7 d\u00e9j\u00e0 ajout\u00e9":"")+"</span></button>";
+  });
+  h+="</div>";
+  return h;
+}
 function addKit(cat){
   if(!cur){toast("Ouvrez une appro","ti-alert-circle");return;}
   var items=CAT_ITEMS.filter(function(it){return it.cat===cat;});
@@ -6188,24 +6271,32 @@ function truckSelectorHTML(){
   _allAssignNames().forEach(function(nm){dlOpts+="<option value=\""+esc(nm)+"\"></option>";});
   var h="<div class=\"fg fg-full\"><label style=\"display:flex;align-items:center;gap:6px\"><i class=\"ti ti-truck\" style=\"font-size:12px;color:#A16207\"></i> Team Leader / Camion <span style=\"font-size:10px;color:#94A3B8;font-weight:400\">(camion enregistr\u00e9 ou nom libre)</span></label><input class=\"fin\" list=\"tl-camion-list\" value=\""+esc(cur.tlCamion||"")+"\" placeholder=\"Choisir un camion ou saisir un nom\u2026\" onchange=\"setTlCamion(this.value)\"/><datalist id=\"tl-camion-list\">"+dlOpts+"</datalist></div>";
   h+="<div class=\"fg fg-full\"><button onclick=\"toggleCamionSujet()\" style=\"background:"+(cur.camionSujet?"#B91C1C":"#fff")+";color:"+(cur.camionSujet?"#fff":"#B91C1C")+";border:1px solid #FCA5A5;border-radius:8px;padding:8px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-alert-triangle\"></i> "+(cur.camionSujet?"Sujet camion signal\u00e9 \u00b7 cliquer pour retirer":"Sujet camion (technicien sans camion ?)")+"</button>"+(cur.camionSujet?"<div style=\"margin-top:7px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:9px 12px;font-size:12px;color:#B91C1C\"><i class=\"ti ti-alert-triangle\"></i> <b>Sujet camion :</b> "+(cur.camionSujetNote?esc(cur.camionSujetNote):"le technicien en charge n'a peut-\u00eatre pas de camion \u2014 solution \u00e0 trouver.")+"</div>":"")+"</div>";
+  return h;
+}
+/* Équipement du camion : sorti de la colonne étroite "Planning & camion"
+   (Su : "faut que ça reste à l'horizontale") — confiné à 1/3 de la largeur,
+   les badges d'équipement ne pouvaient s'aligner qu'un ou deux par ligne.
+   Rendu maintenant en pleine largeur, après les 3 colonnes, pour que
+   l'équipement se lise d'un coup d'œil plutôt qu'en longue colonne. */
+function truckEquipmentDisplayHTML(){
+  if(!TRUCKS.length||!cur)return "";
   var t=truckByTL(cur.tlCamion);
-  if(t){
-    h+="<div class=\"fg fg-full\" style=\"background:#FEFCE8;border:1px solid #FEF08A;border-radius:10px;padding:12px\">";
-    h+="<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px\"><span style=\"font-size:13px;font-weight:700;color:#854D0E\"><i class=\"ti ti-truck\"></i> \u00c9quipement du camion de "+esc(t.tl)+"</span>";
-    h+=cur.truckApplied?"<button onclick=\"clearTruckDeduction()\" style=\"background:#fff;border:1px solid #E2E8F0;color:#475569;border-radius:7px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-x\"></i> Annuler la d\u00e9duction</button>":"<button onclick=\"applyTruckDeduction()\" style=\"background:#A16207;color:#fff;border:none;border-radius:7px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-arrow-down\"></i> D\u00e9duire de l'appro</button>";
-    h+="</div>"+_truckAssignInfo(t)+"<div style=\"display:flex;flex-wrap:wrap;gap:6px\">";
-    var _eq=(t.items||[]).filter(function(x){return !x.ref;});
-    var _num=(t.items||[]).filter(function(x){return x.ref;});
-    _eq.forEach(function(it){h+="<span style=\"font-size:11px;background:#fff;border:1px solid #FDE68A;color:#854D0E;border-radius:14px;padding:3px 9px\">"+esc(it.n)+" <b>x"+it.q+"</b></span>";});
-    if(!_eq.length&&!_num.length)h+="<span style=\"font-size:12px;color:#A16207\">Camion sans \u00e9quipement saisi</span>";
-    h+="</div>";
-    if(_num.length){
-      h+="<div style=\"margin-top:10px;padding-top:10px;border-top:1px dashed #FDE68A\"><div style=\"font-size:12px;font-weight:700;color:#0E7490;margin-bottom:6px\"><i class=\"ti ti-tool\"></i> Machines &amp; mat\u00e9riel num\u00e9rot\u00e9</div>";
-      _num.forEach(function(it){h+="<div style=\"font-size:12px;color:#334155;display:flex;justify-content:space-between;gap:10px;padding:2px 0\"><span>"+(it.m?"<i class=\"ti ti-tool\" style=\"color:#A16207;font-size:11px\"></i> ":"")+esc(it.n)+"</span><span style=\"color:#0E7490;font-weight:700;white-space:nowrap\">n\u00b0 "+esc(it.ref)+"</span></div>";});
-      h+="</div>";
-    }
+  if(!t)return "";
+  var h="<div class=\"card\" style=\"background:#FEFCE8;border:1px solid #FEF08A;border-radius:14px;padding:14px 16px\">";
+  h+="<div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;flex-wrap:wrap;gap:8px\"><span style=\"font-size:13.5px;font-weight:700;color:#854D0E\"><i class=\"ti ti-truck\"></i> \u00c9quipement du camion de "+esc(t.tl)+"</span>";
+  h+=cur.truckApplied?"<button onclick=\"clearTruckDeduction()\" style=\"background:#fff;border:1px solid #E2E8F0;color:#475569;border-radius:7px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-x\"></i> Annuler la d\u00e9duction</button>":"<button onclick=\"applyTruckDeduction()\" style=\"background:#A16207;color:#fff;border:none;border-radius:7px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-arrow-down\"></i> D\u00e9duire de l'appro</button>";
+  h+="</div>"+_truckAssignInfo(t)+"<div style=\"display:flex;flex-wrap:wrap;gap:6px\">";
+  var _eq=(t.items||[]).filter(function(x){return !x.ref;});
+  var _num=(t.items||[]).filter(function(x){return x.ref;});
+  _eq.forEach(function(it){h+="<span style=\"font-size:11px;background:#fff;border:1px solid #FDE68A;color:#854D0E;border-radius:14px;padding:3px 9px\">"+esc(it.n)+" <b>x"+it.q+"</b></span>";});
+  if(!_eq.length&&!_num.length)h+="<span style=\"font-size:12px;color:#A16207\">Camion sans \u00e9quipement saisi</span>";
+  h+="</div>";
+  if(_num.length){
+    h+="<div style=\"margin-top:10px;padding-top:10px;border-top:1px dashed #FDE68A\"><div style=\"font-size:12px;font-weight:700;color:#0E7490;margin-bottom:6px\"><i class=\"ti ti-tool\"></i> Machines &amp; mat\u00e9riel num\u00e9rot\u00e9</div>";
+    _num.forEach(function(it){h+="<div style=\"font-size:12px;color:#334155;display:flex;justify-content:space-between;gap:10px;padding:2px 0\"><span>"+(it.m?"<i class=\"ti ti-tool\" style=\"color:#A16207;font-size:11px\"></i> ":"")+esc(it.n)+"</span><span style=\"color:#0E7490;font-weight:700;white-space:nowrap\">n\u00b0 "+esc(it.ref)+"</span></div>";});
     h+="</div>";
   }
+  h+="</div>";
   return h;
 }
 function setTlCamion(v){if(!cur)return;cur.tlCamion=v;cur.truckApplied=false;["consommables","fournitures","outillage"].forEach(function(k){(cur[k]||[]).forEach(function(r){delete r.truckQ;});});saved=false;renderForm();}
@@ -6639,6 +6730,7 @@ h+="";
   h+=truckSelectorHTML();
   h+="</div></div>";
   h+="</div>"; /* fin .info-grid (2 colonnes sur ordinateur) */
+  h+=truckEquipmentDisplayHTML();
   if(!_infoIsNew){
     h+="<div style=\"text-align:right;margin:-4px 0 12px\"><button type=\"button\" onclick=\"_toggleInfoGrid(false)\" style=\"background:none;border:none;color:#6D28D9;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px\"><i class=\"ti ti-chevron-up\"></i> R&#233;duire les informations chantier</button></div>";
   }
@@ -6648,6 +6740,7 @@ h+="";
   h+=_filApproSectionHTML();
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
+  h+=_kitSuggestionsHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
 h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-star\" style=\"font-size:16px;color:#F59E0B\"></i> Qualit\u00e9 de l'appro</div>"+(avgNote(cur)>0?"<span class=\"card-hd-n\">"+avgNote(cur).toFixed(1)+"/5 \u00b7 "+cur.notes.length+" avis</span>":"")+"</div><div style=\"padding:16px 18px;display:flex;align-items:center;gap:14px\"><div style=\"display:flex;gap:3px\">"+starsHTML(avgNote(cur),true,cur.id)+"</div><span style=\"font-size:12px;color:#94A3B8\">"+(avgNote(cur)>0?"Note moyenne : "+avgNote(cur).toFixed(1)+"/5":"Cliquez sur les \u00e9toiles pour noter")+"</span></div></div>";
@@ -7887,6 +7980,47 @@ function _filPairArrangement(need,a,b){
   return null;
 }
 function _filPairCovers(need,a,b){return !!_filPairArrangement(need,a,b);}
+/* Jumelage à N filets (Su : "ne jumèle que deux filets, il ne devrait pas y
+   avoir de limite") — au-delà de 2, une recherche exhaustive de toutes les
+   combinaisons deviendrait vite ingérable (des centaines de filets au
+   dépôt). Approche gloutonne, par axe : on prend les plus grands filets
+   compatibles avec cet axe en premier, jusqu'à couvrir le besoin — ça
+   minimise le nombre de filets utilisés, donc le gaspillage, sans avoir à
+   tout essayer. Plafonné à 8 filets par groupe : au-delà, jumeler devient
+   physiquement peu réaliste sur un chantier. */
+function _filGroupArrangement(need,filets){
+  var best=null;
+  ["w","h"].forEach(function(axis){
+    var needPerp=axis==="w"?need.h:need.w;
+    var needAligned=axis==="w"?need.w:need.h;
+    var candidates=[];
+    filets.forEach(function(f){
+      var orients=_filOrients(+f.largeur,+f.hauteur);
+      var valid=orients.filter(function(o){var perp=axis==="w"?o[1]:o[0];return perp>=needPerp;});
+      if(!valid.length)return;
+      valid.sort(function(a,b){var alA=axis==="w"?a[0]:a[1],alB=axis==="w"?b[0]:b[1];return alA-alB;});
+      var chosen=valid[0];
+      candidates.push({f:f,w:chosen[0],h:chosen[1],aligned:axis==="w"?chosen[0]:chosen[1]});
+    });
+    candidates.sort(function(a,b){return b.aligned-a.aligned;}); // les plus grands d'abord : moins de filets, moins de gaspillage
+    var acc=0,group=[];
+    for(var k=0;k<candidates.length&&group.length<8;k++){
+      group.push(candidates[k]);
+      acc+=candidates[k].aligned;
+      if(acc>=needAligned)break;
+    }
+    if(acc>=needAligned){
+      var totalPerp=Math.max.apply(null,group.map(function(g){return axis==="w"?g.h:g.w;}));
+      var totalW=axis==="w"?acc:totalPerp;
+      var totalH=axis==="w"?totalPerp:acc;
+      var waste=totalW*totalH-need.w*need.h;
+      if(!best||waste<best.waste||(waste===best.waste&&group.length<best.items.length)){
+        best={axis:axis,items:group,totalW:totalW,totalH:totalH,waste:waste};
+      }
+    }
+  });
+  return best;
+}
 /* forAnticute : Su — "quand j'exclus des filets antichute homme qui ne sont
    plus certifiés, je veux que tu les ajoutes aux filets normaux (mais laisse
    l'indication que c'était des antichute homme)". Deux usages bien distincts :
@@ -7933,7 +8067,16 @@ function searchFilets(needW,needH,mode,typeFilter){
        du bruit qui gaspillerait un 2e filet pour rien. */
     if(_filSingleCovers(need,avail[i])||_filSingleCovers(need,avail[j]))continue;
     var arr=_filPairArrangement(need,avail[i],avail[j]);
-    if(arr)results.push({type:"pair",a:avail[i],b:avail[j],arr:arr,waste:(arr.totalW*arr.totalH)-(need.w*need.h)});
+    if(arr)results.push({type:"group",items:[{f:avail[i],w:arr.a.w,h:arr.a.h},{f:avail[j],w:arr.b.w,h:arr.b.h}],arr:{axis:arr.axis,totalW:arr.totalW,totalH:arr.totalH},waste:(arr.totalW*arr.totalH)-(need.w*need.h)});
+  }
+  /* Jumelage sans limite de 2 (Su : "il ne devrait pas y avoir de limite") :
+     n'ajouté que si le groupe glouton utilise VRAIMENT plus de 2 filets —
+     sinon les paires exhaustives ci-dessus couvrent déjà ce cas, en
+     trouvant le vrai optimum plutôt qu'une approximation gloutonne. */
+  var groupCandidates=avail.filter(function(f){return !_filSingleCovers(need,f);});
+  var grp=_filGroupArrangement(need,groupCandidates);
+  if(grp&&grp.items.length>2){
+    results.push({type:"group",items:grp.items,arr:{axis:grp.axis,totalW:grp.totalW,totalH:grp.totalH},waste:grp.waste});
   }
   results.sort(function(x,y){return x.waste-y.waste;});
   return results.slice(0,6);
@@ -7949,39 +8092,37 @@ function _filDiagramHTML(need,result){
     var f=result.f;
     var ov=_filOrients(+f.largeur,+f.hauteur).filter(function(o){return o[0]>=need.w&&o[1]>=need.h;})[0]||[+f.largeur,+f.hauteur];
     W=ov[0];H=ov[1];
-    parts=[{x:0,y:0,w:ov[0],h:ov[1],label:ov[0]+"\u00d7"+ov[1],cls:"fil-diag-net fil-diag-a"}];
+    parts=[{x:0,y:0,w:ov[0],h:ov[1],label:ov[0]+"\u00d7"+ov[1],ci:0}];
   } else {
-    var arr=result.c.arr;
+    /* "group" : g\u00e8re n'importe quel nombre de filets align\u00e9s sur le m\u00eame
+       axe (Su : "il ne devrait pas y avoir de limite") \u2014 plus seulement 2. */
+    var arr=result.arr;
     W=arr.totalW;H=arr.totalH;
-    if(arr.axis==="w"){
-      parts=[
-        {x:0,y:0,w:arr.a.w,h:arr.a.h,label:arr.a.w+"\u00d7"+arr.a.h,cls:"fil-diag-net fil-diag-a"},
-        {x:arr.a.w,y:0,w:arr.b.w,h:arr.b.h,label:arr.b.w+"\u00d7"+arr.b.h,cls:"fil-diag-net fil-diag-b"}
-      ];
-    } else {
-      parts=[
-        {x:0,y:0,w:arr.a.w,h:arr.a.h,label:arr.a.w+"\u00d7"+arr.a.h,cls:"fil-diag-net fil-diag-a"},
-        {x:0,y:arr.a.h,w:arr.b.w,h:arr.b.h,label:arr.b.w+"\u00d7"+arr.b.h,cls:"fil-diag-net fil-diag-b"}
-      ];
-    }
+    parts=[];
+    var pos=0;
+    result.items.forEach(function(it,i){
+      if(arr.axis==="w"){parts.push({x:pos,y:0,w:it.w,h:it.h,label:it.w+"\u00d7"+it.h,ci:i});pos+=it.w;}
+      else{parts.push({x:0,y:pos,w:it.w,h:it.h,label:it.w+"\u00d7"+it.h,ci:i});pos+=it.h;}
+    });
   }
   var maxDim=Math.max(W,H,need.w,need.h)||1;
   var scale=230/maxDim,pad=26;
   var svgW=W*scale+pad*2,svgH=H*scale+pad*2;
   var svg="<svg viewBox=\"0 0 "+svgW+" "+svgH+"\" width=\"100%\" style=\"max-width:320px;height:auto;display:block;margin:6px auto\">";
+  svg+="<defs><filter id=\"filDropShadow\" x=\"-20%\" y=\"-20%\" width=\"140%\" height=\"140%\"><feDropShadow dx=\"0\" dy=\"1.5\" stdDeviation=\"1.5\" flood-color=\"#000\" flood-opacity=\".18\"/></filter></defs>";
   parts.forEach(function(p){
-    svg+="<rect x=\""+(pad+p.x*scale)+"\" y=\""+(pad+p.y*scale)+"\" width=\""+(p.w*scale)+"\" height=\""+(p.h*scale)+"\" class=\""+p.cls+"\"/>";
+    svg+="<rect x=\""+(pad+p.x*scale)+"\" y=\""+(pad+p.y*scale)+"\" width=\""+(p.w*scale)+"\" height=\""+(p.h*scale)+"\" rx=\"5\" class=\"fil-diag-net fil-diag-c"+(p.ci%5)+"\" filter=\"url(#filDropShadow)\"/>";
     svg+="<text x=\""+(pad+p.x*scale+p.w*scale/2)+"\" y=\""+(pad+p.y*scale+p.h*scale/2)+"\" text-anchor=\"middle\" dominant-baseline=\"middle\" class=\"fil-diag-lbl\">"+p.label+" m</text>";
   });
   // Contour du besoin, en pointill\u00e9s, par-dessus les filets
-  svg+="<rect x=\""+pad+"\" y=\""+pad+"\" width=\""+(need.w*scale)+"\" height=\""+(need.h*scale)+"\" class=\"fil-diag-need\"/>";
+  svg+="<rect x=\""+pad+"\" y=\""+pad+"\" width=\""+(need.w*scale)+"\" height=\""+(need.h*scale)+"\" rx=\"5\" class=\"fil-diag-need\"/>";
   // Surplus (bourrelet \u00e0 replier) : la partie des filets qui d\u00e9passe le besoin, en forme de L si les 2 sens d\u00e9passent
   if(W>need.w)svg+="<rect x=\""+(pad+need.w*scale)+"\" y=\""+pad+"\" width=\""+((W-need.w)*scale)+"\" height=\""+(H*scale)+"\" class=\"fil-diag-surplus\"/>";
   if(H>need.h)svg+="<rect x=\""+pad+"\" y=\""+(pad+need.h*scale)+"\" width=\""+(Math.min(W,need.w)*scale)+"\" height=\""+((H-need.h)*scale)+"\" class=\"fil-diag-surplus\"/>";
   svg+="</svg>";
   var legend="<div class=\"fil-diag-legend\">";
   legend+="<span><i class=\"fil-diag-sw fil-diag-sw-need\"></i> Besoin demand\u00e9 : "+need.w+" \u00d7 "+need.h+" m</span>";
-  if(result.type==="pair")legend+="<span><i class=\"fil-diag-sw fil-diag-sw-a\"></i> Jointure entre les 2 filets</span>";
+  if(result.type==="group"&&result.items.length>1)legend+="<span><i class=\"fil-diag-sw fil-diag-sw-a\"></i> "+result.items.length+" filets jumel\u00e9s</span>";
   if(W>need.w||H>need.h)legend+="<span><i class=\"fil-diag-sw fil-diag-sw-surplus\"></i> Surplus \u00e0 replier (bourrelet)</span>";
   legend+="</div>";
   return "<div class=\"fil-diagram\"><div class=\"fil-diagram-t\">Sch\u00e9ma \u00e0 l'\u00e9chelle</div>"+svg+legend+"</div>";
@@ -8023,14 +8164,14 @@ function _filSearchResultsHTML(w,hh,mode,typeFilter){
   results.forEach(function(r,i){
     var sel=i===idx;
     h+="<div class=\"fil-res-item"+(sel?" sel":"")+"\" onclick=\"_filSelectedResult="+i+";renderFilets()\">";
-    h+="<span class=\"fil-res-badge"+(r.type==="pair"?" combo":"")+"\">"+(r.type==="pair"?"Jumel\u00e9":"Seul")+"</span>";
-    h+="<span class=\"fil-res-txt\">"+(r.type==="single"?_filDimTxt(r.f)+_filDescTxt(r.f):_filDimTxt(r.a)+_filDescTxt(r.a)+" + "+_filDimTxt(r.b)+_filDescTxt(r.b))+"</span>";
+    h+="<span class=\"fil-res-badge"+(r.type==="group"?" combo":"")+"\">"+(r.type==="group"?"Jumel\u00e9 ("+r.items.length+")":"Seul")+"</span>";
+    h+="<span class=\"fil-res-txt\">"+(r.type==="single"?_filDimTxt(r.f)+_filDescTxt(r.f):r.items.map(function(it){return _filDimTxt(it.f)+_filDescTxt(it.f);}).join(" + "))+"</span>";
     h+="<span class=\"fil-res-waste\">"+(r.waste>0.05?("+"+r.waste.toFixed(1)+" m\u00b2 de surplus"):"pile la bonne taille")+"</span>";
     h+="</div>";
   });
   h+="</div>";
   var chosen=results[idx];
-  h+=_filDiagramHTML(need,chosen.type==="single"?{type:"single",f:chosen.f}:{type:"pair",c:{arr:chosen.arr}});
+  h+=_filDiagramHTML(need,chosen);
   h+="</div>";
   return h;
 }
