@@ -179,143 +179,143 @@ const pool = new Pool({
 });
 
 const FILETS_SEED = [
-  {type:'Anti-pigeon',largeur:22.0,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:18.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:17.0,hauteur:14.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:15.0,hauteur:9.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:14.0,hauteur:12.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:13.0,hauteur:11.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:13.0,hauteur:11.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:12.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:12.0,hauteur:9.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:12.0,hauteur:9.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:11.5,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Anti-pigeon',largeur:3.0,hauteur:8.0,is_anticute:false,date_achat:null,notes:null},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:13.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:13.0,hauteur:22.0,is_anticute:true,date_achat:'2015-06-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:23.5,hauteur:4.0,is_anticute:true,date_achat:'2018-03-01',notes:'Neuf · Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,date_achat:'2017-09-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,date_achat:'2017-09-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,date_achat:'2017-09-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:14.0,is_anticute:true,date_achat:'2017-06-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:8.5,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:14.0,hauteur:8.5,is_anticute:true,date_achat:'2017-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2017-09-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2017-09-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:13.0,hauteur:22.0,is_anticute:true,date_achat:'2018-05-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-05-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-05-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:10.0,hauteur:7.0,is_anticute:true,date_achat:'2018-02-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.9,is_anticute:true,date_achat:'2013-11-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:4.7,hauteur:3.9,is_anticute:true,date_achat:'2013-11-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2017-03-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:18.0,hauteur:6.5,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:13.0,is_anticute:true,date_achat:'2019-07-01',notes:'Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:4.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:4.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:12.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:6.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:21.0,hauteur:6.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:20.0,hauteur:4.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:15.0,hauteur:6.0,is_anticute:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:15.0,hauteur:15.0,is_anticute:true,date_achat:'2018-09-01',notes:'Tour Eiffel · Maille 100'},
-  {type:'Antichute objet',largeur:11.0,hauteur:5.5,is_anticute:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:4.0,hauteur:3.0,is_anticute:true,date_achat:'2017-02-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:6.0,hauteur:2.7,is_anticute:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:7.0,hauteur:2.0,is_anticute:true,date_achat:'2018-04-01',notes:'Maille 50'},
-  {type:'Antichute objet',largeur:9.0,hauteur:1.5,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2018-07-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,date_achat:'2018-06-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2018-08-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:10.0,hauteur:3.0,is_anticute:true,date_achat:'2011-10-01',notes:'Maille 100'},
-  {type:'Antichute homme',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2014-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:5.0,hauteur:4.0,is_anticute:true,date_achat:'2014-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2015-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2015-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,date_achat:'2015-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,date_achat:'2016-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:11.0,hauteur:8.0,is_anticute:true,date_achat:'2017-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:22.0,hauteur:8.0,is_anticute:true,date_achat:'2017-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:8.0,hauteur:20.0,is_anticute:true,date_achat:'2017-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:15.0,hauteur:13.0,is_anticute:true,date_achat:'2017-02-01',notes:'Maille 50'},
-  {type:'Antichute homme',largeur:10.0,hauteur:3.0,is_anticute:true,date_achat:'2017-02-01',notes:'Maille 50'}
+  {type:'Anti-pigeon',largeur:22.0,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:18.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:17.0,hauteur:14.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:12.5,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:15.0,hauteur:9.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:14.0,hauteur:12.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:13.0,hauteur:11.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:13.0,hauteur:11.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:12.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:12.0,hauteur:9.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:12.0,hauteur:9.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:11.5,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:6.0,hauteur:6.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Anti-pigeon',largeur:3.0,hauteur:8.0,is_anticute:false,pare_gravat:false,date_achat:null,notes:null},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:13.0,hauteur:22.0,is_anticute:true,pare_gravat:true,date_achat:'2015-06-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:23.5,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2018-03-01',notes:'Neuf · Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:25.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:10.0,hauteur:14.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:14.0,is_anticute:true,pare_gravat:true,date_achat:'2017-06-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:8.5,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:14.0,hauteur:8.5,is_anticute:true,pare_gravat:true,date_achat:'2017-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.5,is_anticute:true,pare_gravat:true,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:13.0,hauteur:22.0,is_anticute:true,pare_gravat:true,date_achat:'2018-05-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2018-05-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2018-05-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:10.0,hauteur:7.0,is_anticute:true,pare_gravat:true,date_achat:'2018-02-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.9,is_anticute:true,pare_gravat:true,date_achat:'2013-11-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:4.7,hauteur:3.9,is_anticute:true,pare_gravat:true,date_achat:'2013-11-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:18.0,hauteur:6.5,is_anticute:true,pare_gravat:true,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:true,date_achat:'2018-07-01',notes:'Avec polyâne · Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2019-07-01',notes:'Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:12.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:8.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:6.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:21.0,hauteur:6.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:20.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:15.0,hauteur:13.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:15.0,hauteur:6.0,is_anticute:true,pare_gravat:true,date_achat:'2017-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:15.0,hauteur:15.0,is_anticute:true,pare_gravat:true,date_achat:'2018-09-01',notes:'Tour Eiffel · Maille 100'},
+  {type:'Antichute objet',largeur:11.0,hauteur:5.5,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:4.0,hauteur:3.0,is_anticute:true,pare_gravat:true,date_achat:'2017-02-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:6.0,hauteur:2.7,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:13.0,hauteur:4.5,is_anticute:true,pare_gravat:true,date_achat:'2017-03-01',notes:'Neuf · Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:true,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:7.0,hauteur:2.0,is_anticute:true,pare_gravat:true,date_achat:'2018-04-01',notes:'Maille 50'},
+  {type:'Antichute objet',largeur:9.0,hauteur:1.5,is_anticute:true,pare_gravat:true,date_achat:'2018-07-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-07-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:20.0,hauteur:5.0,is_anticute:true,pare_gravat:false,date_achat:'2018-06-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2018-08-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:10.0,hauteur:3.0,is_anticute:true,pare_gravat:false,date_achat:'2011-10-01',notes:'Maille 100'},
+  {type:'Antichute homme',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:false,date_achat:'2014-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:5.0,hauteur:4.0,is_anticute:true,pare_gravat:false,date_achat:'2014-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2015-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2015-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:11.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2015-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:6.0,hauteur:9.0,is_anticute:true,pare_gravat:false,date_achat:'2016-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:11.0,hauteur:8.0,is_anticute:true,pare_gravat:false,date_achat:'2017-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:22.0,hauteur:8.0,is_anticute:true,pare_gravat:false,date_achat:'2017-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:8.0,hauteur:20.0,is_anticute:true,pare_gravat:false,date_achat:'2017-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:15.0,hauteur:13.0,is_anticute:true,pare_gravat:false,date_achat:'2017-02-01',notes:'Maille 50'},
+  {type:'Antichute homme',largeur:10.0,hauteur:3.0,is_anticute:true,pare_gravat:false,date_achat:'2017-02-01',notes:'Maille 50'}
 ];
 
 async function initDB() {
@@ -381,6 +381,7 @@ async function initDB() {
       notes             TEXT,
       date_achat        DATE,
       is_anticute       BOOLEAN NOT NULL DEFAULT FALSE,
+      pare_gravat       BOOLEAN NOT NULL DEFAULT FALSE,
       date_certification DATE,
       date_expiration   DATE,
       created_by        UUID REFERENCES users(id) ON DELETE SET NULL,
@@ -491,6 +492,17 @@ async function initDB() {
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_certification DATE;`);
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_expiration DATE;`);
   await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS date_achat DATE;`);
+  // Le pare-gravat est un attribut indépendant du type/usage (Su : "forcément
+  // s'il est objet y'a le pare-gravat ?" — non, ça ne va pas forcément
+  // ensemble, un filet garde son propre statut pare-gravat quel que soit
+  // son type ou son usage prévu).
+  await pool.query(`ALTER TABLE filets ADD COLUMN IF NOT EXISTS pare_gravat BOOLEAN NOT NULL DEFAULT FALSE;`);
+  // Correction ponctuelle si l'import précédent (sans pare_gravat) a déjà
+  // tourné sur ce serveur : les 137 filets importés ont created_by NULL
+  // (jamais le cas d'un filet ajouté à la main par une personne), donc sans
+  // risque de toucher aux données de quelqu'un. Idempotent — sans effet si
+  // déjà correct ou si l'import n'a pas encore eu lieu.
+  await pool.query(`UPDATE filets SET pare_gravat = TRUE WHERE created_by IS NULL AND type = 'Antichute objet' AND pare_gravat = FALSE;`);
   // Import automatique du stock de filets existant (Su : "tu peux pas
   // intégrer tout ça sans que je n'aie à le faire ?") — se déclenche UNE
   // SEULE FOIS. Marqueur dédié dans app_lists plutôt que "la table est
@@ -505,8 +517,8 @@ async function initDB() {
       for (const f of FILETS_SEED) {
         try {
           await pool.query(
-            `INSERT INTO filets (type, largeur, hauteur, statut, is_anticute, date_achat, notes) VALUES ($1,$2,$3,'depot',$4,$5,$6)`,
-            [f.type, f.largeur, f.hauteur, f.is_anticute, f.date_achat, f.notes]
+            `INSERT INTO filets (type, largeur, hauteur, statut, is_anticute, pare_gravat, date_achat, notes) VALUES ($1,$2,$3,'depot',$4,$5,$6,$7)`,
+            [f.type, f.largeur, f.hauteur, f.is_anticute, f.pare_gravat, f.date_achat, f.notes]
           );
           ok++;
         } catch (e) { failed++; console.error('Import filet échoué (ligne ignorée) :', e.message); }
@@ -1617,7 +1629,7 @@ app.get('/api/stats', auth, adminOnly, async (req, res) => {
 });
 
 // ── LISTES PARTAG\u00c9ES (types / catalogue / clients) ─────────────
-const LIST_NAMES = ['types', 'catalogue', 'clients', 'trucks', 'commandes', 'annonces', 'tickets', 'config', 'filet_types'];
+const LIST_NAMES = ['types', 'catalogue', 'clients', 'trucks', 'commandes', 'annonces', 'tickets', 'config', 'filet_types', 'role_access'];
 // ── FILETS (stock au dépôt + suivi chantier) ─────────────────────────
 app.get('/api/filets', auth, async (req, res) => {
   try {
@@ -1627,27 +1639,27 @@ app.get('/api/filets', auth, async (req, res) => {
 });
 app.post('/api/filets', auth, async (req, res) => {
   try {
-    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration } = req.body || {};
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, pare_gravat, date_certification, date_expiration } = req.body || {};
     const l = parseFloat(largeur), h = parseFloat(hauteur);
     if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
     const { rows } = await pool.query(
-      `INSERT INTO filets (type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration, created_by)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *`,
-      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, date_certification || null, date_expiration || null, req.user.id]
+      `INSERT INTO filets (type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, pare_gravat, date_certification, date_expiration, created_by)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, !!pare_gravat, date_certification || null, date_expiration || null, req.user.id]
     );
     res.json(rows[0]);
   } catch (e) { res.status(500).json({ error: 'Erreur de création', detail: e.message }); }
 });
 app.put('/api/filets/:id', auth, async (req, res) => {
   try {
-    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, date_certification, date_expiration } = req.body || {};
+    const { type, largeur, hauteur, statut, appro_id, no_affaire, notes, date_achat, is_anticute, pare_gravat, date_certification, date_expiration } = req.body || {};
     const l = parseFloat(largeur), h = parseFloat(hauteur);
     if (!l || !h || l <= 0 || h <= 0) return res.status(400).json({ error: 'Largeur et hauteur doivent être des nombres positifs' });
     const { rows } = await pool.query(
       `UPDATE filets SET type=$1, largeur=$2, hauteur=$3, statut=$4, appro_id=$5, no_affaire=$6, notes=$7,
-       date_achat=$8, is_anticute=$9, date_certification=$10, date_expiration=$11, updated_at=NOW()
-       WHERE id=$12 RETURNING *`,
-      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, date_certification || null, date_expiration || null, req.params.id]
+       date_achat=$8, is_anticute=$9, pare_gravat=$10, date_certification=$11, date_expiration=$12, updated_at=NOW()
+       WHERE id=$13 RETURNING *`,
+      [type || null, l, h, statut || 'depot', appro_id || null, no_affaire || null, notes || null, date_achat || null, !!is_anticute, !!pare_gravat, date_certification || null, date_expiration || null, req.params.id]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Filet introuvable' });
     res.json(rows[0]);
