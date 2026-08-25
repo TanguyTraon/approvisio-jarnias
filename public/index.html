@@ -1321,6 +1321,15 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 @media print{.tb-more-wrap{display:none!important}}
 .ui-sec{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:16px;margin-bottom:16px}
 .ui-sec-hd{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#0F172A;margin-bottom:14px}
+.ra-hint{font-size:12px;color:#94A3B8;margin-bottom:12px;line-height:1.5}
+.ra-table{width:100%;border-collapse:collapse;font-size:13px}
+.ra-table thead th{font-size:10.5px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.3px;padding:6px 8px;text-align:center}
+.ra-table thead th:first-child{text-align:left}
+.ra-feat{font-weight:600;color:#1E293B;padding:9px 8px;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.ra-feat i{color:#94A3B8;font-size:14px}
+.ra-cell{text-align:center;padding:9px 8px;border-top:1px solid #F1F5F9}
+.ra-cell input{width:17px;height:17px;cursor:pointer}
+.ra-cell input:disabled{cursor:not-allowed;opacity:.5}
 .ui-in{border:1px solid #E2E8F0;border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;outline:none;background:#fff}
 /* ═══ PARAMÉTRAGE INTERFACE — DA actuelle ═══ */
 .ui-sec{background:#fff;border:1px solid #E8EDF4;border-radius:10px;padding:0;margin-bottom:14px;overflow:hidden;transition:border-color .18s var(--ease)}
@@ -2211,6 +2220,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-res-ok{display:flex;align-items:center;gap:7px;color:#059669;font-size:13px;font-weight:700;margin-bottom:10px}
 .fil-res-combo{display:flex;align-items:center;gap:7px;color:#7C3AED;font-size:13px;font-weight:700;margin-bottom:10px}
 .fil-res-none{display:flex;align-items:center;gap:7px;color:#B45309;font-size:13px;font-weight:600;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:11px 14px}
+.fil-res-hint{display:flex;align-items:center;gap:7px;color:#64748B;font-size:12px;margin-top:8px;padding:0 4px}
 .fil-mode-row{margin-bottom:12px}
 .fil-mode-row label{font-size:11.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px}
 .fil-res-list{display:flex;flex-direction:column;gap:8px}
@@ -2233,10 +2243,12 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-cat-chev{font-size:12px;transition:transform .15s var(--ease);flex-shrink:0}
 .fil-table-cat.open .fil-cat-chev{transform:rotate(90deg)}
 .fil-table-cat-n{color:#8B5CF6;font-weight:600;margin-left:2px}
+.fil-table-cat-bd{margin-left:auto;font-weight:600;font-size:10.5px;letter-spacing:0;text-transform:none;color:#7C3AED;opacity:.75}
 .fil-table tbody tr:not(.fil-table-cat){border-bottom:1px solid #F1F5F9}
 .fil-table tbody tr:not(.fil-table-cat):hover{background:#FAFBFC}
 .fil-table td{padding:10px 14px;vertical-align:middle}
 .fil-table-dim{font-weight:700;color:#0F172A;white-space:nowrap}
+.fil-pg-mark{display:inline-block;font-size:9px;font-weight:800;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:5px;padding:1px 5px;margin-left:7px;vertical-align:2px;letter-spacing:.3px}
 .fil-table-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
 .fil-table-badge-libre{background:#ECFDF5;color:#059669}
 .fil-table-badge-reserve{background:#FFFBEB;color:#B45309}
@@ -2262,7 +2274,9 @@ table.at tr.kit-row td.td-d{position:relative}
   .fil-table-dim{justify-content:space-between}
   .fil-table-acts{justify-content:flex-end;margin-left:0}
 }
-.fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px}
+.fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px;cursor:pointer;transition:background .15s}
+.fil-cert-alert:hover{background:#FEE2E2}
+.fil-cert-alert-go{margin-left:auto;font-size:14px;opacity:.6;flex-shrink:0}
 .fil-cert{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;margin-top:7px}
 .fil-cert-ok{background:#ECFDF5;color:#059669}
 .fil-cert-soon{background:#FFFBEB;color:#B45309}
@@ -2286,6 +2300,7 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-ov{position:fixed;inset:0;z-index:4200;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;animation:jScrimIn .22s var(--ease)}
 .fil-modal{width:min(400px,100%);background:#fff;border-radius:18px;padding:24px}
 .fil-modal-t{font-size:16px;font-weight:800;color:#0F172A;margin-bottom:16px}
+.fil-form-hint{font-size:11px;color:#94A3B8;margin-top:5px;line-height:1.5}
 .fil-appro-sec{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:11px;padding:13px 15px}
 .fil-appro-hd{font-size:12.5px;font-weight:700;color:#334155;display:flex;align-items:center;gap:6px;margin-bottom:9px}
 .fil-appro-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #E8EDF4;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:600;color:#1E293B;margin-bottom:6px}
@@ -2370,7 +2385,16 @@ table.at tr.kit-row td.td-d{position:relative}
    tout bouton qui ne tient pas est COUPÉ — donc invisible ET incliquable.
    C'est ce qui est arrivé à la déconnexion quand la rangée est passée à 8 boutons
    (8×30 + 7×6 = 282 px pour 244 px utiles). Ne pas remettre nowrap. */
-.sb-user-actions{display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex:1 1 100%;justify-content:flex-end}
+/* Su : "les boutons... se mettent les uns au-dessus des autres au lieu
+   d'être alignés" — trouvé : ce rang de boutons flex-wrap tenait tout juste
+   dans la largeur de la sidebar, avec très peu de marge. Le moindre écart
+   (zoom du navigateur, police système différente, réglages d'accessibilité)
+   suffisait à le faire déborder et empiler verticalement plutôt que de
+   rester aligné. Interdit désormais le retour à la ligne — un défilement
+   horizontal de secours reste possible dans les cas extrêmes, mais les
+   boutons ne s'empilent plus jamais. */
+.sb-user-actions{display:flex;gap:3px;align-items:center;flex-wrap:nowrap;flex:1 1 100%;justify-content:flex-end;overflow-x:auto;scrollbar-width:none}
+.sb-user-actions::-webkit-scrollbar{display:none}
 .sb-avatar{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:var(--gold)!important;color:var(--ink)!important}
 .sb-user-name{font-size:12px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-user-role{font-size:10px;color:#7C8B9C}
@@ -2525,9 +2549,9 @@ html.dark .tour-hole{box-shadow:0 0 0 3px #0F172A,0 0 0 6px var(--accent,#6D28D9
    Mélange de deux essais : les icônes sont rangées en 2 petits groupes logiques
    (usage courant / réglages), sur un fond semi-transparent flouté, et le nom de
    chaque action apparaît en douceur au survol au lieu d'une bulle d'aide classique. */
-.hdr-grp{display:flex;gap:2px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:3px}
-.hdr-sep{width:1px;height:20px;background:rgba(255,255,255,.14);margin:0 5px;flex-shrink:0}
-.hdr-btn{position:relative;width:28px;height:28px;border:none;background:none;border-radius:8px;color:#C3CDD8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .22s var(--spring)}
+.hdr-grp{display:flex;gap:2px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:2px;flex-shrink:0}
+.hdr-sep{width:1px;height:20px;background:rgba(255,255,255,.14);margin:0 3px;flex-shrink:0}
+.hdr-btn{position:relative;width:26px;height:26px;border:none;background:none;border-radius:8px;color:#C3CDD8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .22s var(--spring)}
 .hdr-btn:hover{background:rgba(228,200,120,.16);color:var(--gold);transform:translateY(-2px)}
 .hdr-lbl{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%) translateY(3px);background:#0F172A;color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .18s var(--ease);z-index:200}
 .hdr-btn:hover .hdr-lbl{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -3399,6 +3423,27 @@ var TRUCKS=[];
 var COMMANDES=[];
 var FILETS=[]; // stock de filets (dépôt + suivi chantier)
 var FILET_TYPES=["Anti-pigeon","Antichute homme","Antichute objet","Protection cordes","Garde-corps","Pare-gravats","Autre"];
+/* "Cockpit" d'acc\u00e8s par r\u00f4le (Su : "pas oblig\u00e9 de repasser par toi pour ce
+   genre de modification") \u2014 uniquement les \u00e9crans qui \u00e9taient d\u00e9j\u00e0
+   r\u00e9serv\u00e9s par r\u00f4le dans le menu (camions, filets, commandes, annonces,
+   demandes d\u00e9p\u00f4t). Volontairement PAS l'administration elle-m\u00eame ni les
+   r\u00e9glages : les rendre configurables ouvrirait un risque de se verrouiller
+   soi-m\u00eame l'acc\u00e8s au cockpit qui sert justement \u00e0 tout r\u00e9gler. Valeurs
+   par d\u00e9faut = comportement actuel, sauf camions o\u00f9 le conducteur gagne
+   l'acc\u00e8s comme demand\u00e9 explicitement. */
+var ROLE_ACCESS={
+  trucks:{admin:true,depot:true,conducteur:true,technicien:false},
+  filets:{admin:true,depot:true,conducteur:true,technicien:false},
+  commandes:{admin:true,depot:true,conducteur:true,technicien:false},
+  annonces:{admin:true,depot:true,conducteur:false,technicien:false},
+  tickets:{admin:true,depot:true,conducteur:false,technicien:false}
+};
+function hasRoleAccess(key){
+  if(!currentUser)return false;
+  if(currentUser.role==="admin")return true; // toujours vrai, jamais configurable — filet de s\u00e9curit\u00e9 contre l'auto-verrouillage
+  var m=ROLE_ACCESS[key];
+  return !!(m&&m[currentUser.role]);
+}
 var ANNONCES=[];
 var TICKETS=[];
 var CONFIG={};
@@ -7584,7 +7629,7 @@ var _listsOk=false;
    en même temps sans se marcher dessus, contrairement à un "tout réécrire"
    partagé. */
 /* ═══ FILETS — stock au dépôt + suivi chantier + recherche intelligente ═══ */
-var _filSearchW="",_filSearchH="",_filSearchMode="general";
+var _filSearchW="",_filSearchH="",_filSearchMode="general",_filSearchType="";
 /* Statut de réservation (Su : "ajoute une étape 'déjà réservé dans une
    appro' pour pas que deux appros en attente prennent le même filet") —
    se déduit de ce qui existe déjà (statut + appro_id), pas un nouveau champ :
@@ -7604,6 +7649,20 @@ function _filReserveStatus(f){
    par d\u00e9faut, on d\u00e9plie seulement ce qu'on regarde. */
 var _filCatOpen={};
 function toggleFilCat(cat){_filCatOpen[cat]=!_filCatOpen[cat];renderFilets();}
+/* Le bandeau d'alerte disait juste "108 sans date connue" sans aucun moyen
+   d'aller les voir \u2014 un clic d\u00e9plie maintenant pr\u00e9cis\u00e9ment les cat\u00e9gories
+   concern\u00e9es, plut\u00f4t que de laisser deviner o\u00f9 elles se trouvent. */
+function _filShowCertIssues(){
+  FILETS.forEach(function(f){
+    var c=_filCertStatus(f);
+    if(c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown")){
+      _filCatOpen[f.type||"Sans cat\u00e9gorie"]=true;
+    }
+  });
+  renderFilets();
+  var t=document.querySelector(".fil-table-wrap");
+  if(t&&t.scrollIntoView)t.scrollIntoView({behavior:"smooth",block:"start"});
+}
 function _filTableHTML(list){
   if(!list.length)return "<div class=\"fil-empty\">Aucun filet enregistr\u00e9.</div>";
   var byCat={};
@@ -7613,13 +7672,20 @@ function _filTableHTML(list){
   cats.forEach(function(cat){
     var open=!!_filCatOpen[cat];
     var catId="fc"+cat.replace(/[^a-zA-Z0-9]/g,"");
-    h+="<tbody><tr class=\"fil-table-cat"+(open?" open":"")+"\" onclick=\"toggleFilCat('"+esc(cat).replace(/'/g,"\\'")+"')\"><td colspan=\"6\"><i class=\"ti ti-chevron-right fil-cat-chev\"></i>"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span></td></tr>";
+    var nLibre=byCat[cat].filter(function(f){return _filReserveStatus(f).level==="libre";}).length;
+    var nRes=byCat[cat].filter(function(f){return _filReserveStatus(f).level==="reserve";}).length;
+    var nChan=byCat[cat].filter(function(f){return _filReserveStatus(f).level==="chantier";}).length;
+    var breakdown=[];
+    if(nLibre)breakdown.push(nLibre+" libre"+(nLibre>1?"s":""));
+    if(nRes)breakdown.push(nRes+" r\u00e9serv\u00e9"+(nRes>1?"s":""));
+    if(nChan)breakdown.push(nChan+" sur chantier");
+    h+="<tbody><tr class=\"fil-table-cat"+(open?" open":"")+"\" onclick=\"toggleFilCat('"+esc(cat).replace(/'/g,"\\'")+"')\"><td colspan=\"6\"><i class=\"ti ti-chevron-right fil-cat-chev\"></i>"+esc(cat)+" <span class=\"fil-table-cat-n\">"+byCat[cat].length+"</span><span class=\"fil-table-cat-bd\">"+breakdown.join(" \u00b7 ")+"</span></td></tr>";
     if(open){
       byCat[cat].forEach(function(f){
         var rs=_filReserveStatus(f);
         var cert=_filCertStatus(f);
         h+="<tr>";
-        h+="<td class=\"fil-table-dim\" data-label=\"Dimensions\">"+_filDimTxt(f)+"</td>";
+        h+="<td class=\"fil-table-dim\" data-label=\"Dimensions\">"+_filDimTxt(f)+(f.pare_gravat?"<span class=\"fil-pg-mark\" title=\"Avec pare-gravat\">PG</span>":"")+"</td>";
         h+="<td data-label=\"Statut\"><span class=\"fil-table-badge fil-table-badge-"+rs.level+"\">"+rs.label+"</span></td>";
         h+="<td data-label=\"Achet\u00e9 le\">"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
         h+="<td data-label=\"Certification\">"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>"+((cert.level==="expired"||cert.level==="unknown")?"<div class=\"fil-downgrade\">Usage objet uniquement (pare-gravat), plus pour une personne</div>":""):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
@@ -7702,7 +7768,7 @@ function closeFiletPicker(){var ov=document.getElementById("fil-picker-ov");if(o
 function reserveFilet(id){
   if(!cur||!cur._id)return;
   var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
-  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:cur._id,no_affaire:cur.noAffaire||f.no_affaire||""};
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:cur._id,no_affaire:cur.noAffaire||f.no_affaire||""};
   apiCall("PUT","/filets/"+id,body).then(function(saved){
     var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
     closeFiletPicker();
@@ -7714,7 +7780,7 @@ function unreserveFilet(id){
   var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
   var msg=(f.statut==="chantier")?"Ce filet est d\u00e9j\u00e0 marqu\u00e9 sur chantier \u2014 retirer seulement le lien avec cette appro ?":"Retirer ce filet de cette appro ? Il redeviendra libre au d\u00e9p\u00f4t.";
   if(!confirm(msg))return;
-  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:null,no_affaire:""};
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:null,no_affaire:""};
   apiCall("PUT","/filets/"+id,body).then(function(saved){
     var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
     renderForm();
@@ -7735,7 +7801,7 @@ function renderFilets(){
     if(nExp)parts.push(nExp+" expir\u00e9"+(nExp>1?"s":""));
     if(nSoon)parts.push(nSoon+" bient\u00f4t \u00e0 renouveler");
     if(nUnk)parts.push(nUnk+" sans date connue");
-    h+="<div class=\"fil-cert-alert\"><i class=\"ti ti-alert-triangle\"></i> Certification antichute \u00e0 v\u00e9rifier : "+parts.join(", ")+"</div>";
+    h+="<div class=\"fil-cert-alert\" onclick=\"_filShowCertIssues()\"><i class=\"ti ti-alert-triangle\"></i> Certification antichute \u00e0 v\u00e9rifier : "+parts.join(", ")+"<i class=\"ti ti-chevron-right fil-cert-alert-go\"></i></div>";
   }
   h+="<div class=\"fil-wrap\">";
 
@@ -7753,8 +7819,12 @@ function renderFilets(){
   h+="<option value=\"anticute_homme\""+(_filSearchMode==="anticute_homme"?" selected":"")+">Antichute homme \u2014 protection de personnes, certification valide obligatoire</option>";
   h+="<option value=\"anticute_objet\""+(_filSearchMode==="anticute_objet"?" selected":"")+">Antichute objet avec pare-gravat \u2014 s\u00e9curisation de mat\u00e9riel</option>";
   h+="</select></div>";
+  h+="<div class=\"fil-mode-row\"><label>Cat\u00e9gorie</label><select class=\"fin\" id=\"fil-search-type\" onchange=\"_filSearchType=this.value;_filSelectedResult=0;renderFilets()\">";
+  h+="<option value=\"\""+(!_filSearchType?" selected":"")+">Toutes cat\u00e9gories</option>";
+  FILET_TYPES.forEach(function(t){h+="<option value=\""+esc(t)+"\""+(_filSearchType===t?" selected":"")+">"+esc(t)+"</option>";});
+  h+="</select></div>";
   var w=parseFloat((_filSearchW||"").replace(",",".")),hh=parseFloat((_filSearchH||"").replace(",","."));
-  if(w>0&&hh>0)h+=_filSearchResultsHTML(w,hh,_filSearchMode);
+  if(w>0&&hh>0)h+=_filSearchResultsHTML(w,hh,_filSearchMode,_filSearchType);
   h+="</div>";
 
   h+="<button class=\"btn-cta\" style=\"margin:16px 0\" onclick=\"openFiletForm()\"><i class=\"ti ti-plus\"></i> Ajouter un filet au stock</button>";
@@ -7834,9 +7904,10 @@ function _filPairCovers(need,a,b){return !!_filPairArrangement(need,a,b);}
    jumelé, sans favoriser l'un par principe.
    mode : "general" | "anticute_homme" | "anticute_objet" (Su : "un antichute
    objet avec pare-gravat, j'aimerais pouvoir sélectionner cette envie"). */
-function _filModeAvail(mode){
+function _filModeAvail(mode,typeFilter){
   return FILETS.filter(function(f){
     if(f.statut!=="depot"||f.appro_id)return false;
+    if(typeFilter&&f.type!==typeFilter)return false;
     if(mode==="anticute_homme"){
       if(!f.is_anticute)return false;
       var cert=_filCertStatus(f);
@@ -7848,9 +7919,9 @@ function _filModeAvail(mode){
     return true; // usage général : tout filet dispo, y compris un ancien antichute rétrogradé
   });
 }
-function searchFilets(needW,needH,mode){
+function searchFilets(needW,needH,mode,typeFilter){
   var need={w:needW,h:needH};
-  var avail=_filModeAvail(mode||"general");
+  var avail=_filModeAvail(mode||"general",typeFilter);
   var results=[];
   avail.forEach(function(f){
     var ov=_filOrients(+f.largeur,+f.hauteur).filter(function(o){return o[0]>=need.w&&o[1]>=need.h;})[0];
@@ -7916,13 +7987,33 @@ function _filDiagramHTML(need,result){
   return "<div class=\"fil-diagram\"><div class=\"fil-diagram-t\">Sch\u00e9ma \u00e0 l'\u00e9chelle</div>"+svg+legend+"</div>";
 }
 var _filSelectedResult=0;
-function _filSearchResultsHTML(w,hh,mode){
+/* Description compl\u00e8te d'un filet pour les r\u00e9sultats de recherche (Su :
+   "dans le calculateur, faut mettre la description des filets avec") \u2014
+   avant, seules les dimensions \u00e9taient affich\u00e9es ; on ne savait pas si
+   c'\u00e9tait un anti-pigeon, un antichute, ni s'il y avait un pare-gravat. */
+function _filDescTxt(f){
+  var bits=[];
+  if(f.type)bits.push(esc(f.type));
+  if(f.pare_gravat)bits.push("avec pare-gravat");
+  return bits.length?" \u2014 "+bits.join(", "):"";
+}
+function _filSearchResultsHTML(w,hh,mode,typeFilter){
   var need={w:w,h:hh};
-  var results=searchFilets(w,hh,mode);
+  var results=searchFilets(w,hh,mode,typeFilter);
   var h="<div class=\"fil-results\">";
   if(!results.length){
     var modeTxt=mode==="anticute_homme"?" en antichute homme certifi\u00e9":mode==="anticute_objet"?" en antichute objet":"";
-    h+="<div class=\"fil-res-none\"><i class=\"ti ti-alert-triangle\"></i> Rien au d\u00e9p\u00f4t ne couvre "+w+" \u00d7 "+hh+" m"+modeTxt+", seul ou combin\u00e9 \u2014 il faudra en commander.</div>";
+    var typeTxt=typeFilter?" en cat\u00e9gorie \u00ab "+esc(typeFilter)+" \u00bb":"";
+    h+="<div class=\"fil-res-none\"><i class=\"ti ti-alert-triangle\"></i> Rien au d\u00e9p\u00f4t ne couvre "+w+" \u00d7 "+hh+" m"+modeTxt+typeTxt+", seul ou combin\u00e9 \u2014 il faudra en commander.</div>";
+    /* Su a construit deux filtres ind\u00e9pendants (usage + cat\u00e9gorie) qui
+       peuvent se contredire silencieusement \u2014 ex: chercher un antichute
+       homme dans la cat\u00e9gorie "Anti-pigeon" ne peut jamais rien donner,
+       quelle que soit la taille demand\u00e9e. Pr\u00e9venir explicitement plut\u00f4t
+       que de laisser croire que c'est juste une question de stock. */
+    if(typeFilter&&(mode==="anticute_homme"||mode==="anticute_objet")){
+      var catHasAnticute=FILETS.some(function(f){return f.type===typeFilter&&f.is_anticute;});
+      if(!catHasAnticute)h+="<div class=\"fil-res-hint\"><i class=\"ti ti-info-circle\"></i> Aucun filet de la cat\u00e9gorie \u00ab "+esc(typeFilter)+" \u00bb n'est marqu\u00e9 antichute \u2014 ce n'est pas une question de taille, cette combinaison ne peut jamais rien donner.</div>";
+    }
     h+="</div>";
     return h;
   }
@@ -7933,7 +8024,7 @@ function _filSearchResultsHTML(w,hh,mode){
     var sel=i===idx;
     h+="<div class=\"fil-res-item"+(sel?" sel":"")+"\" onclick=\"_filSelectedResult="+i+";renderFilets()\">";
     h+="<span class=\"fil-res-badge"+(r.type==="pair"?" combo":"")+"\">"+(r.type==="pair"?"Jumel\u00e9":"Seul")+"</span>";
-    h+="<span class=\"fil-res-txt\">"+(r.type==="single"?_filDimTxt(r.f)+(r.f.type?" \u2014 "+esc(r.f.type):""):_filDimTxt(r.a)+" + "+_filDimTxt(r.b))+"</span>";
+    h+="<span class=\"fil-res-txt\">"+(r.type==="single"?_filDimTxt(r.f)+_filDescTxt(r.f):_filDimTxt(r.a)+_filDescTxt(r.a)+" + "+_filDimTxt(r.b)+_filDescTxt(r.b))+"</span>";
     h+="<span class=\"fil-res-waste\">"+(r.waste>0.05?("+"+r.waste.toFixed(1)+" m\u00b2 de surplus"):"pile la bonne taille")+"</span>";
     h+="</div>";
   });
@@ -7958,13 +8049,14 @@ function openFiletForm(id){
   if(f&&f.type&&_typeOpts.indexOf(f.type)<0)_typeOpts.unshift(f.type); // catégorie créée avant ce champ, ou depuis retirée : on ne la fait pas disparaître en douce
   h+="<div class=\"fg\"><label>Cat\u00e9gorie</label><select class=\"fin\" id=\"filf-type\">"+_typeOpts.map(function(t){return "<option value=\""+esc(t)+"\""+(f&&f.type===t?" selected":"")+">"+esc(t)+"</option>";}).join("")+"</select></div>";
   h+="<div style=\"display:flex;gap:10px\"><div class=\"fg\" style=\"flex:1\"><label>Largeur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-w\" value=\""+(f?esc(""+f.largeur):"")+"\"/></div><div class=\"fg\" style=\"flex:1\"><label>Hauteur (m)</label><input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" id=\"filf-h\" value=\""+(f?esc(""+f.hauteur):"")+"\"/></div></div>";
-  h+="<div class=\"fg\"><label>Statut</label><select class=\"fin\" id=\"filf-statut\"><option value=\"depot\""+((!f||f.statut==="depot")?" selected":"")+">Au d\u00e9p\u00f4t</option><option value=\"chantier\""+(f&&f.statut==="chantier"?" selected":"")+">Sur chantier</option></select></div>";
+  h+="<div class=\"fg\"><label>Statut</label><select class=\"fin\" id=\"filf-statut\">"+((!f)?"<option value=\"depot\" selected>Au d\u00e9p\u00f4t</option>":"<option value=\"depot\""+(f.statut==="depot"?" selected":"")+">Au d\u00e9p\u00f4t</option><option value=\"chantier\""+(f.statut==="chantier"?" selected":"")+">Sur chantier</option>")+"</select>"+(!f?"<div class=\"fil-form-hint\">Un filet neuf entre toujours au d\u00e9p\u00f4t \u2014 pour l'envoyer sur chantier, r\u00e9servez-le depuis la fiche d'une appro, il suivra automatiquement.</div>":"")+"</div>";
   h+="<div class=\"fg\"><label>Date d'achat</label><input type=\"date\" class=\"fin\" id=\"filf-dateachat\" value=\""+esc(f&&f.date_achat?(""+f.date_achat).slice(0,10):"")+"\"/></div>";
   h+="<div class=\"fg\"><label>N\u00b0 d'affaire (si li\u00e9 \u00e0 un chantier)</label><input class=\"fin\" id=\"filf-aff\" value=\""+esc(f?f.no_affaire||"":"")+"\"/></div>";
   h+="<label class=\"cmd-filet-chk\" style=\"margin:2px 0 12px\"><input type=\"checkbox\" id=\"filf-anticute\" "+(f&&f.is_anticute?"checked":"")+" onchange=\"toggleFiletAnticuteFields()\"/> Filet anti-chute (n\u00e9cessite une certification)</label>";
   h+="<div id=\"filf-cert-row\" style=\""+((f&&f.is_anticute)?"":"display:none")+"\">";
   h+="<div style=\"display:flex;gap:10px\"><div class=\"fg\" style=\"flex:1\"><label>Date de certification</label><input type=\"date\" class=\"fin\" id=\"filf-datecert\" value=\""+esc(f&&f.date_certification?(""+f.date_certification).slice(0,10):"")+"\"/></div><div class=\"fg\" style=\"flex:1\"><label>Expire le</label><input type=\"date\" class=\"fin\" id=\"filf-dateexp\" value=\""+esc(f&&f.date_expiration?(""+f.date_expiration).slice(0,10):"")+"\"/></div></div>";
   h+="</div>";
+  h+="<label class=\"cmd-filet-chk\" style=\"margin:2px 0 12px\"><input type=\"checkbox\" id=\"filf-paregravat\" "+(f&&f.pare_gravat?"checked":"")+"/> Avec pare-gravat</label>";
   h+="<div class=\"fg\"><label>Notes</label><input class=\"fin\" id=\"filf-notes\" value=\""+esc(f?f.notes||"":"")+"\"/></div>";
   h+="<div style=\"display:flex;gap:10px;margin-top:6px\"><button class=\"btn-clr\" onclick=\"closeFiletForm()\" style=\"flex:1\">Annuler</button><button class=\"btn-cta\" onclick=\"saveFilet('"+(f?f.id:"")+"')\" style=\"flex:1\">Enregistrer</button></div>";
   h+="</div></div>";
@@ -7983,8 +8075,9 @@ function saveFilet(id){
   var isAnticute=!!(document.getElementById("filf-anticute")||{}).checked;
   var dateCert=isAnticute?((document.getElementById("filf-datecert")||{}).value||""):"";
   var dateExp=isAnticute?((document.getElementById("filf-dateexp")||{}).value||""):"";
+  var pareGravat=!!(document.getElementById("filf-paregravat")||{}).checked;
   if(!w||!hh||w<=0||hh<=0){toast("Largeur et hauteur doivent \u00eatre des nombres positifs","ti-alert-circle");return;}
-  var body={type:type,largeur:w,hauteur:hh,statut:statut,no_affaire:aff,notes:notes,date_achat:dateAchat||null,is_anticute:isAnticute,date_certification:dateCert||null,date_expiration:dateExp||null,appro_id:id?(FILETS.filter(function(x){return x.id===id;})[0]||{}).appro_id||null:null};
+  var body={type:type,largeur:w,hauteur:hh,statut:statut,no_affaire:aff,notes:notes,date_achat:dateAchat||null,is_anticute:isAnticute,pare_gravat:pareGravat,date_certification:dateCert||null,date_expiration:dateExp||null,appro_id:id?(FILETS.filter(function(x){return x.id===id;})[0]||{}).appro_id||null:null};
   var p=id?apiCall("PUT","/filets/"+id,body):apiCall("POST","/filets",body);
   p.then(function(saved){
     if(id){var i=FILETS.findIndex(function(f){return f.id===id;});if(i>=0)FILETS[i]=saved;}
@@ -8018,6 +8111,13 @@ function loadLists(){
     // CATÉGORIES DE FILETS (Su : "sinon tout le monde va mettre des noms différents pour les mêmes filets")
     if(d.filet_types&&d.filet_types.length){FILET_TYPES=d.filet_types.slice();}
     else{apiCall("POST","/lists/filet_types/seed",{data:FILET_TYPES}).catch(function(){});}
+    // ACCÈS PAR RÔLE (cockpit admin) — fusionné par-dessus les défauts, pas remplacé :
+    // une fonctionnalité ajoutée après coup garde son accès par défaut plutôt que
+    // de disparaître silencieusement si elle n'existait pas encore au moment de l'enregistrement.
+    if(d.role_access&&d.role_access[0]){
+      var _savedRA=d.role_access[0];
+      Object.keys(_savedRA).forEach(function(k){ROLE_ACCESS[k]=Object.assign({},ROLE_ACCESS[k]||{},_savedRA[k]);});
+    }
     // CATALOGUE
     if(d.catalogue&&d.catalogue.length){CAT_ITEMS=d.catalogue.slice();rebuildCatOrder();}
     else{apiCall("POST","/lists/catalogue/seed",{data:CAT_ITEMS}).catch(function(){});}
@@ -8335,6 +8435,9 @@ function renderUISettings(){try{setActiveNav('btn-ui');}catch(e){}
     h+="</div></div>";
   }
 
+  // ---- COCKPIT D'ACCÈS PAR RÔLE (Su : "pas obligé de repasser par toi pour ce genre de modification") ----
+  h+=_roleAccessSectionHTML();
+
   h+="</div>";
 
   h+="</div>";
@@ -8516,6 +8619,53 @@ function uiDelFiletType(i){
     if(d&&d.data)FILET_TYPES=d.data.slice();
     toast("Cat\u00e9gorie supprim\u00e9e","ti-trash");renderUISettings();
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+/* "Cockpit" d'accès par rôle. Réservé à l'admin (pas juste canManage) : la
+   fonctionnalité est disponible sur l'écran Paramétrage, ouvert au dépôt
+   aussi, mais décider qui a accès à quoi reste une décision d'admin. */
+var ROLE_ACCESS_FEATURES=[
+  {key:"trucks",label:"Camions",ic:"ti-truck"},
+  {key:"filets",label:"Filets",ic:"ti-grid-dots"},
+  {key:"commandes",label:"Commandes",ic:"ti-truck-delivery"},
+  {key:"annonces",label:"Annonces",ic:"ti-speakerphone"},
+  {key:"tickets",label:"Demandes d\u00e9p\u00f4t",ic:"ti-ticket"}
+];
+var ROLE_ACCESS_ROLES=[
+  {key:"admin",label:"Admin"},
+  {key:"depot",label:"D\u00e9p\u00f4t"},
+  {key:"conducteur",label:"Conducteur"},
+  {key:"technicien",label:"Technicien"}
+];
+function _roleAccessSectionHTML(){
+  if(!currentUser||currentUser.role!=="admin")return "";
+  var h="<div class=\"ui-sec\"><div class=\"ui-sec-hd\"><i class=\"ti ti-adjustments\" style=\"color:#0F172A\"></i> Acc\u00e8s par r\u00f4le</div>";
+  h+="<div class=\"ra-hint\">Qui voit quoi dans le menu \u2014 modifiable ici directement, sans repasser par le d\u00e9veloppement.</div>";
+  h+="<table class=\"ra-table\"><thead><tr><th></th>";
+  ROLE_ACCESS_ROLES.forEach(function(r){h+="<th>"+esc(r.label)+"</th>";});
+  h+="</tr></thead><tbody>";
+  ROLE_ACCESS_FEATURES.forEach(function(f){
+    h+="<tr><td class=\"ra-feat\"><i class=\"ti "+f.ic+"\"></i> "+esc(f.label)+"</td>";
+    ROLE_ACCESS_ROLES.forEach(function(r){
+      if(r.key==="admin"){
+        h+="<td class=\"ra-cell\"><input type=\"checkbox\" checked disabled title=\"Toujours actif pour l'administrateur\"/></td>";
+      } else {
+        var checked=!!(ROLE_ACCESS[f.key]&&ROLE_ACCESS[f.key][r.key]);
+        h+="<td class=\"ra-cell\"><input type=\"checkbox\" "+(checked?"checked":"")+" onchange=\"toggleRoleAccess('"+f.key+"','"+r.key+"',this.checked)\"/></td>";
+      }
+    });
+    h+="</tr>";
+  });
+  h+="</tbody></table></div>";
+  return h;
+}
+function toggleRoleAccess(featureKey,roleKey,val){
+  if(!ROLE_ACCESS[featureKey])ROLE_ACCESS[featureKey]={};
+  ROLE_ACCESS[featureKey][roleKey]=val;
+  saveRoleAccess();
+  try{_syncMenuVisibility();}catch(e){}
+}
+function saveRoleAccess(){
+  apiCall("POST","/lists/role_access/set",{data:[ROLE_ACCESS]}).then(function(){toast("Acc\u00e8s mis \u00e0 jour","ti-check");}).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
 }
 function uiAddClient(){
   var n=(document.getElementById("ui-client-new")||{}).value||"";n=n.trim();
@@ -9766,6 +9916,7 @@ function _renderTicketsView(){
 }
 function validateTicket(id){
   var t=TICKETS.filter(function(x){return x.id===id;})[0];if(!t)return;
+  if(t.statut!=="en_attente")return; // déjà traitée — un double-clic sur connexion lente ne doit jamais dupliquer la commande
   t.statut="valide";t.traitePar=(currentUser&&currentUser.name)||"";t.traiteAt=new Date().toISOString();
   var c={id:uid(),produit:t.produit,qty:t.qty||"",noAffaire:t.noAffaire||"",chantier:t.chantier||"",statut:"en_attente",origine:"ticket",approId:t.approId||null,sec:null,fournisseur:"",createdAt:new Date().toISOString()};
   if(typeof COMMANDES!=="undefined"){COMMANDES.push(c);t.commandeId=c.id;}
@@ -9779,6 +9930,7 @@ function validateTicket(id){
 }
 function refuseTicket(id){
   var t=TICKETS.filter(function(x){return x.id===id;})[0];if(!t)return;
+  if(t.statut!=="en_attente")return;
   var why=prompt("Motif du refus / justification (visible par le Team Leader) :","");
   if(why===null)return;
   t.statut="refuse";t.reponse=(why||"").trim();t.traitePar=(currentUser&&currentUser.name)||"";t.traiteAt=new Date().toISOString();
@@ -12526,13 +12678,13 @@ function _bottomTabsHTML(){
     if(featureOn("terrain_requests"))tabs.push({ic:"ti-message-report",lbl:"Demandes",action:"renderTerrainDemande()",on:currentTab==="terrain"});
     if(featureOn("appro_discussion"))tabs.push({ic:"ti-message-2",lbl:"Messages",action:"renderPending()",on:currentTab==="pending",badge:"pending"});
   }else if(currentRole==="depot"){
-    if(featureOn("depot_trucks"))tabs.push({ic:"ti-truck",lbl:"Camions",action:"renderTrucksSettings()",on:currentTab==="trucks"});
-    if(featureOn("terrain_requests"))tabs.push({ic:"ti-ticket",lbl:"Demandes",action:"renderTickets()",on:currentTab==="tickets",badge:"tickets"});
-    if(featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
+    if(hasRoleAccess("trucks")&&featureOn("depot_trucks"))tabs.push({ic:"ti-truck",lbl:"Camions",action:"renderTrucksSettings()",on:currentTab==="trucks"});
+    if(hasRoleAccess("tickets")&&featureOn("terrain_requests"))tabs.push({ic:"ti-ticket",lbl:"Demandes",action:"renderTickets()",on:currentTab==="tickets",badge:"tickets"});
+    if(hasRoleAccess("commandes")&&featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
   }else{ /* conducteur, admin */
     tabs.push({ic:"ti-clipboard-list",lbl:"Mes appros",action:"switchTab(\'mes\')",on:currentTab==="mes"});
     tabs.push({ic:"ti-books",lbl:"Biblioth\u00e8que",action:"switchTab(\'biblio\')",on:currentTab==="biblio"||currentTab==="historique"});
-    if(featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
+    if(hasRoleAccess("commandes")&&featureOn("commandes"))tabs.push({ic:"ti-truck-delivery",lbl:"Commande",action:"renderCommandes()",on:currentTab==="commande"});
   }
   tabs=tabs.slice(0,4);
   tabs.push({ic:"ti-menu-2",lbl:"Menu",action:"toggleSidebar()",on:false});
@@ -12559,15 +12711,13 @@ function _syncMenuVisibility(){
   var bd=document.getElementById("btn-dash");if(bd)bd.style.display=(currentUser.role==="admin")?"flex":"none";
   var bui=document.getElementById("btn-ui");if(bui)bui.style.display=canManage()?"flex":"none";
   var balo=document.getElementById("btn-alo");if(balo)balo.style.display=(currentUser.role==="admin")?"flex":"none";
-  var btr=document.getElementById("btn-trucks");if(btr)btr.style.display=(canManage()&&featureOn("depot_trucks"))?"flex":"none";
-  /* Su : "les conducteurs y ont accès aussi, c'est pour eux qu'est le plus
-     important avec la recherche intelligente" — élargi ici précisément,
-     sans toucher à canManage() lui-même (utilisé ailleurs pour des écrans
-     qui, eux, doivent vraiment rester réservés dépôt/admin). */
-  var bfl=document.getElementById("btn-filets");if(bfl)bfl.style.display=((canManage()||(currentUser&&currentUser.role==="conducteur"))&&featureOn("filets"))?"flex":"none";
-  var bcmd=document.getElementById("btn-cmd");if(bcmd)bcmd.style.display=(currentUser.role!=="technicien"&&featureOn("commandes"))?"flex":"none";
-  var bann=document.getElementById("btn-annonce");if(bann)bann.style.display=(canManage()&&featureOn("annonces"))?"flex":"none";
-  var btk=document.getElementById("btn-tickets");if(btk)btk.style.display=(canManage()&&featureOn("terrain_requests"))?"flex":"none";
+  var btr=document.getElementById("btn-trucks");if(btr)btr.style.display=(hasRoleAccess("trucks")&&featureOn("depot_trucks"))?"flex":"none";
+  /* Su : "les conducteurs y ont accès aussi" — désormais réglable depuis le
+     cockpit admin plutôt que codé en dur ici (voir ROLE_ACCESS). */
+  var bfl=document.getElementById("btn-filets");if(bfl)bfl.style.display=(hasRoleAccess("filets")&&featureOn("filets"))?"flex":"none";
+  var bcmd=document.getElementById("btn-cmd");if(bcmd)bcmd.style.display=(hasRoleAccess("commandes")&&featureOn("commandes"))?"flex":"none";
+  var bann=document.getElementById("btn-annonce");if(bann)bann.style.display=(hasRoleAccess("annonces")&&featureOn("annonces"))?"flex":"none";
+  var btk=document.getElementById("btn-tickets");if(btk)btk.style.display=(hasRoleAccess("tickets")&&featureOn("terrain_requests"))?"flex":"none";
   var bpe=document.getElementById("btn-perso");if(bpe)bpe.style.display=(currentUser.role==="admin")?"flex":"none";
   var bter=document.getElementById("btn-terrain");if(bter)bter.style.display=(isField()&&featureOn("terrain_requests"))?"flex":"none";
   var bpen=document.getElementById("btn-pending");if(bpen)bpen.style.display=featureOn("appro_discussion")?"flex":"none";
