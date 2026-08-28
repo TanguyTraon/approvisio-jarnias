@@ -727,16 +727,6 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   .next-step-d{font-size:12.5px}
   .next-step-btn{padding:7px 11px;font-size:11.5px}
 }
-/* encart d'invitation quand aucun article */
-.art-empty{text-align:center;background:#fff;border:1.5px dashed #D8E0EA;border-radius:16px;padding:26px 22px;margin-bottom:14px}
-.art-empty-ic{width:56px;height:56px;border-radius:16px;margin:0 auto 12px;background:color-mix(in srgb,var(--accent,#6D28D9) 12%,transparent);color:var(--accent,#6D28D9);display:flex;align-items:center;justify-content:center}
-.art-empty-ic i{font-size:28px}
-.art-empty-t{font-size:16px;font-weight:700;color:#0F172A}
-.art-empty-d{font-size:13px;color:#94A3B8;line-height:1.5;max-width:380px;margin:5px auto 16px}
-.art-empty-btn{background:linear-gradient(135deg,var(--accent,#6D28D9),var(--accent-2,#7C3AED));color:#fff;border:none;border-radius:11px;padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--accent,#6D28D9) 50%,transparent);transition:all .26s var(--spring)}
-.art-empty-btn:hover{transform:translateY(-2px);padding-left:26px;padding-right:26px;border-radius:18px;box-shadow:0 10px 22px -6px color-mix(in srgb,var(--accent,#6D28D9) 60%,transparent)}
-.art-empty-btn:active{transform:scale(.97)}
-@media print{.art-empty{display:none!important}}
 /* align-items:start laissait chaque carte \u00e0 sa hauteur naturelle : la plus courte
    cr\u00e9ait un trou, et la 3e carte d\u00e9marrait au niveau de la plus haute. R\u00e9sultat : bas de
    cartes en escalier. En \u00e9tirant (d\u00e9faut "stretch"), les cartes d'une m\u00eame ligne
@@ -758,6 +748,13 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
 @media(min-width:1500px){
   .fv{max-width:1560px}
   .sec-grid{grid-template-columns:1fr 1fr}
+  /* Su : "la 3e colonne ne remplit pas la ligne, ça fait un vide c'est
+     étrange" — avec toujours 3 cartes (Consommables/Fournitures/Outillage)
+     dans une grille à 2 colonnes, la 3e (Outillage) se retrouvait
+     systématiquement seule sur sa ligne, à moitié de la largeur, laissant
+     un vide permanent à côté. Elle prend maintenant toute la largeur
+     disponible plutôt que de rester coincée dans une demi-colonne. */
+  .sec-grid>.sec-card:nth-child(3):last-child{grid-column:1/-1}
   .info-grid{grid-template-columns:1fr 1fr 1fr}
   .info-grid>.info-sec:nth-child(3):nth-last-child(1){grid-column:auto}
 }
@@ -1430,7 +1427,15 @@ table.at tr.tr{border-bottom:1px solid #F1F5F9}
    commentaire reste toujours visible : son fond bleu signale un état
    (« il y a un commentaire »), pas juste une action, donc le cacher perdrait
    une information utile au premier coup d'œil. */
-@media(min-width:761px){
+/* Actions révélées au survol — RÉSERVÉ à un vrai pointeur avec survol
+   (souris/trackpad), jamais juste "grand écran". Le bug trouvé : une
+   tablette ou un écran tactile large tombait dans l'ancienne condition
+   (min-width:761px) sans jamais pouvoir déclencher de survol — le bouton
+   supprimer restait invisible EN PERMANENCE, sans aucun moyen de le faire
+   apparaître (Su, conducteur de travaux : "le bouton supprimer n'est même
+   pas visible"). hover:hover ne peut être vrai que si l'appareil sait
+   vraiment survoler ; le tactile reste toujours visible, comme sur mobile. */
+@media(hover:hover) and (pointer:fine){
   table.at tr.tr td.cact:not(.cmt-cell):not(:has(.btn-ret.ret)):not(:has(.btn-ret.rettl)){opacity:0;transition:opacity .14s var(--ease)}
   table.at tr.tr:hover td.cact:not(.cmt-cell),table.at tr.tr:focus-within td.cact:not(.cmt-cell){opacity:1}
 }
@@ -7006,11 +7011,7 @@ function renderForm(){
   var secs=[{k:"consommables",l:"Consommables",i:"ti-flask",c:"#1D4ED8"},{k:"fournitures",l:"Fournitures",i:"ti-bolt",c:"#B45309"},{k:"outillage",l:"Outillage",i:"ti-tool",c:"#0F766E"}];
   var _totalArts=0;secs.forEach(function(s){_totalArts+=cur[s.k].filter(function(r){return r.designation&&(""+r.designation).trim();}).length;});
   var secH="";
-  var emptyBanner="";
-  if(_totalArts===0&&!isField()){
-    emptyBanner="<div class=\"art-empty\"><div class=\"art-empty-ic\"><i class=\"ti ti-package\"></i></div><div class=\"art-empty-t\">Ajoutez votre premier article</div><div class=\"art-empty-d\">Tapez le nom d'un produit dans le tableau ci-dessous (il se complète tout seul), ou ouvrez le catalogue pour piocher dedans.</div><button class=\"art-empty-btn liv\" onclick=\"showCp()\"><i class=\"ti ti-package\"></i> Ouvrir le catalogue</button></div>";
-  }
-  secH=emptyBanner+"<div class=\"sec-grid\">"+secs.map(function(s){
+  secH="<div class=\"sec-grid\">"+secs.map(function(s){
     var cnt=cur[s.k].filter(function(r){return r.designation;}).length;
     /* Su : pouvoir décocher tout ce qui a été rendu par erreur, sans repasser
        ligne par ligne. N'apparaît que s'il y a vraiment quelque chose à
@@ -7090,8 +7091,7 @@ h+="";
   h+=_kitZoneHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
-h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-star\" style=\"font-size:16px;color:#F59E0B\"></i> Qualit\u00e9 de l'appro</div>"+(avgNote(cur)>0?"<span class=\"card-hd-n\">"+avgNote(cur).toFixed(1)+"/5 \u00b7 "+cur.notes.length+" avis</span>":"")+"</div><div style=\"padding:16px 18px;display:flex;align-items:center;gap:14px\"><div style=\"display:flex;gap:3px\">"+starsHTML(avgNote(cur),true,cur.id)+"</div><span style=\"font-size:12px;color:#94A3B8\">"+(avgNote(cur)>0?"Note moyenne : "+avgNote(cur).toFixed(1)+"/5":"Cliquez sur les \u00e9toiles pour noter")+"</span></div></div>";
-  h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-notes\" style=\"font-size:16px;color:#64748B\"></i> Observation</div></div><textarea class=\"obs-ta\" placeholder=\"Remarques, consignes particuli&#232;res...\" rows=\"3\" oninput=\"upF('observation',this.value)\">"+esc(cur.observation)+"</textarea></div>";
+h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-notes\" style=\"font-size:16px;color:#64748B\"></i> Observation</div></div><textarea class=\"obs-ta\" placeholder=\"Remarques, consignes particuli&#232;res...\" rows=\"3\" oninput=\"upF('observation',this.value)\">"+esc(cur.observation)+"</textarea></div>";
   h+=_approNextStepHTML();
   h+="<div style=\"height:16px\"></div></div>";
   if(cur&&cur._id){
