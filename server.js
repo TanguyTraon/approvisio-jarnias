@@ -465,6 +465,17 @@ async function initDB() {
       updated_at  TIMESTAMP DEFAULT NOW()
     );
 
+    /* Catégorie personnelle "toujours sous la main" (Su : "j'aimerais
+       pouvoir créer une catégorie perso, avec des quantités que je veux et
+       que l'application la garde en tête") — liste librement composée par
+       CHAQUE personne, indépendante du catalogue partagé et des kits
+       essentiels fixés par l'admin. */
+    CREATE TABLE IF NOT EXISTS user_custom_kit (
+      user_id     UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+      data        JSONB NOT NULL DEFAULT '[]'::jsonb,
+      updated_at  TIMESTAMP DEFAULT NOW()
+    );
+
     /* Suggestions d'ajout au catalogue PARTAG\u00c9 : quand quelqu'un tape souvent un
        article absent du catalogue, on propose \u00e0 l'admin/d\u00e9p\u00f4t de l'y ajouter d'un
        clic, au lieu qu'il ait \u00e0 deviner ce qui manque. */
@@ -1086,6 +1097,28 @@ app.post('/api/my/favorites/toggle', auth, async (req, res) => {
        ON CONFLICT (user_id) DO UPDATE SET data = $2::jsonb, updated_at = NOW()`,
       [req.user.id, JSON.stringify(list)]);
     res.json({ ok: true, on, data: list });
+  } catch (e) { res.status(500).json({ error: 'Erreur' }); }
+});
+
+// ── CATÉGORIE PERSONNELLE "TOUJOURS SOUS LA MAIN" (par utilisateur) ──
+app.get('/api/my/custom-kit', auth, async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT data FROM user_custom_kit WHERE user_id = $1', [req.user.id]);
+    res.json(rows[0] ? rows[0].data : []);
+  } catch (e) { res.status(500).json({ error: 'Erreur' }); }
+});
+app.post('/api/my/custom-kit/set', auth, async (req, res) => {
+  try {
+    const items = Array.isArray(req.body && req.body.items) ? req.body.items : [];
+    const clean = items.slice(0, 100).map(it => ({
+      n: ('' + (it && it.n || '')).trim().slice(0, 160),
+      q: ('' + (it && it.q != null ? it.q : '1')).trim().slice(0, 20) || '1'
+    })).filter(it => it.n);
+    await pool.query(
+      `INSERT INTO user_custom_kit (user_id, data, updated_at) VALUES ($1,$2::jsonb,NOW())
+       ON CONFLICT (user_id) DO UPDATE SET data = $2::jsonb, updated_at = NOW()`,
+      [req.user.id, JSON.stringify(clean)]);
+    res.json({ ok: true, data: clean });
   } catch (e) { res.status(500).json({ error: 'Erreur' }); }
 });
 
