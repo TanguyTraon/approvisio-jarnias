@@ -887,8 +887,14 @@ input:not([type=checkbox]):not([type=radio]):focus,textarea:focus,select:focus{o
   .at td.cact{display:inline-flex;flex:0 0 auto;width:auto;padding:0;margin-top:0;margin-right:3px;align-items:center}
   .at td.cact::before{display:none}
   .at td.cmt-cell{display:inline-flex;margin-left:auto}
-  .at td.cmt-cell .btn-cmt{padding:4px 6px}
-  .at td.cact .btn-ret,.at td.cact .btn-del{padding:4px 6px}
+  /* Su : "en tant que conducteur je ne peux pas supprimer de ligne" — le
+     code ne bloque personne par rôle ; le vrai souci trouvé, c'est que ces
+     3 boutons collés (commentaire, retour, supprimer) ne faisaient que
+     quelques pixels de remplissage sur mobile, exactement là où la
+     précision tactile compte le plus. Facile de rater sa cible, ou de
+     toucher le mauvais bouton juste à côté. */
+  .at td.cmt-cell .btn-cmt{padding:9px;min-width:38px;min-height:38px}
+  .at td.cact .btn-ret,.at td.cact .btn-del{padding:9px;min-width:38px;min-height:38px}
   .tbl-wrap{overflow:visible}
 }
 /* ============================================================
@@ -1556,12 +1562,25 @@ table.at tr.kit-row td.td-d{position:relative}
 .cp-kit-n{width:40px;padding:4px;border:1px solid #C4B5FD;border-radius:6px;text-align:center;font-family:inherit;font-size:12px;color:#6D28D9;font-weight:700;background:#fff;outline:none}
 .btn-kit{background:#6D28D9;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;padding:5px 9px;display:inline-flex;align-items:center;gap:4px;transition:all .22s var(--spring)}
 .kit-sugg{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;margin:0 0 14px}
+.kit-essentials{background:#EFF6FF;border-color:#BFDBFE}
+.kit-essentials .kit-sugg-hd{color:#1D4ED8}
+.kit-essentials .kit-sugg-btn{background:#2563EB}
+.kit-essentials .kit-sugg-btn.added{background:#DBEAFE;color:#1D4ED8}
 .kit-sugg-hd{font-size:12px;font-weight:700;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:9px}
 .kit-sugg-btn{display:inline-flex;align-items:center;gap:6px;background:#7C3AED;color:#fff;border:none;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin:0 6px 6px 0;transition:transform .15s var(--ease),box-shadow .2s}
 .kit-sugg-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px -5px rgba(124,58,237,.5)}
 .kit-sugg-btn:active{transform:scale(.97)}
 .kit-sugg-btn.added{background:#EDE9FE;color:#6D28D9}
 .kit-sugg-n{opacity:.85;font-weight:600;font-size:11px}
+.kit-picker-inline{background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin:2px 0 8px;display:flex;flex-direction:column;gap:2px}
+.kit-essentials .kit-picker-inline{border-color:#BFDBFE}
+.kit-picker-item{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#334155;padding:5px 4px;border-radius:6px;cursor:pointer}
+.kit-picker-item:hover{background:#F8FAFC}
+.kit-picker-item input{width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.kit-picker-q{margin-left:auto;color:#94A3B8;font-size:11px;font-weight:600}
+.kit-picker-acts{display:flex;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed #E2E8F0}
+.kit-picker-add{background:#059669;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;flex:1;justify-content:center}
+.kit-picker-cancel{background:#F1F5F9;color:#64748B;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .btn-kit:hover{background:#5B21B6;padding-left:12px;padding-right:12px;border-radius:9px;box-shadow:0 6px 14px -5px rgba(109,40,217,.5);transform:translateY(-1px)}
 @media(max-width:768px){.cp-panel{width:100vw}.cp-sec-hd{flex-wrap:wrap;gap:7px}.cp-sec-actions{width:100%;justify-content:flex-start}.cp-hd{padding-top:calc(16px + env(safe-area-inset-top))}}
 .cp-row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid #F8FAFC;gap:10px;transition:background .14s var(--ease)}
@@ -2252,6 +2271,14 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-sec-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14px;margin:22px 0 14px}
 .fil-sec-n{margin-left:auto;font-size:12px;background:rgba(255,255,255,.6);padding:2px 9px;border-radius:10px}
 .fil-empty{color:#94A3B8;font-size:13px;padding:16px 4px}
+.fil-filter-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px}
+.fil-filter-pills{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.fil-filter-pill{background:#F8FAFC;border:1px solid #E2E8F0;color:#475569;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .15s}
+.fil-filter-pill:hover{border-color:#CBD5E1}
+.fil-filter-pill span{background:rgba(0,0,0,.06);border-radius:10px;padding:1px 6px;font-size:10.5px;font-weight:700}
+.fil-filter-pill.active{background:#7C3AED;border-color:#7C3AED;color:#fff}
+.fil-filter-pill.active span{background:rgba(255,255,255,.25)}
+.fil-filter-text{max-width:260px;flex-shrink:0}
 .fil-table-wrap{background:#fff;border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;margin-top:8px}
 .fil-table{width:100%;border-collapse:collapse;font-size:13px}
 .fil-table thead th{text-align:left;font-size:10.5px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;padding:10px 14px;border-bottom:1px solid #E2E8F0;background:#F8FAFC}
@@ -2292,6 +2319,10 @@ table.at tr.kit-row td.td-d{position:relative}
   .fil-table-dim{justify-content:space-between}
   .fil-table-acts{justify-content:flex-end;margin-left:0}
 }
+.fil-reserve-banner{display:flex;align-items:center;gap:9px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:13px;font-weight:600;padding:12px 18px;margin:0 24px 16px;border-radius:11px}
+.fil-reserve-banner span{flex:1}
+.fil-reserve-banner button{background:#fff;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
+.fil-reserve-btn{background:#2563EB!important;color:#fff!important;border:none!important;border-radius:8px!important;padding:7px 13px!important;font-size:12px!important;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;width:auto!important;height:auto!important}
 .fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px;cursor:pointer;transition:background .15s}
 .fil-cert-alert:hover{background:#FEE2E2}
 .fil-cert-alert-go{margin-left:auto;font-size:14px;opacity:.6;flex-shrink:0}
@@ -2392,10 +2423,10 @@ table.at tr.kit-row td.td-d{position:relative}
 .auth-tag-l{display:block;width:26px;height:1px;background:linear-gradient(90deg,transparent,#64748B)}
 .auth-tag-l:last-child{background:linear-gradient(90deg,#64748B,transparent)}
 .auth-card{position:relative;z-index:2;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 70px -25px rgba(0,0,0,.75);animation:fadeUp .5s var(--ease) both}
-.auth-card::before{content:"";position:absolute;top:0;left:22px;right:22px;height:2px;border-radius:2px;background:linear-gradient(90deg,#7C3AED,#DB2777,#F59E0B)}
-.auth-field input:focus{border-color:#7C3AED;background:#fff;box-shadow:0 0 0 3.5px rgba(124,58,237,.14)}
+.auth-card::before{content:"";position:absolute;top:0;left:22px;right:22px;height:2px;border-radius:2px;background:linear-gradient(90deg,#123528,#E4C878,#123528)}
+.auth-field input:focus{border-color:#123528;background:#fff;box-shadow:0 0 0 3.5px rgba(228,200,120,.28)}
 .btn-auth{transition:transform .14s var(--ease),box-shadow .2s}
-.btn-auth:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(109,40,217,.7)}
+.btn-auth:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(18,53,40,.7)}
 .btn-auth:active{transform:scale(.98)}
 @media(prefers-reduced-motion:reduce){.auth-rope{animation:none}}
 .auth-err{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:9px 12px;font-size:13px;color:#B91C1C;margin-bottom:13px;display:none}
@@ -2682,7 +2713,7 @@ body.vm-compact .btn-add-row{padding:5px 9px;font-size:12px}
   body.vm-compact .at td.td-av .csel{font-size:10.5px!important;padding:2px 1px!important}
   body.vm-compact .at td.cact{margin-top:0;margin-right:1px}
   body.vm-compact .at td.cmt-cell{margin-left:3px}
-  body.vm-compact .at td.cact .btn-ret,body.vm-compact .at td.cact .btn-del,body.vm-compact .at td.cmt-cell .btn-cmt{padding:3px 4px;font-size:11px}
+  body.vm-compact .at td.cact .btn-ret,body.vm-compact .at td.cact .btn-del,body.vm-compact .at td.cmt-cell .btn-cmt{padding:8px;min-width:30px;min-height:30px;font-size:11px}
   /* Le commentaire reste consultable : il se d\u00e9plie sous la ligne. */
   body.vm-compact .at tr.show-c{flex-wrap:wrap}
   body.vm-compact .at tr.show-c td.td-c{display:block!important;flex:0 0 100%;margin-top:4px}
@@ -3278,6 +3309,22 @@ function _cmdkRun(i){
   closeCmdk();
   if(it&&typeof it.run==="function")try{it.run();}catch(e){}
 }
+/* Su : "sur téléphone, quand je veux ajouter quelque chose, presque tout
+   bug, j'arrive plus à voir ce que j'écris" — sur un appro un peu longue,
+   le champ tapé pouvait se retrouver caché sous le clavier virtuel, sans
+   aucun ajustement automatique. Le délai laisse le temps au clavier de finir
+   son animation d'ouverture avant de calculer où défiler — trop tôt, la
+   hauteur de la fenêtre visible n'est pas encore la bonne. */
+document.addEventListener("focusin",function(e){
+  if(window.innerWidth>760)return;
+  var t=e.target;
+  if(!t||!t.classList)return;
+  if(!(t.classList.contains("cin")||t.classList.contains("csel")))return;
+  if(!t.closest(".at"))return;
+  setTimeout(function(){
+    try{t.scrollIntoView({block:"center",behavior:"smooth"});}catch(err){}
+  },300);
+});
 document.addEventListener("keydown",function(e){
   var tag=(e.target.tagName||"").toLowerCase();
   var typing=tag==="input"||tag==="textarea"||e.target.isContentEditable;
@@ -4001,6 +4048,12 @@ function _rerenderCurrent(){
     if(typeof cur!=="undefined"&&cur)return;   /* une appro est ouverte : on n'y touche pas */
     var t=(typeof currentTab!=="undefined"&&currentTab)||"";
     if(t==="uisettings"||t==="perso"||t==="alosettings")return;
+    /* Su : "ça fait un sursaut" — le rafraîchissement reconstruit tout
+       l'écran, ce qui remettait le défilement en haut à chaque fois, même
+       en pleine lecture d'une longue liste. On note où on en était avant,
+       et on y revient juste après. */
+    var mainEl=document.getElementById("main-area");
+    var scrollY=mainEl?mainEl.scrollTop:0;
     if(t==="depot")renderDepotHome();
     else if(t==="biblio")renderLibrary();
     else if(t==="dashboard")renderDashboard();
@@ -4012,6 +4065,8 @@ function _rerenderCurrent(){
     else if(t==="filets")renderFilets();
     else if(t==="mes")renderMesAppros();
     else renderWelcome();
+    var mainEl2=document.getElementById("main-area");
+    if(mainEl2&&scrollY>0)mainEl2.scrollTop=scrollY;
   }catch(e){}
 }
 
@@ -5214,18 +5269,89 @@ function _suggestedKitsForChantier(nomChantier,typeChantiers){
   });
   return matches;
 }
+function _kitButtonHTML(cat){
+  var n=CAT_ITEMS.filter(function(it){return it.cat===cat;}).length;
+  var already=["consommables","fournitures","outillage"].some(function(sec){return (cur[sec]||[]).some(function(r){return r.kit===cat;});});
+  var open=_kitPickerOpenCat===cat;
+  var h="<button class=\"kit-sugg-btn"+(already?" added":"")+(open?" open":"")+"\" onclick=\"toggleKitPicker('"+cat.replace(/'/g,"\\'")+"')\" title=\""+(already?"D\u00e9j\u00e0 ajout\u00e9 \u2014 cliquer permet d'en choisir d'autres":"")+"\"><i class=\"ti "+(open?"ti-chevron-up":"ti-circle-plus")+"\"></i> "+esc(cat)+" <span class=\"kit-sugg-n\">"+n+" articles"+(already?" \u00b7 d\u00e9j\u00e0 ajout\u00e9":"")+"</span></button>";
+  h+=_kitPickerInlineHTML(cat);
+  return h;
+}
 function _kitSuggestionsHTML(){
   if(!cur)return "";
   var cats=_suggestedKitsForChantier(cur.nomChantier,getTypes(cur));
   if(!cats.length)return "";
   var h="<div class=\"kit-sugg\"><div class=\"kit-sugg-hd\"><i class=\"ti ti-bulb\"></i> Suggestions rapides d'apr\u00e8s le titre</div>";
-  cats.forEach(function(cat){
-    var n=CAT_ITEMS.filter(function(it){return it.cat===cat;}).length;
-    var already=["consommables","fournitures","outillage"].some(function(sec){return (cur[sec]||[]).some(function(r){return r.kit===cat;});});
-    h+="<button class=\"kit-sugg-btn"+(already?" added":"")+"\" onclick=\"addKit('"+cat.replace(/'/g,"\\'")+"')\" title=\""+(already?"D\u00e9j\u00e0 ajout\u00e9 \u2014 cliquer en ajoute de nouveau":"")+"\"><i class=\"ti ti-circle-plus\"></i> "+esc(cat)+" <span class=\"kit-sugg-n\">"+n+" articles"+(already?" \u00b7 d\u00e9j\u00e0 ajout\u00e9":"")+"</span></button>";
-  });
+  cats.forEach(function(cat){h+=_kitButtonHTML(cat);});
   h+="</div>";
   return h;
+}
+/* Su : "toujours visible sur chaque appro — les cordes/ancrages sont
+   nécessaires presque partout, pas besoin de deviner" — contrairement aux
+   suggestions ci-dessus (détectées depuis le titre), cette section ne
+   dépend d'aucune détection : elle est là systématiquement, parce que ces
+   catégories servent sur la quasi-totalité des chantiers d'un cordiste. */
+var KIT_ESSENTIALS=["Cordes & Mousquetonnerie","Ligne de vie / Ancrage"];
+function _kitEssentialsHTML(){
+  if(!cur)return "";
+  var cats=KIT_ESSENTIALS.filter(function(cat){return CAT_ORDER.indexOf(cat)>=0;});
+  if(!cats.length)return "";
+  var h="<div class=\"kit-sugg kit-essentials\"><div class=\"kit-sugg-hd\"><i class=\"ti ti-pin\"></i> Toujours sous la main</div>";
+  cats.forEach(function(cat){h+=_kitButtonHTML(cat);});
+  h+="</div>";
+  return h;
+}
+/* Su : "je ne veux pas que ça ouvre le catalogue, faut que ça reste dans
+   la section que tu as ajoutée" — plus de navigation vers le panneau
+   catalogue : la sélection se fait sur place, en dépliant la catégorie
+   directement sous son bouton. Tout précoché par défaut (le geste rapide
+   qui plaisait), mais on peut décocher ce qu'on ne veut pas avant
+   d'ajouter, sans jamais quitter cette section. */
+var _kitPickerOpenCat=null;
+var _kitPickerSel={};
+function toggleKitPicker(cat){
+  if(_kitPickerOpenCat===cat){_kitPickerOpenCat=null;_kitPickerSel={};}
+  else{
+    _kitPickerOpenCat=cat;
+    _kitPickerSel={};
+    CAT_ITEMS.forEach(function(it,i){if(it.cat===cat)_kitPickerSel[i]=true;});
+  }
+  renderForm();
+}
+function _kitPickerToggleItem(i,checked){
+  if(checked)_kitPickerSel[i]=true;else delete _kitPickerSel[i];
+}
+function _kitPickerInlineHTML(cat){
+  if(_kitPickerOpenCat!==cat)return "";
+  var h="<div class=\"kit-picker-inline\">";
+  CAT_ITEMS.forEach(function(it,i){
+    if(it.cat!==cat)return;
+    var ck=!!_kitPickerSel[i];
+    h+="<label class=\"kit-picker-item\"><input type=\"checkbox\" "+(ck?"checked":"")+" onchange=\"_kitPickerToggleItem("+i+",this.checked)\"/> "+esc(it.n)+" <span class=\"kit-picker-q\">x"+esc(it.q||"1")+"</span></label>";
+  });
+  h+="<div class=\"kit-picker-acts\"><button class=\"kit-picker-add\" onclick=\"addKitSelection('"+cat.replace(/'/g,"\\'")+"')\"><i class=\"ti ti-check\"></i> Ajouter la s\u00e9lection</button><button class=\"kit-picker-cancel\" onclick=\"toggleKitPicker('"+cat.replace(/'/g,"\\'")+"')\">Annuler</button></div>";
+  h+="</div>";
+  return h;
+}
+function addKitSelection(cat){
+  if(!cur){toast("Ouvrez une appro","ti-alert-circle");return;}
+  var idx=Object.keys(_kitPickerSel).map(Number).filter(function(i){var it=CAT_ITEMS[i];return it&&it.cat===cat;});
+  if(!idx.length){toast("Aucun article s\u00e9lectionn\u00e9","ti-alert-circle");return;}
+  idx.forEach(function(i){
+    var it=CAT_ITEMS[i];if(!it)return;
+    var row=mkR(it.n,it.q||"1");row.kit=cat;
+    if(currentRole==="depot")row.depotAdded=true;
+    else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
+    else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro())row.condAdded=true;
+    if(cur[it.sec]&&cur[it.sec].length&&!cur[it.sec][cur[it.sec].length-1].designation)cur[it.sec].splice(cur[it.sec].length-1,1);
+    if(!cur[it.sec])cur[it.sec]=[];
+    cur[it.sec].push(row);
+  });
+  if(cur.statut==="prete")cur.modifPrep=true;else if(cur.statut==="sur_chantier")cur.addToPrepare=true;
+  saved=false;
+  _kitPickerOpenCat=null;_kitPickerSel={};
+  renderForm();
+  toast(idx.length+" article"+(idx.length>1?"s":"")+" ajout\u00e9"+(idx.length>1?"s":""),"ti-circle-plus");
 }
 function addKit(cat){
   if(!cur){toast("Ouvrez une appro","ti-alert-circle");return;}
@@ -6740,6 +6866,7 @@ h+="";
   h+=_filApproSectionHTML();
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
+  h+=_kitEssentialsHTML();
   h+=_kitSuggestionsHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
@@ -7746,6 +7873,7 @@ function toggleFilCat(cat){_filCatOpen[cat]=!_filCatOpen[cat];renderFilets();}
    d'aller les voir \u2014 un clic d\u00e9plie maintenant pr\u00e9cis\u00e9ment les cat\u00e9gories
    concern\u00e9es, plut\u00f4t que de laisser deviner o\u00f9 elles se trouvent. */
 function _filShowCertIssues(){
+  _filStatusFilter="cert_issue";
   FILETS.forEach(function(f){
     var c=_filCertStatus(f);
     if(c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown")){
@@ -7756,8 +7884,61 @@ function _filShowCertIssues(){
   var t=document.querySelector(".fil-table-wrap");
   if(t&&t.scrollIntoView)t.scrollIntoView({behavior:"smooth",block:"start"});
 }
+/* Filtres rapides du tableau (audit d'utilisabilité demandé par Su) — avant,
+   la seule façon de voir "tout ce qui est libre" ou "tout ce qui a besoin
+   d'une certification" était de déplier chaque catégorie une par une et de
+   parcourir visuellement. Complète le groupement par catégorie, ne le
+   remplace pas — les deux se combinent. */
+var _filStatusFilter="",_filTextFilter="";
+function _filApplyFilters(list){
+  return list.filter(function(f){
+    if(_filStatusFilter){
+      if(_filStatusFilter==="cert_issue"){
+        var c=_filCertStatus(f);
+        if(!c||(c.level!=="expired"&&c.level!=="soon"&&c.level!=="unknown"))return false;
+      } else if(_filReserveStatus(f).level!==_filStatusFilter)return false;
+    }
+    if(_filTextFilter){
+      var q=_stripAccents(_filTextFilter.toLowerCase());
+      var hay=_stripAccents(((f.no_affaire||"")+" "+_filDimTxt(f)+" "+(f.type||"")+" "+(f.notes||"")).toLowerCase());
+      if(hay.indexOf(q)<0)return false;
+    }
+    return true;
+  });
+}
+function _filSetStatusFilter(v){_filStatusFilter=v;_filRefreshZone();}
+function _filSetTextFilter(v){
+  _filTextFilter=v;
+  var input=document.getElementById("fil-filter-text-in");
+  var pos=input?input.selectionStart:null;
+  _filRefreshZone();
+  var input2=document.getElementById("fil-filter-text-in");
+  if(input2){input2.focus();if(pos!==null)input2.setSelectionRange(pos,pos);}
+}
+function _filRefreshZone(){
+  var z=document.getElementById("fil-filter-zone");
+  if(!z)return;
+  var depotF=FILETS.filter(function(f){return f.statut==="depot";});
+  var chantierF=FILETS.filter(function(f){return f.statut==="chantier";});
+  z.innerHTML=_filFilterZoneHTML(depotF.concat(chantierF));
+}
+function _filFilterZoneHTML(allList){
+  var h="<div class=\"fil-filter-row\">";
+  h+="<div class=\"fil-filter-pills\">";
+  [["","Tout",allList.length],["libre","Libre",allList.filter(function(f){return _filReserveStatus(f).level==="libre";}).length],["reserve","R\u00e9serv\u00e9",allList.filter(function(f){return _filReserveStatus(f).level==="reserve";}).length],["chantier","Sur chantier",allList.filter(function(f){return _filReserveStatus(f).level==="chantier";}).length],["cert_issue","Certification \u00e0 v\u00e9rifier",allList.filter(function(f){var c=_filCertStatus(f);return c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown");}).length]].forEach(function(p){
+    h+="<button class=\"fil-filter-pill"+(_filStatusFilter===p[0]?" active":"")+"\" onclick=\"_filSetStatusFilter('"+p[0]+"')\">"+p[1]+" <span>"+p[2]+"</span></button>";
+  });
+  h+="</div>";
+  h+="<input class=\"fin fil-filter-text\" id=\"fil-filter-text-in\" placeholder=\"Filtrer par affaire, dimension, cat\u00e9gorie\u2026\" value=\""+esc(_filTextFilter)+"\" oninput=\"_filSetTextFilter(this.value)\"/>";
+  h+="</div>";
+  h+="<div class=\"fil-table-wrap\">"+_filTableHTML(_filApplyFilters(allList))+"</div>";
+  return h;
+}
 function _filTableHTML(list){
-  if(!list.length)return "<div class=\"fil-empty\">Aucun filet enregistr\u00e9.</div>";
+  if(!list.length){
+    if(_filStatusFilter||_filTextFilter)return "<div class=\"fil-empty\">Aucun filet ne correspond \u00e0 ce filtre.</div>";
+    return "<div class=\"fil-empty\">Aucun filet enregistr\u00e9.</div>";
+  }
   var byCat={};
   list.forEach(function(f){var k=f.type||"Sans cat\u00e9gorie";(byCat[k]=byCat[k]||[]).push(f);});
   var cats=Object.keys(byCat).sort();
@@ -7783,7 +7964,8 @@ function _filTableHTML(list){
         h+="<td data-label=\"Achet\u00e9 le\">"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
         h+="<td data-label=\"Certification\">"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>"+((cert.level==="expired"||cert.level==="unknown")?"<div class=\"fil-downgrade\">Usage objet uniquement (pare-gravat), plus pour une personne</div>":""):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
         h+="<td data-label=\"Affaire\">"+(f.no_affaire?esc(f.no_affaire):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
-        h+="<td class=\"fil-table-acts\" data-label=\"\"><button onclick=\"event.stopPropagation();openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"event.stopPropagation();delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button></td>";
+        var canReserve=_filReserveContext&&rs.level==="libre";
+        h+="<td class=\"fil-table-acts\" data-label=\"\">"+(canReserve?"<button onclick=\"event.stopPropagation();reserveFiletFromFilets('"+f.id+"')\" class=\"fil-reserve-btn\" title=\"R\u00e9server pour cette appro\"><i class=\"ti ti-circle-plus\"></i> R\u00e9server</button>":"<button onclick=\"event.stopPropagation();openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"event.stopPropagation();delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button>")+"</td>";
         h+="</tr>";
       });
     }
@@ -7811,10 +7993,45 @@ function _filApproSectionHTML(){
   } else {
     h+="<div class=\"fil-appro-empty\">Aucun filet r\u00e9serv\u00e9 pour l'instant.</div>";
   }
-  if(cur._id)h+="<button class=\"btn-cta\" style=\"margin-top:9px;padding:8px 16px;font-size:12.5px\" onclick=\"openFiletPicker()\"><i class=\"ti ti-plus\"></i> Choisir un filet</button>";
+  if(cur._id)h+="<button class=\"btn-cta\" style=\"margin-top:9px;padding:8px 16px;font-size:12.5px\" onclick=\"goReserveFiletForAppro()\"><i class=\"ti ti-plus\"></i> Choisir un filet</button>";
   else h+="<div class=\"fil-appro-hint\">Enregistrez d'abord l'appro pour pouvoir y r\u00e9server un filet.</div>";
   h+="</div>";
   return h;
+}
+/* Su : "ou limite que ça envoie directement dans l'onglet filet mais que
+   ça garde en tête que je veux mettre le filet sur cette appro, et remplit
+   automatiquement le numéro d'affaire" — l'écran Filets complet (tableau,
+   recherche, certification) est bien plus détaillé que l'ancienne petite
+   fenêtre. On y navigue en gardant le contexte de l'appro d'origine :
+   cur devient null en changeant d'écran, donc _filReserveContext garde ce
+   qu'il faut pour revenir dessus et compléter automatiquement l'affaire. */
+var _filReserveContext=null;
+function goReserveFiletForAppro(){
+  if(!cur||!cur._id)return;
+  _filReserveContext={approId:cur._id,apLocalId:cur.id,noAffaire:cur.noAffaire||"",nomChantier:cur.nomChantier||""};
+  renderFilets();
+}
+function cancelFiletReservation(){
+  _filReserveContext=null;
+  if(window.event)window.event.stopPropagation&&window.event.stopPropagation();
+  renderFilets();
+}
+function _filReserveBannerHTML(){
+  if(!_filReserveContext)return "";
+  return "<div class=\"fil-reserve-banner\"><i class=\"ti ti-target-arrow\"></i> <span>Vous choisissez un filet pour <b>"+esc(_filReserveContext.nomChantier||"cette appro")+"</b> \u2014 cliquez sur un filet libre pour le r\u00e9server</span><button onclick=\"cancelFiletReservation()\">Annuler</button></div>";
+}
+function reserveFiletFromFilets(id){
+  if(!_filReserveContext){toast("Aucune appro en attente de r\u00e9servation","ti-alert-circle");return;}
+  var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
+  var ctx=_filReserveContext;
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:ctx.approId,no_affaire:ctx.noAffaire||f.no_affaire||""};
+  apiCall("PUT","/filets/"+id,body).then(function(saved){
+    var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
+    _filReserveContext=null;
+    toast("Filet r\u00e9serv\u00e9 pour "+(ctx.nomChantier||"l'appro"),"ti-check");
+    if(typeof openApproById==="function")openApproById(ctx.apLocalId);
+    else renderFilets();
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
 }
 /* Le s\u00e9lecteur reprend les m\u00eames \u00e9tapes que pour choisir un article d'appro :
    chercher une taille pr\u00e9cise EN PREMIER (m\u00eame recherche intelligente que
@@ -7883,8 +8100,10 @@ function unreserveFilet(id){
 
 function renderFilets(){
   try{setActiveNav("btn-filets");}catch(e){}
+  if(!hasRoleAccess("filets")){toast("Acc\u00e8s non autoris\u00e9 pour votre r\u00f4le","ti-lock");return;}
   cur=null;currentTab="filets";
   var h=_dashHeader("Filets","Stock au d\u00e9p\u00f4t, suivi automatique sur chantier.");
+  h+=_filReserveBannerHTML();
   var certIssues=FILETS.filter(function(f){var c=_filCertStatus(f);return c&&(c.level==="expired"||c.level==="soon"||c.level==="unknown");});
   if(certIssues.length){
     var nExp=certIssues.filter(function(f){return _filCertStatus(f).level==="expired";}).length;
@@ -7924,7 +8143,7 @@ function renderFilets(){
 
   var depotF=FILETS.filter(function(f){return f.statut==="depot";});
   var chantierF=FILETS.filter(function(f){return f.statut==="chantier";});
-  h+="<div class=\"fil-table-wrap\">"+_filTableHTML(depotF.concat(chantierF))+"</div>";
+  h+="<div id=\"fil-filter-zone\">"+_filFilterZoneHTML(depotF.concat(chantierF))+"</div>";
 
   h+="</div>";
   document.getElementById("main-area").innerHTML=h;
@@ -9125,7 +9344,7 @@ function _autoSujetCheck(){
 
 function renderTrucksSettings(){try{setActiveNav('btn-trucks');}catch(e){}
   if(typeof closeSidebar==="function")closeSidebar();
-  if(!canManage()){toast("Acc\u00e8s admin ou d\u00e9p\u00f4t","ti-lock");return;}
+  if(!hasRoleAccess("trucks")){toast("Accès non autorisé pour votre rôle","ti-lock");return;}
   if(!featureOn("depot_trucks")){toast("Fonctionnalit\u00e9 d\u00e9sactiv\u00e9e par l'administrateur","ti-lock");goHome();return;}
   cur=null;currentTab="trucks";
   var m=document.getElementById("main-area");
@@ -9614,6 +9833,7 @@ function renderCommandes(){try{setActiveNav('btn-cmd');}catch(e){}if(typeof _mou
   if(typeof _unmountCpFab==="function")_unmountCpFab();
   if(typeof closeSidebar==="function")closeSidebar();
   if(isField())return;
+  if(!hasRoleAccess("commandes")){toast("Accès non autorisé pour votre rôle","ti-lock");return;}
   if(!featureOn("commandes")){toast("Fonctionnalité désactivée par l'administrateur","ti-lock");goHome();return;}
   cur=null;currentTab="commande";
   var m=document.getElementById("main-area");
@@ -9790,7 +10010,7 @@ function saveAnnonces(cb){
 }
 function renderAnnonces(){try{setActiveNav('btn-annonce');}catch(e){}
   if(typeof closeSidebar==="function")closeSidebar();
-  if(!canManage()){toast("Acc\u00e8s admin ou d\u00e9p\u00f4t","ti-lock");return;}
+  if(!hasRoleAccess("annonces")){toast("Accès non autorisé pour votre rôle","ti-lock");return;}
   if(!featureOn("annonces")){toast("Fonctionnalit\u00e9 d\u00e9sactiv\u00e9e par l'administrateur","ti-lock");goHome();return;}
   cur=null;currentTab="annonces";
   annEnsureUsers();
@@ -9976,7 +10196,7 @@ function updateTicketBadge(){
 }
 function renderTickets(){try{setActiveNav('btn-tickets');}catch(e){}
   if(typeof closeSidebar==="function")closeSidebar();
-  if(!canManage()){toast("Acc\u00e8s admin ou d\u00e9p\u00f4t","ti-lock");return;}
+  if(!hasRoleAccess("tickets")){toast("Accès non autorisé pour votre rôle","ti-lock");return;}
   if(!featureOn("terrain_requests")){toast("Fonctionnalit\u00e9 d\u00e9sactiv\u00e9e par l\u0027administrateur","ti-lock");renderDepotHome();return;}
   cur=null;currentTab="tickets";
   // recharge pour limiter les conflits
@@ -12944,6 +13164,15 @@ var sheetsPollTimer=null;
 function startSheetsPolling(){
   if(sheetsPollTimer)clearInterval(sheetsPollTimer);
   sheetsPollTimer=setInterval(function(){
+    /* Su : "toutes les minutes la page se refresh, mais ça fait un sursaut,
+       on pourrait pas faire autrement ?" — si quelqu'un est en train de
+       taper dans un champ (recherche, formulaire...), reconstruire tout
+       l'écran lui arracherait le focus et pourrait faire disparaître ce
+       qu'il est en train d'écrire. On attend plutôt le prochain passage,
+       60 secondes plus tard, sans jamais couper quelqu'un en pleine saisie. */
+    var ae=document.activeElement;
+    var typing=ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA"||ae.tagName==="SELECT"||ae.isContentEditable);
+    if(typing)return;
     if(typeof refreshFromServer==="function")refreshFromServer({silent:true});
   },60000);
 }
