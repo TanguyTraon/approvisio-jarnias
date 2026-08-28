@@ -1427,18 +1427,14 @@ table.at tr.tr{border-bottom:1px solid #F1F5F9}
    commentaire reste toujours visible : son fond bleu signale un état
    (« il y a un commentaire »), pas juste une action, donc le cacher perdrait
    une information utile au premier coup d'œil. */
-/* Actions révélées au survol — RÉSERVÉ à un vrai pointeur avec survol
-   (souris/trackpad), jamais juste "grand écran". Le bug trouvé : une
-   tablette ou un écran tactile large tombait dans l'ancienne condition
-   (min-width:761px) sans jamais pouvoir déclencher de survol — le bouton
-   supprimer restait invisible EN PERMANENCE, sans aucun moyen de le faire
-   apparaître (Su, conducteur de travaux : "le bouton supprimer n'est même
-   pas visible"). hover:hover ne peut être vrai que si l'appareil sait
-   vraiment survoler ; le tactile reste toujours visible, comme sur mobile. */
-@media(hover:hover) and (pointer:fine){
-  table.at tr.tr td.cact:not(.cmt-cell):not(:has(.btn-ret.ret)):not(:has(.btn-ret.rettl)){opacity:0;transition:opacity .14s var(--ease)}
-  table.at tr.tr:hover td.cact:not(.cmt-cell),table.at tr.tr:focus-within td.cact:not(.cmt-cell){opacity:1}
-}
+/* Bouton supprimer TOUJOURS VISIBLE, plus jamais caché derrière un survol.
+   Su, à plusieurs reprises : "j'ai toujours pas moyen de supprimer sur
+   l'affichage ordi" — après avoir corrigé une première fois la condition
+   de détection du survol (une tablette tombait dans le mauvais cas), le
+   problème persistait encore. Plutôt que de continuer à deviner quel
+   réglage matériel précis pose souci, le bouton reste maintenant visible
+   en permanence, sur tous les écrans, sans aucune condition — comme sur
+   mobile. Plus rien à détecter, plus rien qui puisse se re-cacher. */
 table.at tr.tr:last-child{border-bottom:none}
 table.at td{padding:0}
 table.at tr.kit-hd td{padding:0;border:none;background:none}
@@ -1605,13 +1601,18 @@ table.at tr.kit-row td.td-d{position:relative}
 .kit-sugg-btn:active{transform:scale(.97)}
 .kit-sugg-btn.added{background:#EDE9FE;color:#6D28D9}
 .kit-sugg-n{opacity:.85;font-weight:600;font-size:11px}
-.kit-picker-inline{background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin:2px 0 8px;display:flex;flex-direction:column;gap:2px}
+.kit-picker-inline{background:#fff;border:1px solid #FDE68A;border-radius:10px;padding:6px 10px;margin:2px 0 8px;display:flex;flex-direction:column}
 .kit-essentials .kit-picker-inline{border-color:#BFDBFE}
-.kit-picker-item{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#334155;padding:5px 4px;border-radius:6px;cursor:pointer}
+.kit-picker-item{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#334155;padding:4px 2px;border-radius:6px;cursor:pointer;min-height:26px}
 .kit-picker-item:hover{background:#F8FAFC}
-.kit-picker-item input{width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.kit-picker-item input[type=checkbox]{width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.kit-picker-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kit-picker-qbadge{margin-left:auto;flex-shrink:0;background:#F5F3FF;color:#6D28D9;border:1px solid #E9D5FF;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;transition:background .13s}
+.kit-picker-qbadge:hover{background:#EDE4FF}
+.kit-essentials .kit-picker-qbadge{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.kit-essentials .kit-picker-qbadge:hover{background:#DBEAFE}
 .kit-picker-qwrap{margin-left:auto;display:flex;align-items:center;gap:4px;flex-shrink:0}
-.kit-picker-qin{width:40px;border:1px solid #E2E8F0;border-radius:6px;padding:4px 5px;font-size:11.5px;text-align:center;font-family:inherit;color:#334155}
+.kit-picker-qin{width:38px;border:1px solid #6D28D9;border-radius:6px;padding:3px 4px;font-size:12px;text-align:center;font-family:inherit;color:#334155;font-weight:700}
 .kit-picker-qsave{background:none;border:none;color:#CBD5E1;cursor:pointer;padding:3px;font-size:12px;display:flex;align-items:center}
 .kit-picker-qsave:hover{color:#059669}
 .kit-picker-acts{display:flex;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed #E2E8F0}
@@ -5520,17 +5521,40 @@ function _kitCustomAddToAppro(i){
    d'ajouter, sans jamais quitter cette section. */
 var _kitPickerOpenCat=null;
 var _kitPickerSel={};
+/* Su : "le nombre d'unité n'est pas très bien visible, et quand tu déroule
+   tout c'est trop gros visuellement" — le champ de quantité restait
+   toujours ouvert (un rectangle vide de 40px, sans grand contraste), sur
+   CHAQUE ligne en permanence, alourdissant toute la liste dépliée. Chaque
+   quantité est maintenant un badge compact et coloré, bien lisible d'un
+   coup d'œil (« ×2 »), qui ne se transforme en champ éditable que si on
+   clique dessus — l'édition reste possible, juste plus discrète par défaut. */
+var _kitPickerQty={};
+var _kitPickerEditIdx=null;
 function toggleKitPicker(cat){
-  if(_kitPickerOpenCat===cat){_kitPickerOpenCat=null;_kitPickerSel={};}
+  if(_kitPickerOpenCat===cat){_kitPickerOpenCat=null;_kitPickerSel={};_kitPickerQty={};_kitPickerEditIdx=null;}
   else{
     _kitPickerOpenCat=cat;
-    _kitPickerSel={};
-    CAT_ITEMS.forEach(function(it,i){if(it.cat===cat)_kitPickerSel[i]=true;});
+    _kitPickerSel={};_kitPickerQty={};_kitPickerEditIdx=null;
+    CAT_ITEMS.forEach(function(it,i){
+      if(it.cat!==cat)return;
+      _kitPickerSel[i]=true;
+      var pref=_myQtyFor(it.n);
+      _kitPickerQty[i]=(pref!=null&&(""+pref).trim()!=="")?pref:(it.q||"1");
+    });
   }
   renderForm();
 }
 function _kitPickerToggleItem(i,checked){
   if(checked)_kitPickerSel[i]=true;else delete _kitPickerSel[i];
+}
+function _kitPickerEditQty(i){
+  _kitPickerEditIdx=i;
+  renderForm();
+}
+function _kitPickerCommitQty(i,val){
+  _kitPickerQty[i]=(""+val).trim()||"1";
+  _kitPickerEditIdx=null;
+  renderForm();
 }
 function _kitPickerInlineHTML(cat){
   if(_kitPickerOpenCat!==cat)return "";
@@ -5538,9 +5562,15 @@ function _kitPickerInlineHTML(cat){
   CAT_ITEMS.forEach(function(it,i){
     if(it.cat!==cat)return;
     var ck=!!_kitPickerSel[i];
-    var pref=_myQtyFor(it.n);
-    var qv=(pref!=null&&(""+pref).trim()!=="")?pref:(it.q||"1");
-    h+="<label class=\"kit-picker-item\"><input type=\"checkbox\" "+(ck?"checked":"")+" onchange=\"_kitPickerToggleItem("+i+",this.checked)\"/> "+esc(it.n)+"<span class=\"kit-picker-qwrap\"><input type=\"text\" class=\"kit-picker-qin\" id=\"kpq_"+i+"\" value=\""+esc(qv)+"\" onclick=\"event.preventDefault();event.stopPropagation()\"/><button type=\"button\" class=\"kit-picker-qsave\" onclick=\"event.preventDefault();event.stopPropagation();_kitPickerSaveQty('"+it.n.replace(/'/g,"\\'")+"',"+i+")\" title=\"Retenir cette quantit\u00e9 pour moi\"><i class=\"ti ti-device-floppy\"></i></button></span></label>";
+    var qv=_kitPickerQty[i]||it.q||"1";
+    var editing=_kitPickerEditIdx===i;
+    h+="<label class=\"kit-picker-item\"><input type=\"checkbox\" "+(ck?"checked":"")+" onchange=\"_kitPickerToggleItem("+i+",this.checked)\"/> <span class=\"kit-picker-nm\">"+esc(it.n)+"</span>";
+    if(editing){
+      h+="<span class=\"kit-picker-qwrap\"><input type=\"text\" class=\"kit-picker-qin\" id=\"kpq_"+i+"\" value=\""+esc(qv)+"\" autofocus onclick=\"event.preventDefault();event.stopPropagation()\" onkeydown=\"if(event.key==='Enter'){event.preventDefault();_kitPickerCommitQty("+i+",this.value);}\" onblur=\"_kitPickerCommitQty("+i+",this.value)\"/><button type=\"button\" class=\"kit-picker-qsave\" onclick=\"event.preventDefault();event.stopPropagation();_kitPickerSaveQty('"+it.n.replace(/'/g,"\\'")+"',"+i+")\" title=\"Retenir cette quantit\u00e9 pour moi\"><i class=\"ti ti-device-floppy\"></i></button></span>";
+    } else {
+      h+="<button type=\"button\" class=\"kit-picker-qbadge\" onclick=\"event.preventDefault();event.stopPropagation();_kitPickerEditQty("+i+")\" title=\"Modifier la quantit\u00e9\">\u00d7"+esc(qv)+"</button>";
+    }
+    h+="</label>";
   });
   h+="<div class=\"kit-picker-acts\"><button class=\"kit-picker-add\" onclick=\"addKitSelection('"+cat.replace(/'/g,"\\'")+"')\"><i class=\"ti ti-check\"></i> Ajouter la s\u00e9lection</button><button class=\"kit-picker-cancel\" onclick=\"toggleKitPicker('"+cat.replace(/'/g,"\\'")+"')\">Annuler</button></div>";
   h+="</div>";
@@ -5554,8 +5584,7 @@ function _kitPickerInlineHTML(cat){
    Corrigé aux deux endroits où un kit s'ajoute (sélection ici, et le
    bouton "Kit" classique juste après). */
 function _kitPickerSaveQty(name,i){
-  var input=document.getElementById("kpq_"+i);
-  var qv=(input&&input.value||"1").trim()||"1";
+  var qv=_kitPickerQty[i]||"1";
   saveQtyPref(name,qv);
 }
 function addKitSelection(cat){
@@ -5564,8 +5593,7 @@ function addKitSelection(cat){
   if(!idx.length){toast("Aucun article s\u00e9lectionn\u00e9","ti-alert-circle");return;}
   idx.forEach(function(i){
     var it=CAT_ITEMS[i];if(!it)return;
-    var input=document.getElementById("kpq_"+i);
-    var qv=(input&&input.value||"").trim()||it.q||"1";
+    var qv=_kitPickerQty[i]||it.q||"1";
     var row=mkR(it.n,qv);row.kit=cat;
     if(currentRole==="depot")row.depotAdded=true;
     else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
@@ -5576,7 +5604,7 @@ function addKitSelection(cat){
   });
   if(cur.statut==="prete")cur.modifPrep=true;else if(cur.statut==="sur_chantier")cur.addToPrepare=true;
   saved=false;
-  _kitPickerOpenCat=null;_kitPickerSel={};
+  _kitPickerOpenCat=null;_kitPickerSel={};_kitPickerQty={};_kitPickerEditIdx=null;
   renderForm();
   toast(idx.length+" article"+(idx.length>1?"s":"")+" ajout\u00e9"+(idx.length>1?"s":""),"ti-circle-plus");
 }
@@ -8478,6 +8506,29 @@ function _filPairCovers(need,a,b){return !!_filPairArrangement(need,a,b);}
    tout essayer. Plafonné à 8 filets par groupe : au-delà, jumeler devient
    physiquement peu réaliste sur un chantier. */
 function _filGroupArrangement(need,filets){
+  /* Su : "un anti-pigeon ne sert que avec un anti-pigeon, un filet avec
+     pare-gravat ne va que avec un pare-gravat" — avant, l'algorithme
+     glouton piochait dans TOUS les filets candidats sans distinction de
+     catégorie, produisant des mélanges incohérents (voire dangereux) dès
+     qu'aucun type précis n'était demandé. On sépare maintenant les
+     candidats en sous-groupes cohérents (même catégorie, même statut de
+     pare-gravat), et l'algorithme ne combine plus jamais qu'à l'intérieur
+     d'un seul de ces sous-groupes — jamais entre deux. */
+  var buckets={};
+  filets.forEach(function(f){
+    var key=(f.type||"")+"|"+(f.pare_gravat?"1":"0");
+    (buckets[key]=buckets[key]||[]).push(f);
+  });
+  var best=null;
+  Object.keys(buckets).forEach(function(key){
+    var coherent=_filGroupArrangementCoherent(need,buckets[key]);
+    if(coherent&&(!best||coherent.waste<best.waste||(coherent.waste===best.waste&&coherent.items.length<best.items.length))){
+      best=coherent;
+    }
+  });
+  return best;
+}
+function _filGroupArrangementCoherent(need,filets){
   var best=null;
   ["w","h"].forEach(function(axis){
     var needPerp=axis==="w"?need.h:need.w;
@@ -8559,6 +8610,14 @@ function searchFilets(needW,needH,mode,typeFilter){
     if(ov)results.push({type:"single",f:f,waste:(ov[0]*ov[1])-(need.w*need.h)});
   });
   for(var i=0;i<avail.length;i++)for(var j=i+1;j<avail.length;j++){
+    /* Su : "un anti-pigeon ne sert que avec un anti-pigeon, un filet avec
+       pare-gravat ne va que avec un pare-gravat" — sans cette vérification,
+       une recherche sans type précis (mode "général") pouvait combiner deux
+       filets de nature totalement différente juste parce que leurs
+       dimensions s'additionnaient — un mélange incohérent, potentiellement
+       dangereux à proposer sans le dire. Même catégorie ET même statut de
+       pare-gravat obligatoires avant toute combinaison. */
+    if(avail[i].type!==avail[j].type||!!avail[i].pare_gravat!==!!avail[j].pare_gravat)continue;
     /* Si l'un des deux couvre déjà le besoin tout seul, la "combinaison"
        n'apporte rien — ce n'est pas une vraie solution à proposer, juste
        du bruit qui gaspillerait un 2e filet pour rien. */
