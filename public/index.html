@@ -1566,6 +1566,18 @@ table.at tr.kit-row td.td-d{position:relative}
 .kit-essentials .kit-sugg-hd{color:#1D4ED8}
 .kit-essentials .kit-sugg-btn{background:#2563EB}
 .kit-essentials .kit-sugg-btn.added{background:#DBEAFE;color:#1D4ED8}
+.kit-custom{background:#F0FDF4;border-color:#BBF7D0}
+.kit-custom .kit-sugg-hd{color:#15803D}
+.kit-custom-empty{font-size:12px;color:#64748B;padding:4px 2px 10px}
+.kit-custom-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.kit-custom-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #DCFCE7;border-radius:9px;padding:7px 9px}
+.kit-custom-n{flex:1;font-size:12.5px;font-weight:600;color:#1E293B;min-width:0}
+.kit-custom-q{width:48px;flex-shrink:0;border:1px solid #E2E8F0;border-radius:6px;padding:5px 6px;font-size:12px;text-align:center;font-family:inherit}
+.kit-custom-add{flex-shrink:0;background:#059669;color:#fff;border:none;border-radius:7px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.kit-custom-del{flex-shrink:0;background:none;border:none;color:#94A3B8;cursor:pointer;font-size:14px;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.kit-custom-del:hover{color:#DC2626}
+.kit-custom-newbtn{width:100%;background:#fff;border:1px dashed #86EFAC;color:#15803D;border-radius:9px;padding:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.kit-custom-newbtn:hover{background:#F0FDF4}
 .kit-sugg-hd{font-size:12px;font-weight:700;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:9px}
 .kit-sugg-btn{display:inline-flex;align-items:center;gap:6px;background:#7C3AED;color:#fff;border:none;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin:0 6px 6px 0;transition:transform .15s var(--ease),box-shadow .2s}
 .kit-sugg-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px -5px rgba(124,58,237,.5)}
@@ -1577,7 +1589,10 @@ table.at tr.kit-row td.td-d{position:relative}
 .kit-picker-item{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#334155;padding:5px 4px;border-radius:6px;cursor:pointer}
 .kit-picker-item:hover{background:#F8FAFC}
 .kit-picker-item input{width:15px;height:15px;cursor:pointer;flex-shrink:0}
-.kit-picker-q{margin-left:auto;color:#94A3B8;font-size:11px;font-weight:600}
+.kit-picker-qwrap{margin-left:auto;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.kit-picker-qin{width:40px;border:1px solid #E2E8F0;border-radius:6px;padding:4px 5px;font-size:11.5px;text-align:center;font-family:inherit;color:#334155}
+.kit-picker-qsave{background:none;border:none;color:#CBD5E1;cursor:pointer;padding:3px;font-size:12px;display:flex;align-items:center}
+.kit-picker-qsave:hover{color:#059669}
 .kit-picker-acts{display:flex;gap:8px;margin-top:8px;padding-top:8px;border-top:1px dashed #E2E8F0}
 .kit-picker-add{background:#059669;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;flex:1;justify-content:center}
 .kit-picker-cancel{background:#F1F5F9;color:#64748B;border:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -2363,7 +2378,6 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-appro-row button{background:none;border:none;color:#94A3B8;cursor:pointer;font-size:14px;padding:2px}
 .fil-appro-row button:hover{color:#DC2626}
 .fil-appro-empty{color:#94A3B8;font-size:12.5px}
-.fil-appro-hint{color:#94A3B8;font-size:11.5px;margin-top:6px}
 .fil-picker-ov{position:fixed;inset:0;z-index:4200;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;animation:jScrimIn .22s var(--ease)}
 .fil-picker-modal{width:min(420px,100%);max-height:80vh;background:#fff;border-radius:18px;display:flex;flex-direction:column;overflow:hidden}
 .fil-picker-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;font-size:15px;font-weight:800;color:#0F172A;border-bottom:1px solid #F1F5F9}
@@ -4953,6 +4967,22 @@ function loadMyFavorites(){
     MY_FAVORITES=Array.isArray(list)?list:[];
   }).catch(function(){});
 }
+/* ═══ Catégorie personnelle "toujours sous la main" (Su : "j'aimerais
+   pouvoir créer une catégorie perso, avec des quantités que je veux et que
+   l'application la garde en tête") — libre, par personne, indépendante des
+   kits essentiels fixés par l'admin et du catalogue partagé. ═══ */
+var MY_CUSTOM_KIT=[];
+function loadMyCustomKit(){
+  apiCall("GET","/my/custom-kit").then(function(list){
+    MY_CUSTOM_KIT=Array.isArray(list)?list:[];
+  }).catch(function(){});
+}
+function _saveMyCustomKit(){
+  apiCall("POST","/my/custom-kit/set",{items:MY_CUSTOM_KIT}).then(function(d){
+    if(d&&Array.isArray(d.data))MY_CUSTOM_KIT=d.data;
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+
 function _isFavorite(name){
   if(!name)return false;
   var key=(""+name).toLowerCase();
@@ -5301,6 +5331,70 @@ function _kitEssentialsHTML(){
   h+="</div>";
   return h;
 }
+/* Su : "j'aimerais pouvoir aussi créer une catégorie perso, qui me permet
+   de mettre des choses perso que j'utilise souvent, avec possibilité
+   d'avoir les quantités que je veux et que l'application la garde en
+   tête" — liste librement composée par CHAQUE personne (voir
+   MY_CUSTOM_KIT / user_custom_kit côté serveur), pas un kit fixé par
+   l'admin. Chaque quantité se modifie et se retient directement ici, sans
+   bouton "enregistrer" séparé : c'est déjà la liste personnelle de la
+   personne, pas besoin de confirmer un choix qu'elle vient de faire elle-même. */
+function _kitCustomHTML(){
+  if(!cur)return "";
+  var h="<div class=\"kit-sugg kit-custom\"><div class=\"kit-sugg-hd\"><i class=\"ti ti-user-star\"></i> Ma cat\u00e9gorie perso</div>";
+  if(!MY_CUSTOM_KIT.length){
+    h+="<div class=\"kit-custom-empty\">Aucun article pour l'instant \u2014 ajoutez ce que vous utilisez souvent.</div>";
+  } else {
+    h+="<div class=\"kit-custom-list\">";
+    MY_CUSTOM_KIT.forEach(function(it,i){
+      h+="<div class=\"kit-custom-row\">";
+      h+="<span class=\"kit-custom-n\">"+esc(it.n)+"</span>";
+      h+="<input class=\"kit-custom-q\" type=\"text\" value=\""+esc(it.q||"1")+"\" onchange=\"_kitCustomSetQty("+i+",this.value)\"/>";
+      h+="<button class=\"kit-custom-add\" onclick=\"_kitCustomAddToAppro("+i+")\" title=\"Ajouter \u00e0 cette appro\"><i class=\"ti ti-circle-plus\"></i></button>";
+      h+="<button class=\"kit-custom-del\" onclick=\"_kitCustomRemove("+i+")\" title=\"Retirer de ma liste\"><i class=\"ti ti-x\"></i></button>";
+      h+="</div>";
+    });
+    h+="</div>";
+  }
+  h+="<button class=\"kit-custom-newbtn\" onclick=\"_kitCustomPromptNew()\"><i class=\"ti ti-plus\"></i> Ajouter un article</button>";
+  h+="</div>";
+  return h;
+}
+function _kitCustomPromptNew(){
+  var n=(prompt("Nom de l'article \u00e0 ajouter \u00e0 votre cat\u00e9gorie perso :","")||"").trim();
+  if(!n)return;
+  var q=(prompt("Quantit\u00e9 habituelle pour \u00ab "+n+" \u00bb :","1")||"1").trim()||"1";
+  MY_CUSTOM_KIT.push({n:n,q:q});
+  _saveMyCustomKit();
+  renderForm();
+}
+function _kitCustomSetQty(i,val){
+  if(!MY_CUSTOM_KIT[i])return;
+  MY_CUSTOM_KIT[i].q=(""+val).trim()||"1";
+  _saveMyCustomKit();
+}
+function _kitCustomRemove(i){
+  if(!MY_CUSTOM_KIT[i])return;
+  MY_CUSTOM_KIT.splice(i,1);
+  _saveMyCustomKit();
+  renderForm();
+}
+function _kitCustomAddToAppro(i){
+  var it=MY_CUSTOM_KIT[i];
+  if(!it||!cur){toast("Ouvrez une appro","ti-alert-circle");return;}
+  var row=mkR(it.n,it.q||"1");
+  if(currentRole==="depot")row.depotAdded=true;
+  else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
+  else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro())row.condAdded=true;
+  var sec="fournitures";
+  if(cur[sec]&&cur[sec].length&&!cur[sec][cur[sec].length-1].designation)cur[sec].splice(cur[sec].length-1,1);
+  if(!cur[sec])cur[sec]=[];
+  cur[sec].push(row);
+  if(cur.statut==="prete")cur.modifPrep=true;else if(cur.statut==="sur_chantier")cur.addToPrepare=true;
+  saved=false;
+  renderForm();
+  toast("\u00ab "+it.n+" \u00bb ajout\u00e9","ti-circle-plus");
+}
 /* Su : "je ne veux pas que ça ouvre le catalogue, faut que ça reste dans
    la section que tu as ajoutée" — plus de navigation vers le panneau
    catalogue : la sélection se fait sur place, en dépliant la catégorie
@@ -5327,11 +5421,25 @@ function _kitPickerInlineHTML(cat){
   CAT_ITEMS.forEach(function(it,i){
     if(it.cat!==cat)return;
     var ck=!!_kitPickerSel[i];
-    h+="<label class=\"kit-picker-item\"><input type=\"checkbox\" "+(ck?"checked":"")+" onchange=\"_kitPickerToggleItem("+i+",this.checked)\"/> "+esc(it.n)+" <span class=\"kit-picker-q\">x"+esc(it.q||"1")+"</span></label>";
+    var pref=_myQtyFor(it.n);
+    var qv=(pref!=null&&(""+pref).trim()!=="")?pref:(it.q||"1");
+    h+="<label class=\"kit-picker-item\"><input type=\"checkbox\" "+(ck?"checked":"")+" onchange=\"_kitPickerToggleItem("+i+",this.checked)\"/> "+esc(it.n)+"<span class=\"kit-picker-qwrap\"><input type=\"text\" class=\"kit-picker-qin\" id=\"kpq_"+i+"\" value=\""+esc(qv)+"\" onclick=\"event.preventDefault();event.stopPropagation()\"/><button type=\"button\" class=\"kit-picker-qsave\" onclick=\"event.preventDefault();event.stopPropagation();_kitPickerSaveQty('"+it.n.replace(/'/g,"\\'")+"',"+i+")\" title=\"Retenir cette quantit\u00e9 pour moi\"><i class=\"ti ti-device-floppy\"></i></button></span></label>";
   });
   h+="<div class=\"kit-picker-acts\"><button class=\"kit-picker-add\" onclick=\"addKitSelection('"+cat.replace(/'/g,"\\'")+"')\"><i class=\"ti ti-check\"></i> Ajouter la s\u00e9lection</button><button class=\"kit-picker-cancel\" onclick=\"toggleKitPicker('"+cat.replace(/'/g,"\\'")+"')\">Annuler</button></div>";
   h+="</div>";
   return h;
+}
+/* Su : "dans le catalogue, quand je change des quantités de kit, faut que
+   ça garde en tête et soit perso" — le mécanisme de quantité préférée
+   existait déjà pour un article ajouté individuellement depuis le
+   catalogue, mais un ajout par KIT l'ignorait complètement : la valeur
+   brute du catalogue partagé écrasait toujours la préférence personnelle.
+   Corrigé aux deux endroits où un kit s'ajoute (sélection ici, et le
+   bouton "Kit" classique juste après). */
+function _kitPickerSaveQty(name,i){
+  var input=document.getElementById("kpq_"+i);
+  var qv=(input&&input.value||"1").trim()||"1";
+  saveQtyPref(name,qv);
 }
 function addKitSelection(cat){
   if(!cur){toast("Ouvrez une appro","ti-alert-circle");return;}
@@ -5339,7 +5447,9 @@ function addKitSelection(cat){
   if(!idx.length){toast("Aucun article s\u00e9lectionn\u00e9","ti-alert-circle");return;}
   idx.forEach(function(i){
     var it=CAT_ITEMS[i];if(!it)return;
-    var row=mkR(it.n,it.q||"1");row.kit=cat;
+    var input=document.getElementById("kpq_"+i);
+    var qv=(input&&input.value||"").trim()||it.q||"1";
+    var row=mkR(it.n,qv);row.kit=cat;
     if(currentRole==="depot")row.depotAdded=true;
     else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
     else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro())row.condAdded=true;
@@ -5358,7 +5468,9 @@ function addKit(cat){
   var items=CAT_ITEMS.filter(function(it){return it.cat===cat;});
   if(!items.length)return;
   items.forEach(function(it){
-    var row=mkR(it.n,it.q||"1");row.kit=cat;
+    var pref=_myQtyFor(it.n);
+    var qv=(pref!=null&&(""+pref).trim()!=="")?pref:(it.q||"1");
+    var row=mkR(it.n,qv);row.kit=cat;
     if(currentRole==="depot")row.depotAdded=true;
     else if(isField()&&featureOn("tech_signature")){row.techAdded=true;_techMarkDirty();}
     else if((currentUser.role==="conducteur"||currentUser.role==="admin")&&_isLiveAppro())row.condAdded=true;
@@ -6867,6 +6979,7 @@ h+="";
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
   h+=_kitEssentialsHTML();
+  h+=_kitCustomHTML();
   h+=_kitSuggestionsHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
@@ -7431,7 +7544,7 @@ function doSave(){
       if(!found)sheets.push(JSON.parse(JSON.stringify(cur)));
     });
   }
-  p.then(function(){
+  return p.then(function(){
     saved=true;tpl=null;
     if(_autosaveTimer){clearTimeout(_autosaveTimer);_autosaveTimer=null;}
     _autosaveClearLocal();_setSaveState("saved");
@@ -7444,6 +7557,7 @@ function doSave(){
     var sb2=document.querySelector(".btn-save");
     if(sb2){sb2.disabled=false;sb2.innerHTML="Enregistrer";}
     toast("Erreur: "+e.message,"ti-alert-circle");
+    throw e; // laisse l'appelant (ex: la r\u00e9servation de filet) savoir que l'enregistrement a \u00e9chou\u00e9, pour ne pas continuer sur une base fausse
   });
 }
 function qrDataURL(text){
@@ -7993,8 +8107,7 @@ function _filApproSectionHTML(){
   } else {
     h+="<div class=\"fil-appro-empty\">Aucun filet r\u00e9serv\u00e9 pour l'instant.</div>";
   }
-  if(cur._id)h+="<button class=\"btn-cta\" style=\"margin-top:9px;padding:8px 16px;font-size:12.5px\" onclick=\"goReserveFiletForAppro()\"><i class=\"ti ti-plus\"></i> Choisir un filet</button>";
-  else h+="<div class=\"fil-appro-hint\">Enregistrez d'abord l'appro pour pouvoir y r\u00e9server un filet.</div>";
+  h+="<button class=\"btn-cta\" style=\"margin-top:9px;padding:8px 16px;font-size:12.5px\" onclick=\"goReserveFiletForAppro()\"><i class=\"ti ti-plus\"></i> Choisir un filet</button>";
   h+="</div>";
   return h;
 }
@@ -8006,10 +8119,25 @@ function _filApproSectionHTML(){
    cur devient null en changeant d'écran, donc _filReserveContext garde ce
    qu'il faut pour revenir dessus et compléter automatiquement l'affaire. */
 var _filReserveContext=null;
+/* Su : "je peux pas choisir de filet sans enregistrer dans l'appro, c'est
+   pas pratique" — avant, le bouton restait caché tant que l'appro n'avait
+   pas de _id (un identifiant serveur, obligatoire pour rattacher le filet).
+   Maintenant, s'il manque encore, on enregistre d'abord silencieusement,
+   puis on enchaîne — un seul geste au lieu de deux. */
 function goReserveFiletForAppro(){
-  if(!cur||!cur._id)return;
-  _filReserveContext={approId:cur._id,apLocalId:cur.id,noAffaire:cur.noAffaire||"",nomChantier:cur.nomChantier||""};
-  renderFilets();
+  if(!cur)return;
+  if(cur._id){
+    _filReserveContext={approId:cur._id,apLocalId:cur.id,noAffaire:cur.noAffaire||"",nomChantier:cur.nomChantier||""};
+    renderFilets();
+    return;
+  }
+  var btn=(typeof event!=="undefined"&&event)?event.currentTarget:null;
+  if(btn){btn.disabled=true;btn.innerHTML="<i class=\"ti ti-loader-2\"></i> Enregistrement\u2026";}
+  doSave().then(function(){
+    if(!cur||!cur._id)return; // l'enregistrement a échoué silencieusement quelque part, ne pas continuer sur une base fausse
+    _filReserveContext={approId:cur._id,apLocalId:cur.id,noAffaire:cur.noAffaire||"",nomChantier:cur.nomChantier||""};
+    renderFilets();
+  }).catch(function(){ /* doSave affiche déjà son propre message d'erreur */ });
 }
 function cancelFiletReservation(){
   _filReserveContext=null;
@@ -13127,6 +13255,8 @@ function enterApp(){
   try{loadMyQtyPrefs();}catch(e){}
   /* Favoris \u00e9pingl\u00e9s manuellement (ind\u00e9pendants de la fr\u00e9quence d'usage). */
   try{loadMyFavorites();}catch(e){}
+  /* Catégorie personnelle "toujours sous la main" (Su). */
+  try{loadMyCustomKit();}catch(e){}
   var initials=currentUser.name.split(" ").map(function(w){return w[0];}).join("").slice(0,2).toUpperCase();
   var av=document.getElementById("sb-avatar");
   av.style.background=ri.bg;av.style.color=ri.color;av.textContent=initials;
