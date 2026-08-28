@@ -7962,7 +7962,7 @@ function _filTableHTML(list){
         h+="<td class=\"fil-table-dim\" data-label=\"Dimensions\">"+_filDimTxt(f)+(f.pare_gravat?"<span class=\"fil-pg-mark\" title=\"Avec pare-gravat\">PG</span>":"")+"</td>";
         h+="<td data-label=\"Statut\"><span class=\"fil-table-badge fil-table-badge-"+rs.level+"\">"+rs.label+"</span></td>";
         h+="<td data-label=\"Achet\u00e9 le\">"+(f.date_achat?fd((""+f.date_achat).slice(0,10)):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
-        h+="<td data-label=\"Certification\">"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>"+((cert.level==="expired"||cert.level==="unknown")?"<div class=\"fil-downgrade\">Usage objet uniquement (pare-gravat), plus pour une personne</div>":""):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
+        h+="<td data-label=\"Certification\">"+(cert?"<span class=\"fil-cert fil-cert-"+cert.level+"\" style=\"margin-top:0;display:inline-flex\">"+cert.label+"</span>"+((cert.level==="expired"||cert.level==="unknown")?"<div class=\"fil-downgrade\">Usage objet uniquement, plus pour une personne \u2014 "+(f.pare_gravat?"avec pare-gravat":"<b>sans pare-gravat</b>, \u00e0 ajouter si besoin")+"</div>":""):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
         h+="<td data-label=\"Affaire\">"+(f.no_affaire?esc(f.no_affaire):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</td>";
         var canReserve=_filReserveContext&&rs.level==="libre";
         h+="<td class=\"fil-table-acts\" data-label=\"\">"+(canReserve?"<button onclick=\"event.stopPropagation();reserveFiletFromFilets('"+f.id+"')\" class=\"fil-reserve-btn\" title=\"R\u00e9server pour cette appro\"><i class=\"ti ti-circle-plus\"></i> R\u00e9server</button>":"<button onclick=\"event.stopPropagation();openFiletForm('"+f.id+"')\" title=\"Modifier\"><i class=\"ti ti-edit\"></i></button><button onclick=\"event.stopPropagation();delFilet('"+f.id+"')\" title=\"Supprimer\" class=\"danger\"><i class=\"ti ti-trash\"></i></button>")+"</td>";
@@ -8129,7 +8129,8 @@ function renderFilets(){
   h+="<div class=\"fil-mode-row\"><label>Usage recherch\u00e9</label><select class=\"fin\" id=\"fil-search-mode\" onchange=\"_filSearchMode=this.value;_filSelectedResult=0;renderFilets()\">";
   h+="<option value=\"general\""+(_filSearchMode==="general"?" selected":"")+">G\u00e9n\u00e9ral (n'importe quel filet disponible)</option>";
   h+="<option value=\"anticute_homme\""+(_filSearchMode==="anticute_homme"?" selected":"")+">Antichute homme \u2014 protection de personnes, certification valide obligatoire</option>";
-  h+="<option value=\"anticute_objet\""+(_filSearchMode==="anticute_objet"?" selected":"")+">Antichute objet avec pare-gravat \u2014 s\u00e9curisation de mat\u00e9riel</option>";
+  h+="<option value=\"anticute_objet_pg\""+(_filSearchMode==="anticute_objet_pg"?" selected":"")+">Antichute objet, avec pare-gravat</option>";
+  h+="<option value=\"anticute_objet_sanspg\""+(_filSearchMode==="anticute_objet_sanspg"?" selected":"")+">Antichute objet, sans pare-gravat</option>";
   h+="</select></div>";
   h+="<div class=\"fil-mode-row\"><label>Cat\u00e9gorie</label><select class=\"fin\" id=\"fil-search-type\" onchange=\"_filSearchType=this.value;_filSelectedResult=0;renderFilets()\">";
   h+="<option value=\"\""+(!_filSearchType?" selected":"")+">Toutes cat\u00e9gories</option>";
@@ -8266,8 +8267,16 @@ function _filModeAvail(mode,typeFilter){
       var cert=_filCertStatus(f);
       return !!(cert&&cert.level==="ok"); // jamais un doute pour de la protection humaine
     }
-    if(mode==="anticute_objet"){
-      return !!f.is_anticute; // construction antichute, peu importe la certification humaine — l'usage n'est plus sur une personne
+    /* Su : "s'ils n'ont pas de pare-gravat, ils peuvent être antichute
+       objet, mais il faut préciser qu'il n'y a pas de pare-gravat" — le
+       libellé disait "avec pare-gravat" mais le filtre ne vérifiait jamais
+       ce champ, montrant les deux cas mélangés. Vraiment séparés maintenant :
+       chercher un usage objet exige de dire explicitement lequel des deux. */
+    if(mode==="anticute_objet_pg"){
+      return !!(f.is_anticute&&f.pare_gravat); // construction antichute, avec pare-gravat déjà en place
+    }
+    if(mode==="anticute_objet_sanspg"){
+      return !!(f.is_anticute&&!f.pare_gravat); // construction antichute, mais sans pare-gravat — à ajouter séparément si besoin
     }
     return true; // usage général : tout filet dispo, y compris un ancien antichute rétrogradé
   });
@@ -8362,7 +8371,7 @@ function _filSearchResultsHTML(w,hh,mode,typeFilter){
   var results=searchFilets(w,hh,mode,typeFilter);
   var h="<div class=\"fil-results\">";
   if(!results.length){
-    var modeTxt=mode==="anticute_homme"?" en antichute homme certifi\u00e9":mode==="anticute_objet"?" en antichute objet":"";
+    var modeTxt=mode==="anticute_homme"?" en antichute homme certifi\u00e9":mode==="anticute_objet_pg"?" en antichute objet avec pare-gravat":mode==="anticute_objet_sanspg"?" en antichute objet sans pare-gravat":"";
     var typeTxt=typeFilter?" en cat\u00e9gorie \u00ab "+esc(typeFilter)+" \u00bb":"";
     h+="<div class=\"fil-res-none\"><i class=\"ti ti-alert-triangle\"></i> Rien au d\u00e9p\u00f4t ne couvre "+w+" \u00d7 "+hh+" m"+modeTxt+typeTxt+", seul ou combin\u00e9 \u2014 il faudra en commander.</div>";
     /* Su a construit deux filtres ind\u00e9pendants (usage + cat\u00e9gorie) qui
@@ -8370,7 +8379,7 @@ function _filSearchResultsHTML(w,hh,mode,typeFilter){
        homme dans la cat\u00e9gorie "Anti-pigeon" ne peut jamais rien donner,
        quelle que soit la taille demand\u00e9e. Pr\u00e9venir explicitement plut\u00f4t
        que de laisser croire que c'est juste une question de stock. */
-    if(typeFilter&&(mode==="anticute_homme"||mode==="anticute_objet")){
+    if(typeFilter&&(mode==="anticute_homme"||mode==="anticute_objet_pg"||mode==="anticute_objet_sanspg")){
       var catHasAnticute=FILETS.some(function(f){return f.type===typeFilter&&f.is_anticute;});
       if(!catHasAnticute)h+="<div class=\"fil-res-hint\"><i class=\"ti ti-info-circle\"></i> Aucun filet de la cat\u00e9gorie \u00ab "+esc(typeFilter)+" \u00bb n'est marqu\u00e9 antichute \u2014 ce n'est pas une question de taille, cette combinaison ne peut jamais rien donner.</div>";
     }
