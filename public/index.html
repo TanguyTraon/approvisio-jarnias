@@ -1561,6 +1561,13 @@ table.at tr.kit-row td.td-d{position:relative}
 .cp-kit-x{font-size:12px;font-weight:800;color:#6D28D9;line-height:1}
 .cp-kit-n{width:40px;padding:4px;border:1px solid #C4B5FD;border-radius:6px;text-align:center;font-family:inherit;font-size:12px;color:#6D28D9;font-weight:700;background:#fff;outline:none}
 .btn-kit{background:#6D28D9;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;padding:5px 9px;display:inline-flex;align-items:center;gap:4px;transition:all .22s var(--spring)}
+.kit-zone{margin:0 0 14px}
+.kit-zone-hd{width:100%;display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;color:#334155;cursor:pointer;font-family:inherit;transition:background .15s}
+.kit-zone-hd:hover{background:#F1F5F9}
+.kit-zone-hd i:first-child{color:#D97706}
+.kit-zone-n{background:#E2E8F0;color:#475569;border-radius:20px;padding:1px 9px;font-size:11.5px;font-weight:700}
+.kit-zone-hd i:last-child{margin-left:auto;color:#94A3B8}
+#kit-zone-inner:not(:empty){margin-top:8px}
 .kit-sugg{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;margin:0 0 14px}
 .kit-essentials{background:#EFF6FF;border-color:#BFDBFE}
 .kit-essentials .kit-sugg-hd{color:#1D4ED8}
@@ -1578,6 +1585,15 @@ table.at tr.kit-row td.td-d{position:relative}
 .kit-custom-del:hover{color:#DC2626}
 .kit-custom-newbtn{width:100%;background:#fff;border:1px dashed #86EFAC;color:#15803D;border-radius:9px;padding:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
 .kit-custom-newbtn:hover{background:#F0FDF4}
+.kit-custom-picker{background:#fff;border:1px solid #DCFCE7;border-radius:10px;padding:10px}
+.kit-custom-search{width:100%;border:1px solid #E2E8F0;border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;margin-bottom:8px}
+.kit-custom-search:focus{outline:none;border-color:#059669}
+.kit-custom-result{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border-radius:7px;font-size:12.5px;color:#334155;cursor:pointer}
+.kit-custom-result:hover{background:#F0FDF4}
+.kit-custom-result span{color:#94A3B8;font-size:11px;font-weight:600;flex-shrink:0}
+.kit-custom-noresult{font-size:12px;color:#94A3B8;padding:8px 4px}
+.kit-custom-freetext{width:100%;background:none;border:none;color:#64748B;font-size:11.5px;text-decoration:underline;cursor:pointer;font-family:inherit;padding:8px 2px 2px;text-align:center}
+.kit-custom-cancelpick{width:100%;background:#F8FAFC;border:1px solid #E2E8F0;color:#64748B;border-radius:8px;padding:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px}
 .kit-sugg-hd{font-size:12px;font-weight:700;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:9px}
 .kit-sugg-btn{display:inline-flex;align-items:center;gap:6px;background:#7C3AED;color:#fff;border:none;border-radius:9px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin:0 6px 6px 0;transition:transform .15s var(--ease),box-shadow .2s}
 .kit-sugg-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px -5px rgba(124,58,237,.5)}
@@ -5307,6 +5323,43 @@ function _kitButtonHTML(cat){
   h+=_kitPickerInlineHTML(cat);
   return h;
 }
+/* Su : "faut pas que ça prenne de la place sur l'écran, qu'on doive
+   beaucoup scroller" — les trois sections (suggestions détectées, toujours
+   sous la main, catégorie perso) s'empilaient toutes grandes ouvertes sur
+   chaque appro, avant même d'arriver au tableau de matériel. Regroupées
+   maintenant sous un seul bandeau compact, replié par défaut — un compte
+   total donne un aperçu sans avoir à tout dérouler. */
+var _kitZoneOpen=false;
+function _kitZoneCount(){
+  var n=0;
+  if(cur){
+    KIT_ESSENTIALS.forEach(function(cat){if(CAT_ORDER.indexOf(cat)>=0)n++;});
+    n+=_suggestedKitsForChantier(cur.nomChantier,getTypes(cur)).length;
+    n+=MY_CUSTOM_KIT.length;
+  }
+  return n;
+}
+function _kitZoneToggle(){
+  _kitZoneOpen=!_kitZoneOpen;
+  var z=document.getElementById("kit-zone-inner");
+  if(!z)return;
+  z.innerHTML=_kitZoneOpen?_kitZoneInnerHTML():"";
+  var chev=document.getElementById("kit-zone-chev");
+  if(chev)chev.className="ti "+(_kitZoneOpen?"ti-chevron-up":"ti-chevron-down");
+}
+function _kitZoneInnerHTML(){
+  return _kitEssentialsHTML()+_kitCustomHTML()+_kitSuggestionsHTML();
+}
+function _kitZoneHTML(){
+  if(!cur)return "";
+  var n=_kitZoneCount();
+  if(!n)return "";
+  var h="<div class=\"kit-zone\">";
+  h+="<button class=\"kit-zone-hd\" onclick=\"_kitZoneToggle()\"><i class=\"ti ti-bolt\"></i> Raccourcis rapides <span class=\"kit-zone-n\">"+n+"</span><i id=\"kit-zone-chev\" class=\"ti "+(_kitZoneOpen?"ti-chevron-up":"ti-chevron-down")+"\"></i></button>";
+  h+="<div id=\"kit-zone-inner\">"+(_kitZoneOpen?_kitZoneInnerHTML():"")+"</div>";
+  h+="</div>";
+  return h;
+}
 function _kitSuggestionsHTML(){
   if(!cur)return "";
   var cats=_suggestedKitsForChantier(cur.nomChantier,getTypes(cur));
@@ -5356,9 +5409,64 @@ function _kitCustomHTML(){
     });
     h+="</div>";
   }
-  h+="<button class=\"kit-custom-newbtn\" onclick=\"_kitCustomPromptNew()\"><i class=\"ti ti-plus\"></i> Ajouter un article</button>";
+  if(_kitCustomPickerOpen)h+=_kitCustomPickerHTML();
+  else h+="<button class=\"kit-custom-newbtn\" onclick=\"_kitCustomOpenPicker()\"><i class=\"ti ti-plus\"></i> Ajouter un article</button>";
   h+="</div>";
   return h;
+}
+/* Su : "j'aurais aimé avoir la possibilité de piocher les éléments dans le
+   catalogue, plutôt que d'écrire manuellement" — remplace les deux prompt()
+   (nom puis quantité, tapés à l'aveugle) par une vraie recherche dans le
+   catalogue partagé, réutilisant _cpSearch telle quelle. Un lien de secours
+   reste disponible pour un article qui n'existe vraiment pas au catalogue. */
+var _kitCustomPickerOpen=false,_kitCustomSearchQ="";
+function _kitCustomOpenPicker(){
+  _kitCustomPickerOpen=true;_kitCustomSearchQ="";
+  renderForm();
+  var el=document.getElementById("kit-custom-search-in");
+  if(el)el.focus();
+}
+function _kitCustomClosePicker(){
+  _kitCustomPickerOpen=false;
+  renderForm();
+}
+function _kitCustomPickerHTML(){
+  var h="<div class=\"kit-custom-picker\">";
+  h+="<input id=\"kit-custom-search-in\" class=\"kit-custom-search\" type=\"text\" placeholder=\"Chercher un article du catalogue\u2026\" value=\""+esc(_kitCustomSearchQ)+"\" oninput=\"_kitCustomSearch(this.value)\"/>";
+  h+="<div id=\"kit-custom-results\">"+_kitCustomResultsHTML()+"</div>";
+  h+="<button class=\"kit-custom-freetext\" onclick=\"_kitCustomPromptNew()\">Pas dans le catalogue ? Ajouter un nom libre</button>";
+  h+="<button class=\"kit-custom-cancelpick\" onclick=\"_kitCustomClosePicker()\">Fermer</button>";
+  h+="</div>";
+  return h;
+}
+function _kitCustomResultsHTML(){
+  var q=_kitCustomSearchQ.trim();
+  var list;
+  if(!q){
+    list=CAT_ITEMS.slice(0,8); // rien tapé : un aperçu court plutôt qu'une liste vide ou tout le catalogue d'un coup
+  } else {
+    var res=_cpSearch(q);
+    list=res?Object.keys(res.items).map(function(i){return CAT_ITEMS[+i];}).filter(Boolean).slice(0,20):[];
+  }
+  if(!list.length)return "<div class=\"kit-custom-noresult\">Aucun article trouv\u00e9.</div>";
+  var h="";
+  list.forEach(function(it){
+    h+="<div class=\"kit-custom-result\" onclick=\"_kitCustomPickFromCatalogue('"+it.n.replace(/'/g,"\\'")+"','"+(it.q||"1").replace(/'/g,"\\'")+"')\">"+esc(it.n)+" <span>x"+esc(it.q||"1")+"</span></div>";
+  });
+  return h;
+}
+function _kitCustomSearch(v){
+  _kitCustomSearchQ=v;
+  var r=document.getElementById("kit-custom-results");
+  if(r)r.innerHTML=_kitCustomResultsHTML();
+}
+function _kitCustomPickFromCatalogue(n,q){
+  if(MY_CUSTOM_KIT.some(function(it){return it.n.toLowerCase()===n.toLowerCase();})){toast("D\u00e9j\u00e0 dans votre cat\u00e9gorie perso","ti-info-circle");return;}
+  MY_CUSTOM_KIT.push({n:n,q:q||"1"});
+  _saveMyCustomKit();
+  _kitCustomPickerOpen=false;
+  renderForm();
+  toast("\u00ab "+n+" \u00bb ajout\u00e9 \u00e0 votre cat\u00e9gorie perso","ti-check");
 }
 function _kitCustomPromptNew(){
   var n=(prompt("Nom de l'article \u00e0 ajouter \u00e0 votre cat\u00e9gorie perso :","")||"").trim();
@@ -5366,6 +5474,7 @@ function _kitCustomPromptNew(){
   var q=(prompt("Quantit\u00e9 habituelle pour \u00ab "+n+" \u00bb :","1")||"1").trim()||"1";
   MY_CUSTOM_KIT.push({n:n,q:q});
   _saveMyCustomKit();
+  _kitCustomPickerOpen=false;
   renderForm();
 }
 function _kitCustomSetQty(i,val){
@@ -6978,9 +7087,7 @@ h+="";
   h+=_filApproSectionHTML();
   h+="<div class=\"card\" style=\"border-left:4px solid \"+((STATUT[cur.statut]||STATUT.en_attente).color)+\"\"><div style=\"padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap\"><div style=\"display:flex;align-items:center;gap:10px\"><span style=\"font-size:12px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.5px\">Statut :</span>"+statutBadge(cur.statut)+(cur.preparedAt?"<span style=\"font-size:11px;color:#94A3B8\">pr\u00e9par\u00e9e le "+cur.preparedAt+"</span>":"")+"</div><div style=\"display:flex;align-items:center;gap:8px\">"+statutButtons()+_statutJumpHTML()+"</div></div></div>";
   h+=catDatalistHTML();
-  h+=_kitEssentialsHTML();
-  h+=_kitCustomHTML();
-  h+=_kitSuggestionsHTML();
+  h+=_kitZoneHTML();
   if(_totalArts>0)h+="<div style=\"display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 2px 6px\"><span style=\"font-size:11px;color:#94A3B8;font-weight:600\">Affichage</span>"+viewModeSeg()+"</div>";
   h+=aiBanner+aiErr+legH()+secH;
 h+="<div class=\"card\"><div class=\"card-hd\"><div class=\"card-hd-t\"><i class=\"ti ti-star\" style=\"font-size:16px;color:#F59E0B\"></i> Qualit\u00e9 de l'appro</div>"+(avgNote(cur)>0?"<span class=\"card-hd-n\">"+avgNote(cur).toFixed(1)+"/5 \u00b7 "+cur.notes.length+" avis</span>":"")+"</div><div style=\"padding:16px 18px;display:flex;align-items:center;gap:14px\"><div style=\"display:flex;gap:3px\">"+starsHTML(avgNote(cur),true,cur.id)+"</div><span style=\"font-size:12px;color:#94A3B8\">"+(avgNote(cur)>0?"Note moyenne : "+avgNote(cur).toFixed(1)+"/5":"Cliquez sur les \u00e9toiles pour noter")+"</span></div></div>";
