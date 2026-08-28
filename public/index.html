@@ -2369,6 +2369,9 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-cert-unknown{background:#F1F5F9;color:#64748B}
 .fil-downgrade{font-size:10.5px;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.5}
 .fil-diagram{background:linear-gradient(160deg,#FAFAFF,#F5F3FF);border:1px solid #E9E4FB;border-radius:16px;padding:16px 18px 12px;margin-top:12px;text-align:center;box-shadow:0 8px 22px -14px rgba(109,40,217,.35)}
+.fil-res-reserve{width:100%;margin-top:12px;background:#2563EB;color:#fff;border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .14s var(--ease),box-shadow .2s}
+.fil-res-reserve:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(37,99,235,.6)}
+.fil-res-reserve:active{transform:scale(.98)}
 .fil-diagram-t{font-size:11px;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:.5px;text-align:left;display:flex;align-items:center;gap:5px}
 .fil-diagram-t::before{content:"";width:5px;height:5px;border-radius:50%;background:#8B5CF6}
 /* Palette variée pour distinguer chaque filet d'un groupe (jusqu'à N,
@@ -8268,6 +8271,37 @@ function reserveFiletFromFilets(id){
     else renderFilets();
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
 }
+/* Su : "si c'est jumelé j'ai la flemme de chercher, je veux pouvoir dire
+   réservé sur la proposition de jumelage" — avant, choisir un résultat de
+   recherche qui combine plusieurs filets n'offrait aucun moyen de les
+   réserver ensemble : il fallait ensuite retrouver chacun d'eux un par un
+   dans le tableau. Réserve maintenant TOUS les filets du résultat choisi
+   (un seul comme plusieurs) en un geste, en attendant que chacun aboutisse
+   avant de revenir sur l'appro \u2014 pour ne jamais repartir avec une
+   réservation partielle si l'un des appels échoue en cours de route. */
+function reserveSearchResult(idx){
+  if(!_filReserveContext){toast("Aucune appro en attente de r\u00e9servation","ti-alert-circle");return;}
+  var w=parseFloat((_filSearchW||"").replace(",","."));
+  var hh=parseFloat((_filSearchH||"").replace(",","."));
+  if(!(w>0&&hh>0))return;
+  var results=searchFilets(w,hh,_filSearchMode,_filSearchType);
+  var chosen=results[idx];
+  if(!chosen)return;
+  var filets=chosen.type==="single"?[chosen.f]:chosen.items.map(function(it){return it.f;});
+  var ctx=_filReserveContext;
+  var proms=filets.map(function(f){
+    var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:f.statut,date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,appro_id:ctx.approId,no_affaire:ctx.noAffaire||f.no_affaire||""};
+    return apiCall("PUT","/filets/"+f.id,body).then(function(saved){
+      var i=FILETS.findIndex(function(x){return x.id===f.id;});if(i>=0)FILETS[i]=saved;
+    });
+  });
+  Promise.all(proms).then(function(){
+    _filReserveContext=null;
+    toast(filets.length+" filet"+(filets.length>1?"s":"")+" r\u00e9serv\u00e9"+(filets.length>1?"s":"")+" pour "+(ctx.nomChantier||"l'appro"),"ti-check");
+    if(typeof openApproById==="function")openApproById(ctx.apLocalId);
+    else renderFilets();
+  }).catch(function(e){toast("Erreur: "+e.message+" \u2014 certains filets ont pu \u00eatre r\u00e9serv\u00e9s, v\u00e9rifiez avant de recommencer","ti-alert-circle");});
+}
 /* Le s\u00e9lecteur reprend les m\u00eames \u00e9tapes que pour choisir un article d'appro :
    chercher une taille pr\u00e9cise EN PREMIER (m\u00eame recherche intelligente que
    l'\u00e9cran Filets), puis parcourir le reste du stock libre par cat\u00e9gorie. Seuls
@@ -8635,6 +8669,10 @@ function _filSearchResultsHTML(w,hh,mode,typeFilter){
   h+="</div>";
   var chosen=results[idx];
   h+=_filDiagramHTML(need,chosen);
+  if(_filReserveContext){
+    var n=chosen.type==="single"?1:chosen.items.length;
+    h+="<button class=\"fil-res-reserve\" onclick=\"reserveSearchResult("+idx+")\"><i class=\"ti ti-circle-check\"></i> R\u00e9server "+(n>1?("les "+n+" filets"):"ce filet")+" pour cette appro</button>";
+  }
   h+="</div>";
   return h;
 }
