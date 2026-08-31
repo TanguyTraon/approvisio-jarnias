@@ -2295,6 +2295,9 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-res-combo{display:flex;align-items:center;gap:7px;color:#7C3AED;font-size:13px;font-weight:700;margin-bottom:10px}
 .fil-res-none{display:flex;align-items:center;gap:7px;color:#B45309;font-size:13px;font-weight:600;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:11px 14px}
 .fil-res-hint{display:flex;align-items:center;gap:7px;color:#64748B;font-size:12px;margin-top:8px;padding:0 4px}
+.fil-adv-toggle{background:none;border:none;color:#7C3AED;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;padding:8px 2px;margin-bottom:2px}
+.fil-adv-toggle i{font-size:13px}
+.fil-adv-dot{width:6px;height:6px;border-radius:50%;background:#7C3AED;display:inline-block}
 .fil-mode-row{margin-bottom:12px}
 .fil-mode-row label{font-size:11.5px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px}
 .fil-res-list{display:flex;flex-direction:column;gap:8px}
@@ -2356,10 +2359,36 @@ table.at tr.kit-row td.td-d{position:relative}
   .fil-table-dim{justify-content:space-between}
   .fil-table-acts{justify-content:flex-end;margin-left:0}
 }
+.fil-rendu-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:4000;display:flex;align-items:center;justify-content:center;padding:20px}
+.fil-rendu-modal{background:#fff;border-radius:16px;padding:22px 24px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)}
+.fil-rendu-hd{font-size:16px;font-weight:800;color:#0F172A;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.fil-rendu-hd i{color:#7C3AED}
+.fil-rendu-sub{font-size:12.5px;color:#64748B;line-height:1.5;margin-bottom:16px}
+.fil-rendu-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.fil-rendu-row{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:11px 13px}
+.fil-rendu-nm{display:block;font-size:13px;font-weight:700;color:#1E293B;margin-bottom:8px}
+.fil-rendu-btns{display:flex;gap:8px}
+.fil-rendu-btn{flex:1;background:#fff;border:1.5px solid #E2E8F0;color:#475569;border-radius:8px;padding:8px 6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s}
+.fil-rendu-btn:hover{border-color:#CBD5E1;background:#F8FAFC}
+.fil-rendu-btn.chosen{background:#059669;border-color:#059669;color:#fff}
+.fil-rendu-btn.warn.chosen{background:#D97706;border-color:#D97706;color:#fff}
+.fil-rendu-acts{display:flex;gap:10px}
+.fil-rendu-cancel{flex:1;background:#F1F5F9;border:none;color:#64748B;border-radius:9px;padding:11px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.fil-rendu-confirm{flex:1.4;background:#7C3AED;border:none;color:#fff;border-radius:9px;padding:11px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.fil-rendu-confirm:disabled{background:#E2E8F0;color:#94A3B8;cursor:not-allowed}
 .fil-reserve-banner{display:flex;align-items:center;gap:9px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;font-size:13px;font-weight:600;padding:12px 18px;margin:0 24px 16px;border-radius:11px}
 .fil-reserve-banner span{flex:1}
 .fil-reserve-banner button{background:#fff;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
 .fil-reserve-btn{background:#2563EB!important;color:#fff!important;border:none!important;border-radius:8px!important;padding:7px 13px!important;font-size:12px!important;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;width:auto!important;height:auto!important}
+.fil-arec{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:14px 18px;margin:0 24px 16px}
+.fil-arec-hd{font-size:14px;font-weight:800;color:#92400E;display:flex;align-items:center;gap:8px}
+.fil-arec-n{background:#FDE68A;color:#78350F;border-radius:20px;padding:1px 9px;font-size:11.5px;font-weight:800}
+.fil-arec-sub{font-size:12px;color:#A16207;margin:4px 0 12px;line-height:1.5}
+.fil-arec-list{display:flex;flex-direction:column;gap:7px}
+.fil-arec-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid #FDE68A;border-radius:9px;padding:9px 12px;flex-wrap:wrap}
+.fil-arec-nm{font-size:12.5px;font-weight:600;color:#1E293B}
+.fil-arec-back{flex-shrink:0;background:#059669;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px}
+.fil-arec-back:hover{background:#047857}
 .fil-cert-alert{display:flex;align-items:center;gap:8px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;font-size:13px;font-weight:700;padding:12px 18px;margin:0 24px 16px;border-radius:11px;cursor:pointer;transition:background .15s}
 .fil-cert-alert:hover{background:#FEE2E2}
 .fil-cert-alert-go{margin-left:auto;font-size:14px;opacity:.6;flex-shrink:0}
@@ -5916,7 +5945,19 @@ function depotMarkRendu(id){
   var s=null;sheets.forEach(function(x){if(x.id===id)s=x;});
   if(!s)return;
   if(!s._id){toast("Appro pas encore synchronis\u00e9e \u2014 rechargez la page","ti-alert-circle");return;}
-  try{_successWaveOn(document.querySelector('.depot-card[data-id="'+id+'"]'));}catch(e){}
+  /* Su : "quand on rend l'appro, ça demande si le filet est toujours sur
+     chantier ou s'il est revenu au dépôt" — s'il y a des filets réservés
+     pour cette appro, on demande d'abord pour chacun avant de finaliser.
+     S'il n'y en a aucun, rien ne change par rapport à avant. */
+  var linkedFilets=(typeof FILETS!=="undefined")?FILETS.filter(function(f){return f.appro_id===s._id;}):[];
+  if(linkedFilets.length){
+    _openFiletRenduModal(s,linkedFilets);
+  } else {
+    _finalizeDepotRendu(s,id);
+  }
+}
+function _finalizeDepotRendu(s,cardId){
+  try{_successWaveOn(document.querySelector('.depot-card[data-id="'+cardId+'"]'));}catch(e){}
   s.statut="sortie";
   ["consommables","fournitures","outillage"].forEach(function(k){
     s[k].forEach(function(r){if(r.designation)r.returned=true;});
@@ -5924,6 +5965,76 @@ function depotMarkRendu(id){
   _resolveAdditions(s);
   apiCall("PUT","/appros/"+s._id,s).then(function(){
     renderDepotHome();toast("Appro compl\u00e8tement rendue","ti-checks");
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
+}
+/* Modale de revue des filets, ouverte uniquement s'il y en a de liés.
+   Chaque filet reçoit un choix explicite : "revenu au dépôt" (redevient un
+   filet libre, comme n'importe quel autre) ou "reste sur chantier" (garde
+   son lien avec l'affaire, mais bascule dans une catégorie à part —
+   a_recenser — pour qu'on sache qu'il faut aller le retrouver physiquement,
+   plutôt que de le perdre de vue une fois l'appro officiellement close). */
+var _filRenduSheet=null,_filRenduList=[],_filRenduChoices={};
+function _openFiletRenduModal(s,filets){
+  _filRenduSheet=s;_filRenduList=filets;_filRenduChoices={};
+  var ov=document.createElement("div");
+  ov.className="fil-rendu-overlay";ov.id="fil-rendu-overlay";
+  ov.innerHTML=_filRenduModalHTML();
+  document.body.appendChild(ov);
+}
+function _filRenduModalHTML(){
+  var s=_filRenduSheet;
+  var h="<div class=\"fil-rendu-modal\">";
+  h+="<div class=\"fil-rendu-hd\"><i class=\"ti ti-grid-dots\"></i> Filets de cette appro</div>";
+  h+="<div class=\"fil-rendu-sub\">"+_filRenduList.length+" filet"+(_filRenduList.length>1?"s":"")+" r\u00e9serv\u00e9"+(_filRenduList.length>1?"s":"")+" pour "+esc(s.nomChantier||"ce chantier")+" \u2014 chacun est-il revenu au d\u00e9p\u00f4t ou reste-t-il sur place ?</div>";
+  h+="<div class=\"fil-rendu-list\">";
+  _filRenduList.forEach(function(f){
+    var choice=_filRenduChoices[f.id];
+    h+="<div class=\"fil-rendu-row\"><span class=\"fil-rendu-nm\">"+_filDimTxt(f)+_filDescTxt(f)+"</span><div class=\"fil-rendu-btns\">";
+    h+="<button class=\"fil-rendu-btn"+(choice==="depot"?" chosen":"")+"\" onclick=\"_filRenduChoose('"+f.id+"','depot')\"><i class=\"ti ti-corner-down-left\"></i> Revenu au d\u00e9p\u00f4t</button>";
+    h+="<button class=\"fil-rendu-btn warn"+(choice==="chantier"?" chosen":"")+"\" onclick=\"_filRenduChoose('"+f.id+"','chantier')\"><i class=\"ti ti-map-pin\"></i> Reste sur chantier</button>";
+    h+="</div></div>";
+  });
+  h+="</div>";
+  var allChosen=_filRenduList.every(function(f){return !!_filRenduChoices[f.id];});
+  h+="<div class=\"fil-rendu-acts\"><button class=\"fil-rendu-cancel\" onclick=\"_closeFiletRenduModal()\">Annuler le rendu</button><button class=\"fil-rendu-confirm\" "+(allChosen?"":"disabled")+" onclick=\"_confirmFiletRendu()\"><i class=\"ti ti-check\"></i> Confirmer et rendre l'appro</button></div>";
+  h+="</div>";
+  return h;
+}
+function _filRenduChoose(fid,choice){
+  _filRenduChoices[fid]=choice;
+  var ov=document.getElementById("fil-rendu-overlay");
+  if(ov)ov.innerHTML=_filRenduModalHTML();
+}
+function _closeFiletRenduModal(){
+  var ov=document.getElementById("fil-rendu-overlay");
+  if(ov)ov.remove();
+  _filRenduSheet=null;_filRenduList=[];_filRenduChoices={};
+}
+function _confirmFiletRendu(){
+  var s=_filRenduSheet;
+  if(!s)return;
+  var proms=_filRenduList.map(function(f){
+    var backAtDepot=_filRenduChoices[f.id]==="depot";
+    var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,
+      statut:backAtDepot?"depot":"chantier",
+      appro_id:backAtDepot?null:f.appro_id,
+      no_affaire:backAtDepot?"":f.no_affaire,
+      date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,
+      date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,
+      a_recenser:!backAtDepot};
+    return apiCall("PUT","/filets/"+f.id,body).then(function(saved){
+      var i=FILETS.findIndex(function(x){return x.id===f.id;});if(i>=0)FILETS[i]=saved;
+    });
+  });
+  Promise.all(proms).then(function(){
+    var nDepot=_filRenduList.filter(function(f){return _filRenduChoices[f.id]==="depot";}).length;
+    var nChantier=_filRenduList.length-nDepot;
+    var msgBits=[];
+    if(nDepot)msgBits.push(nDepot+" revenu"+(nDepot>1?"s":"")+" au d\u00e9p\u00f4t");
+    if(nChantier)msgBits.push(nChantier+" \u00e0 recenser sur chantier");
+    toast(msgBits.join(", "),"ti-grid-dots");
+    _closeFiletRenduModal();
+    _finalizeDepotRendu(s,s.id);
   }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
 }
 function tabsBarHTML(){
@@ -8102,6 +8213,14 @@ var _listsOk=false;
    partagé. */
 /* ═══ FILETS — stock au dépôt + suivi chantier + recherche intelligente ═══ */
 var _filSearchW="",_filSearchH="",_filSearchMode="general",_filSearchType="";
+var _filSearchAdvOpen=false;
+function _filToggleAdv(){
+  _filSearchAdvOpen=!_filSearchAdvOpen;
+  var z=document.getElementById("fil-search-adv");
+  if(z)z.style.display=_filSearchAdvOpen?"block":"none";
+  var chev=document.getElementById("fil-adv-chev");
+  if(chev)chev.className="ti "+(_filSearchAdvOpen?"ti-chevron-up":"ti-chevron-down");
+}
 /* Statut de réservation (Su : "ajoute une étape 'déjà réservé dans une
    appro' pour pas que deux appros en attente prennent le même filet") —
    se déduit de ce qui existe déjà (statut + appro_id), pas un nouveau champ :
@@ -8173,6 +8292,32 @@ function _filRefreshZone(){
   var depotF=FILETS.filter(function(f){return f.statut==="depot";});
   var chantierF=FILETS.filter(function(f){return f.statut==="chantier";});
   z.innerHTML=_filFilterZoneHTML(depotF.concat(chantierF));
+}
+/* Su : "s'il reste sur chantier, mets-le dans une catégorie à part qui
+   consiste à mettre les filets sur chantier à recenser" — section distincte,
+   toujours visible en haut de l'écran quand elle contient quelque chose,
+   avec une seule action possible depuis ici : dire qu'il est finalement
+   revenu (le retrouver physiquement reste un geste humain, pas automatisé). */
+function _filARecenserHTML(list){
+  var h="<div class=\"fil-arec\"><div class=\"fil-arec-hd\"><i class=\"ti ti-map-pin-question\"></i> \u00c0 recenser sur chantier <span class=\"fil-arec-n\">"+list.length+"</span></div>";
+  h+="<div class=\"fil-arec-sub\">Rest\u00e9s sur place \u00e0 la cl\u00f4ture de leur appro \u2014 \u00e0 retrouver physiquement et \u00e0 rentrer au d\u00e9p\u00f4t.</div>";
+  h+="<div class=\"fil-arec-list\">";
+  list.forEach(function(f){
+    h+="<div class=\"fil-arec-row\"><span class=\"fil-arec-nm\">"+_filDimTxt(f)+_filDescTxt(f)+(f.no_affaire?" \u00b7 "+esc(f.no_affaire):"")+"</span><button class=\"fil-arec-back\" onclick=\"_filMarkBackFromChantier('"+f.id+"')\"><i class=\"ti ti-corner-down-left\"></i> Revenu au d\u00e9p\u00f4t</button></div>";
+  });
+  h+="</div></div>";
+  return h;
+}
+function _filMarkBackFromChantier(id){
+  var f=FILETS.filter(function(x){return x.id===id;})[0];if(!f)return;
+  var body={type:f.type,largeur:f.largeur,hauteur:f.hauteur,statut:"depot",appro_id:null,no_affaire:"",
+    date_achat:f.date_achat,is_anticute:f.is_anticute,pare_gravat:f.pare_gravat,
+    date_certification:f.date_certification,date_expiration:f.date_expiration,notes:f.notes,a_recenser:false};
+  apiCall("PUT","/filets/"+id,body).then(function(saved){
+    var i=FILETS.findIndex(function(x){return x.id===id;});if(i>=0)FILETS[i]=saved;
+    toast("Filet remis au stock d\u00e9p\u00f4t","ti-check");
+    renderFilets();
+  }).catch(function(e){toast("Erreur: "+e.message,"ti-alert-circle");});
 }
 function _filFilterZoneHTML(allList){
   var h="<div class=\"fil-filter-row\">";
@@ -8423,6 +8568,16 @@ function renderFilets(){
   h+="<input type=\"number\" step=\"0.1\" min=\"0\" class=\"fin\" placeholder=\"Hauteur (m)\" value=\""+esc(_filSearchH)+"\" oninput=\"_filSearchH=this.value\" style=\"max-width:130px\"/>";
   h+="<button class=\"btn-cta\" style=\"padding:9px 20px;font-size:13px\" onclick=\"renderFilets()\">Chercher</button>";
   h+="</div>";
+  /* Su : "faut trouver un autre moyen de l'afficher" (d\u00e9j\u00e0 dit pour une
+     section voisine) — les 2 menus, avec leurs libell\u00e9s tr\u00e8s longs
+     ("Antichute homme — protection de personnes, certification valide
+     obligatoire"), restaient toujours grands ouverts m\u00eame pour consulter
+     le stock sans rien chercher. L'essentiel (taille) reste imm\u00e9diat ;
+     l'affinage (usage, cat\u00e9gorie) se replie, avec un rappel visuel discret
+     si un filtre non standard est d\u00e9j\u00e0 actif. */
+  var advActive=(_filSearchMode!=="general")||!!_filSearchType;
+  h+="<button type=\"button\" class=\"fil-adv-toggle\" onclick=\"_filToggleAdv()\">Affiner la recherche"+(advActive?" <span class=\"fil-adv-dot\"></span>":"")+" <i id=\"fil-adv-chev\" class=\"ti "+(_filSearchAdvOpen?"ti-chevron-up":"ti-chevron-down")+"\"></i></button>";
+  h+="<div id=\"fil-search-adv\" style=\"display:"+(_filSearchAdvOpen?"block":"none")+"\">";
   h+="<div class=\"fil-mode-row\"><label>Usage recherch\u00e9</label><select class=\"fin\" id=\"fil-search-mode\" onchange=\"_filSearchMode=this.value;_filSelectedResult=0;renderFilets()\">";
   h+="<option value=\"general\""+(_filSearchMode==="general"?" selected":"")+">G\u00e9n\u00e9ral (n'importe quel filet disponible)</option>";
   h+="<option value=\"anticute_homme\""+(_filSearchMode==="anticute_homme"?" selected":"")+">Antichute homme \u2014 protection de personnes, certification valide obligatoire</option>";
@@ -8433,14 +8588,22 @@ function renderFilets(){
   h+="<option value=\"\""+(!_filSearchType?" selected":"")+">Toutes cat\u00e9gories</option>";
   FILET_TYPES.forEach(function(t){h+="<option value=\""+esc(t)+"\""+(_filSearchType===t?" selected":"")+">"+esc(t)+"</option>";});
   h+="</select></div>";
+  h+="</div>";
   var w=parseFloat((_filSearchW||"").replace(",",".")),hh=parseFloat((_filSearchH||"").replace(",","."));
   if(w>0&&hh>0)h+=_filSearchResultsHTML(w,hh,_filSearchMode,_filSearchType);
   h+="</div>";
 
   h+="<button class=\"btn-cta\" style=\"margin:16px 0\" onclick=\"openFiletForm()\"><i class=\"ti ti-plus\"></i> Ajouter un filet au stock</button>";
 
+  /* Su : "s'il reste sur chantier, mets-le dans une catégorie à part qui
+     consiste à mettre les filets sur chantier à recenser" — regroupés ici
+     à part, peu importe leur type, plutôt que noyés dans le tableau normal
+     parmi les filets dont l'appro est encore active. */
+  var aRecenser=FILETS.filter(function(f){return f.a_recenser;});
+  if(aRecenser.length)h+=_filARecenserHTML(aRecenser);
+
   var depotF=FILETS.filter(function(f){return f.statut==="depot";});
-  var chantierF=FILETS.filter(function(f){return f.statut==="chantier";});
+  var chantierF=FILETS.filter(function(f){return f.statut==="chantier"&&!f.a_recenser;});
   h+="<div id=\"fil-filter-zone\">"+_filFilterZoneHTML(depotF.concat(chantierF))+"</div>";
 
   h+="</div>";
@@ -10207,6 +10370,18 @@ function renderCommandes(){try{setActiveNav('btn-cmd');}catch(e){}if(typeof _mou
     h+="<input id=\"cmd-filet-w\" type=\"number\" step=\"0.1\" min=\"0\" placeholder=\"Largeur (m)\" class=\"ui-in\" style=\"width:100px\"/>";
     h+="<input id=\"cmd-filet-h\" type=\"number\" step=\"0.1\" min=\"0\" placeholder=\"Hauteur (m)\" class=\"ui-in\" style=\"width:100px\"/>";
     h+="</div>";
+    /* Su : "un filet depuis commande ne se met pas bien dans l'affichage des
+       filets" — trouvé en auditant la cha\u00eene : is_anticute et pare_gravat
+       n'\u00e9taient JAMAIS transmis \u00e0 la cr\u00e9ation, quel que soit le type choisi
+       ci-dessus. Un filet "Antichute homme" command\u00e9 arrivait au stock avec
+       is_anticute=false par d\u00e9faut c\u00f4t\u00e9 serveur \u2014 invisible dans la
+       recherche antichute, sans alerte de certification, malgr\u00e9 son vrai
+       type. M\u00eame case \u00e0 cocher que dans la fiche filet classique, pour que
+       la commande capture exactement les m\u00eames informations. */
+    h+="<div class=\"cmd-add-row\" id=\"cmd-filet-row2\" style=\"display:none;margin-top:8px;align-items:center;gap:14px\">";
+    h+="<label class=\"cmd-filet-chk\" style=\"margin:0\"><input type=\"checkbox\" id=\"cmd-filet-anticute\" onchange=\"toggleCmdFiletAnticute()\"/> Filet antichute</label>";
+    h+="<label class=\"cmd-filet-chk\" id=\"cmd-filet-pg-wrap\" style=\"margin:0;display:none\"><input type=\"checkbox\" id=\"cmd-filet-pg\"/> Avec pare-gravat</label>";
+    h+="</div>";
   }
   h+="</div>";
 
@@ -10269,7 +10444,15 @@ function c_hasAff(aff){if(!aff||aff.indexOf("Sans N")>=0)return false;return _ap
 function toggleCmdFiletFields(){
   var chk=document.getElementById("cmd-isfilet");
   var row=document.getElementById("cmd-filet-row");
-  if(row)row.style.display=(chk&&chk.checked)?"flex":"none";
+  var row2=document.getElementById("cmd-filet-row2");
+  var on=!!(chk&&chk.checked);
+  if(row)row.style.display=on?"flex":"none";
+  if(row2)row2.style.display=on?"flex":"none";
+}
+function toggleCmdFiletAnticute(){
+  var chk=document.getElementById("cmd-filet-anticute");
+  var wrap=document.getElementById("cmd-filet-pg-wrap");
+  if(wrap)wrap.style.display=(chk&&chk.checked)?"inline-flex":"none";
 }
 function addCommandeManual(){
   var prod=(document.getElementById("cmd-prod")||{}).value||"";prod=prod.trim();
@@ -10282,10 +10465,12 @@ function addCommandeManual(){
   var filetType=isFilet?((document.getElementById("cmd-filet-type")||{}).value||"").trim():"";
   var filetW=isFilet?parseFloat((document.getElementById("cmd-filet-w")||{}).value):null;
   var filetH=isFilet?parseFloat((document.getElementById("cmd-filet-h")||{}).value):null;
+  var filetAnticute=isFilet&&!!(document.getElementById("cmd-filet-anticute")||{}).checked;
+  var filetPareGravat=isFilet&&filetAnticute&&!!(document.getElementById("cmd-filet-pg")||{}).checked;
   if(isFilet&&(!filetW||!filetH||filetW<=0||filetH<=0)){toast("Indiquez la largeur et la hauteur du filet","ti-alert-circle");return;}
   /* auteur/createdBy indispensables : sans eux _cmdVisible() masque la commande \u00e0 son propre cr\u00e9ateur. */
   COMMANDES.push({id:uid(),produit:prod,qty:qty,noAffaire:aff,chantier:chan,tl:ctl,statut:"en_attente",origine:"manuel",approId:null,sec:null,fournisseur:"",
-    isFilet:isFilet,filetType:filetType,filetW:filetW,filetH:filetH,
+    isFilet:isFilet,filetType:filetType,filetW:filetW,filetH:filetH,filetAnticute:filetAnticute,filetPareGravat:filetPareGravat,
     auteur:(currentUser&&(currentUser.name||currentUser.username))||"",createdBy:(currentUser&&currentUser.id)||null,
     createdAt:new Date().toISOString()});
   /* Affichage imm\u00e9diat : si le r\u00e9seau flanche, l'utilisateur voit quand m\u00eame sa commande
@@ -10323,6 +10508,7 @@ function toggleCommandeRecu(id){
   if(wasPending&&c.statut==="recu"&&c.isFilet&&!c.filetCreated&&typeof apiCall==="function"){
     c.filetCreated=true;
     apiCall("POST","/filets",{type:c.filetType||"",largeur:c.filetW,hauteur:c.filetH,statut:"depot",no_affaire:c.noAffaire||"",appro_id:c.approId||null,
+      is_anticute:!!c.filetAnticute,pare_gravat:!!c.filetPareGravat,date_achat:new Date().toISOString().slice(0,10),
       notes:"Re\u00e7u via commande"+(c.produit?" \u00ab "+c.produit+" \u00bb":"")}).then(function(saved){
       if(typeof FILETS!=="undefined")FILETS.unshift(saved);
       if(typeof toast==="function")toast("Filet ajout\u00e9 au stock d\u00e9p\u00f4t","ti-grid-dots");
