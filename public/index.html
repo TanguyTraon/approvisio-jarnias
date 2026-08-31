@@ -1389,12 +1389,17 @@ html[data-amb] .dash-hero::before{content:"";position:absolute;inset:0;z-index:1
 .fv>*:nth-child(7){animation-delay:.24s}
 .fv>*:nth-child(8){animation-delay:.28s}
 .fv>*:nth-child(n+9){animation-delay:.30s}
-.doc-band{background:var(--accent,#0F172A);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
-.doc-band img{width:80px;border-radius:8px}
+/* Su : "est-ce que ça c'est pas trop gros aussi ? il faut aller à
+   l'objectif" — ce bandeau (logo + titre + méta) se répète à chaque
+   ouverture d'une appro, avant même le premier champ vraiment utile.
+   L'identité visuelle reste, en beaucoup plus discret : logo réduit,
+   remplissage resserré sur les deux blocs. */
+.doc-band{background:var(--accent,#0F172A);padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.doc-band img{width:50px;border-radius:7px}
 .doc-band-r{text-align:right}
-.doc-band-title{font-size:14px;font-weight:700;color:#F1F5F9}
-.doc-band-sub{font-size:10px;color:#64748B;margin-top:2px}
-.doc-meta{display:flex;gap:18px;padding:10px 18px;border-bottom:1px solid #F1F5F9;flex-wrap:wrap}
+.doc-band-title{font-size:12.5px;font-weight:700;color:#F1F5F9}
+.doc-band-sub{font-size:9px;color:#64748B;margin-top:1px}
+.doc-meta{display:flex;gap:18px;padding:6px 16px;border-bottom:1px solid #F1F5F9;flex-wrap:wrap}
 .dm label{font-size:10px;color:#94A3B8;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:2px}
 .dm-val{font-size:12px;color:#334155}
 .dm-in{background:transparent;border:none;border-bottom:1px solid #E2E8F0;color:#334155;font-size:12px;font-family:inherit;outline:none;width:115px;padding:1px 0}
@@ -2134,6 +2139,15 @@ table.at tr.kit-row td.td-d{position:relative}
 .pz-sign-line{border-top:1px solid #CBD5E1;width:120px;margin:0 auto}
 
 .tabs-bar{display:flex;gap:2px;background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(10px);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid #E2E8F0;padding:0 16px;flex-shrink:0;position:sticky;top:0;z-index:20}
+@media(max-width:760px){
+  /* Su : "j'aime bien l'affichage en serré... mais ça ne rentre pas dans
+     le format du téléphone" — le bandeau d'onglets, semi-transparent avec
+     flou, laissait transparaître le contenu qui défile juste en dessous
+     (le bandeau orange "À préparer"), créant l'impression d'un
+     chevauchement au moment précis où l'un croise l'autre en scrollant.
+     Rendu opaque uniquement sur mobile, où cet effet gêne le plus. */
+  .tabs-bar{background:#fff}
+}
 .tab-btn{background:none;border:none;padding:13px 18px;font-size:13px;font-weight:600;color:#64748B;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px;margin-bottom:-1px;position:relative;transition:color .18s var(--ease)}
 .tab-btn:hover{color:#1E293B}
 .tab-btn::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:2px;background:#0F172A;border-radius:2px;transform:scaleX(0);transform-origin:center;transition:transform .28s var(--ease)}
@@ -2251,8 +2265,16 @@ table.at tr.kit-row td.td-d{position:relative}
    qu'empilées en pleine largeur les unes sous les autres. Chacune redevient
    alors une seule sous-colonne de cartes (sinon 3 colonnes de 2 cartes
    chacune = 6 cartes de front, illisible). Mobile garde l'empilement complet. */
+/* Su : "quand tu passes en version compressée pour le chef dépôt, ça se
+   chevauche" — trouvé : à cette largeur, .depot-col restait en display:grid
+   (hérité de la règle 560px un peu plus haut, jamais vraiment annulé), avec
+   .depot-empty en grid-column:1/-1. Ce mélange grid/flex ambigu laissait le
+   navigateur libre d'interpréter les largeurs de colonnes de façon
+   incohérente entre une case vide très courte et une longue liste à côté.
+   Repassé en flex pur et explicite ici, sans ambiguïté possible. */
 @media(min-width:901px){
-  .depot-col{max-width:none;grid-template-columns:1fr}
+  .depot-wrap{flex-direction:row;align-items:flex-start}
+  .depot-col{display:flex;flex-direction:column;flex:1 1 0;min-width:0;max-width:100%;box-sizing:border-box;grid-template-columns:none}
 }
 .depot-col-hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14px}
 .depot-col-hd .dch-n{margin-left:auto;font-size:12px;background:rgba(255,255,255,.5);padding:2px 9px;border-radius:10px}
@@ -2443,10 +2465,16 @@ table.at tr.kit-row td.td-d{position:relative}
 .fil-picker-item{display:flex;align-items:center;justify-content:space-between;background:#F8FAFC;border:1px solid #E8EDF4;border-radius:9px;padding:10px 13px;font-size:13px;font-weight:600;color:#1E293B;cursor:pointer;margin-bottom:6px;transition:background .13s,border-color .13s}
 .fil-picker-item:hover{background:#F5F3FF;border-color:#DDD6FE}
 .fil-picker-item i{color:#CBD5E1;font-size:14px}
-.depot-empty{position:relative;overflow:hidden;text-align:center;padding:44px 16px;color:#94A3B8;font-size:13px;background:#fff;border:1px dashed #E2E8F0;border-radius:10px}
+.depot-empty{position:relative;overflow:hidden;text-align:center;padding:44px 16px;color:#94A3B8;font-size:13px;background:#fff;border:1px dashed #E2E8F0;border-radius:10px;width:100%;max-width:100%;box-sizing:border-box}
 .depot-empty::before{content:"";position:absolute;width:180px;height:180px;background:radial-gradient(circle,rgba(109,40,217,.07),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-60%);animation:emptyFloat 5s ease-in-out infinite;pointer-events:none}
 .depot-empty i{position:relative;color:#CBD5E1}
-@media(min-width:901px){.depot-wrap{flex-direction:row}}
+/* Su : "quand tu passes en version compressée pour le chef dépôt, ça se
+   chevauche" — les colonnes vides (à préparer / retours) débordaient sur
+   la colonne du milieu. flex:1 seul laisse le navigateur libre d'utiliser
+   la taille du contenu comme base avant répartition ; flex-basis:0 force
+   une répartition strictement égale dès le départ, et align-items:flex-start
+   empêche tout étirement vertical inattendu entre colonnes de hauteurs
+   très différentes (une case vide très courte à côté d'une longue liste). */
 @media(max-width:900px){.depot-wrap{flex-direction:column;padding:4px 12px 30px}.depot-col-hd{position:static}}
 
 .auth-screen{position:fixed;inset:0;background:#0F172A;display:flex;align-items:center;justify-content:center;z-index:3000;flex-direction:column;gap:22px;padding:20px}
@@ -4191,8 +4219,19 @@ function loadSheetsFromServer(retries){
   return apiCall("GET","/appros").then(function(data){
     sheets=(data||[]).map(function(s){return mig(s);});
     _lastRefreshAt=Date.now();   /* tout chargement r\u00e9ussi compte : \u00e9vite un refresh inutile juste apr\u00e8s l'ouverture */
-    try{if(currentTab==="dash"&&typeof renderDashboard==="function")renderDashboard();
-         else if(currentTab==="depot"&&typeof renderDepotHome==="function")renderDepotHome();}catch(e){}
+    /* Su : "j'suis sur une appro, et bam ça me remet sur l'accueil, c'est
+       pas possible ça" — ce chemin-ci redessinait directement l'accueil
+       dépôt selon currentTab, SANS jamais vérifier si une appro était
+       ouverte (cur), contournant la même protection déjà posée ailleurs
+       pour le rafraîchissement périodique. currentTab peut très bien
+       encore valoir "depot" alors qu'une appro ouverte depuis cet écran
+       est affichée par-dessus — c'est exactement ce cas qui arrachait la
+       personne de sa fiche en cours. */
+    try{
+      if(typeof cur!=="undefined"&&cur){ /* une appro est ouverte : on n'y touche pas, quel que soit currentTab */ }
+      else if(currentTab==="dash"&&typeof renderDashboard==="function")renderDashboard();
+      else if(currentTab==="depot"&&typeof renderDepotHome==="function")renderDepotHome();
+    }catch(e){}
     return sheets;
   }).catch(function(e){
     if(retries>0){
@@ -7878,8 +7917,10 @@ function buildPZ(s){
     (_hasResPZ?"<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:"+RESOLVED_C.bg+";border:1px solid "+RESOLVED_C.left+";border-radius:2px\"></span> Ajout d&#233;j&#224; int&#233;gr&#233;</span>":"")+
     "<span style=\"display:inline-flex;align-items:center;gap:4px\"><span style=\"display:inline-block;width:10px;height:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:2px\"></span> Retourn&#233; d&#233;p&#244;t</span></div>":"";
   var obsH=s.observation?"<div class=\"pz-sec\"><div class=\"pz-sec-t\">Observation</div><div class=\"pz-obs\">"+esc(s.observation)+"</div></div>":"";
+  var truckEquipH=(typeof _bkTruckEquipHTML==="function")?_bkTruckEquipHTML(s).replace(/class="bk-sec"/g,"class=\"pz-sec\"").replace(/class="bk-sec-t"/g,"class=\"pz-sec-t\"").replace(/class="bk-tbl"/g,"class=\"pz-tbl\""):"";
+  var filetsH=(typeof _bkFiletsHTML==="function")?_bkFiletsHTML(s).replace(/class="bk-sec"/g,"class=\"pz-sec\"").replace(/class="bk-sec-t"/g,"class=\"pz-sec-t\"").replace(/class="bk-tbl"/g,"class=\"pz-tbl\""):"";
   var camH=s.camionSujet?"<div style=\"margin-bottom:10px;border:1px solid #FCA5A5;background:#FEF2F2;border-radius:8px;padding:9px 13px;font-size:11px;color:#B91C1C;display:flex;align-items:center;gap:8px\"><span style=\"font-size:15px\">&#9888;</span><span><b>Sujet camion</b> &#8212; "+(s.camionSujetNote?esc(s.camionSujetNote):((s.tlCamion||s.tlName)?("le camion de "+esc(s.tlCamion||s.tlName)+" pose probl\u00e8me, solution \u00e0 trouver."):"le technicien en charge n'a peut-\u00eatre pas de camion, solution \u00e0 trouver."))+"</span></div>":"";
-  var _qr=s._id?qrDataURL(window.location.origin+"/?appro="+s._id):"";var _qrB=_qr?"<img src=\""+_qr+"\" style=\"width:82px;height:82px;background:#fff;border-radius:8px;padding:3px\" alt=\"QR\"/>":"";return "<div class=\"pz-hd\"><div class=\"pz-hd-l\"><img src=\"data:image/png;base64,"+LB64+"\" alt=\"JARNIAS\"/>"+_qrB+"</div><div class=\"pz-hd-c\"><div class=\"pz-hd-title\">Feuille d&#39;approvisionnement</div><div class=\"pz-hd-sub\">"+(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.tagline?esc(CONFIG.tagline):"Les experts de la hauteur")+"</div><div style=\"margin-top:5px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap\">"+tTag+"</div></div><div class=\"pz-hd-flag\">"+prioFlag+"</div></div><div class=\"pz-ref\"><div class=\"pz-ri\"><div class=\"pz-rl\">R&#233;f&#233;rence</div><div class=\"pz-rv\">"+esc(s.reference)+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Cr&#233;&#233; le</div><div class=\"pz-rv\">"+s.dateCreation+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Mis &#224; jour</div><div class=\"pz-rv\">"+s.dateMiseAJour+"</div></div></div><div class=\"pz-bt\">Informations chantier</div><div class=\"pz-info\"><div class=\"pz-fi\"><label>N&#176; Affaire</label><span>"+(esc(s.noAffaire)||"—")+"</span></div><div class=\"pz-fi\"><label>Charg&#233; d&#39;affaires</label><span>"+(esc(s.chargeAffaires)||"—")+"</span></div><div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Nom du chantier</label><span>"+(esc(s.nomChantier)||"—")+"</span></div>"+(s.tlCamion?"<div class=\"pz-fi\"><label>Team Leader / Camion</label><span>"+esc(s.tlCamion)+"</span></div>":"")+(s.conducteur?"<div class=\"pz-fi\"><label>Conducteur de travaux</label><span>"+esc(s.conducteur)+"</span></div>":"")+(s.clientSite?"<div class=\"pz-fi\"><label>Client / Site</label><span>"+esc(s.clientSite)+"</span></div>":"")+(s.adresseChantier?"<div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Adresse du chantier</label><span style=\"white-space:pre-wrap\">"+esc(s.adresseChantier)+"</span></div>":"")+(s.coordClient?"<div class=\"pz-fi\"><label>Coordonn&#233;es client</label><span style=\"white-space:pre-wrap\">"+esc(s.coordClient)+"</span></div>":"")+"</div>"+camH+dRow+legH+"<div class=\"pz-secwrap\">"+secH+"</div>"+retH+obsH+"<div class=\"pz-foot\"><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Charg&#233; d&#39;affaires</label></div><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Visa client</label></div></div>";
+  var _qr=s._id?qrDataURL(window.location.origin+"/?appro="+s._id):"";var _qrB=_qr?"<img src=\""+_qr+"\" style=\"width:82px;height:82px;background:#fff;border-radius:8px;padding:3px\" alt=\"QR\"/>":"";return "<div class=\"pz-hd\"><div class=\"pz-hd-l\"><img src=\"data:image/png;base64,"+LB64+"\" alt=\"JARNIAS\"/>"+_qrB+"</div><div class=\"pz-hd-c\"><div class=\"pz-hd-title\">Feuille d&#39;approvisionnement</div><div class=\"pz-hd-sub\">"+(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.tagline?esc(CONFIG.tagline):"Les experts de la hauteur")+"</div><div style=\"margin-top:5px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap\">"+tTag+"</div></div><div class=\"pz-hd-flag\">"+prioFlag+"</div></div><div class=\"pz-ref\"><div class=\"pz-ri\"><div class=\"pz-rl\">R&#233;f&#233;rence</div><div class=\"pz-rv\">"+esc(s.reference)+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Cr&#233;&#233; le</div><div class=\"pz-rv\">"+s.dateCreation+"</div></div><div class=\"pz-ri\"><div class=\"pz-rl\">Mis &#224; jour</div><div class=\"pz-rv\">"+s.dateMiseAJour+"</div></div></div><div class=\"pz-bt\">Informations chantier</div><div class=\"pz-info\"><div class=\"pz-fi\"><label>N&#176; Affaire</label><span>"+(esc(s.noAffaire)||"—")+"</span></div><div class=\"pz-fi\"><label>Charg&#233; d&#39;affaires</label><span>"+(esc(s.chargeAffaires)||"—")+"</span></div><div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Nom du chantier</label><span>"+(esc(s.nomChantier)||"—")+"</span></div>"+(s.tlCamion?"<div class=\"pz-fi\"><label>Team Leader / Camion</label><span>"+esc(s.tlCamion)+"</span></div>":"")+(s.conducteur?"<div class=\"pz-fi\"><label>Conducteur de travaux</label><span>"+esc(s.conducteur)+"</span></div>":"")+(s.clientSite?"<div class=\"pz-fi\"><label>Client / Site</label><span>"+esc(s.clientSite)+"</span></div>":"")+(s.adresseChantier?"<div class=\"pz-fi\" style=\"grid-column:1/-1\"><label>Adresse du chantier</label><span style=\"white-space:pre-wrap\">"+esc(s.adresseChantier)+"</span></div>":"")+(s.coordClient?"<div class=\"pz-fi\"><label>Coordonn&#233;es client</label><span style=\"white-space:pre-wrap\">"+esc(s.coordClient)+"</span></div>":"")+"</div>"+camH+dRow+legH+"<div class=\"pz-secwrap\">"+secH+"</div>"+retH+truckEquipH+filetsH+obsH+"<div class=\"pz-foot\"><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Charg&#233; d&#39;affaires</label></div><div class=\"pz-sign\"><div class=\"pz-sign-line\"></div><label>Visa client</label></div></div>";
 }
 function isLongAppro(s){
   var n=0;["consommables","fournitures","outillage"].forEach(function(k){(s[k]||[]).forEach(function(r){if(r.designation&&(""+r.designation).trim())n++;});});
@@ -7932,6 +7973,49 @@ function _bkSecHTML(o){
   return "<div class=\"bk-sec\"><div class=\"bk-sec-t\"><span class=\"dot\" style=\"background:"+o.sec.c+"\"></span> "+o.sec.l+" <span class=\"cnt\">"+o.shown+" article"+(o.shown>1?"s":"")+"</span></div>"+
     "<table class=\"bk-tbl\"><thead><tr><th style=\"width:40%\">D\u00e9signation</th><th style=\"width:13%;text-align:center\">Qt\u00e9</th><th style=\"width:24%\">Disponibilit\u00e9</th><th style=\"width:23%\">Comm.</th></tr></thead><tbody>"+o.rows+"</tbody></table></div>";
 }
+/* Su : "détail du kit, détail du camion, même coché ne met pas dans le PDF"
+   — pdfTruckDetail n'ajustait qu'une quantité NETTE par article déduit,
+   jamais la vraie LISTE de l'équipement embarqué. Et les filets réservés
+   (toute une fonctionnalité construite depuis) n'apparaissaient nulle part
+   dans le document final. Les deux manquaient réellement, pas juste mal
+   affichés — corrigé en ajoutant ces deux sections. */
+function _bkTruckEquipHTML(s){
+  if(!pdfTruckDetailOn()||!s.tlCamion)return "";
+  var t=(typeof truckByTL==="function")?truckByTL(s.tlCamion):null;
+  if(!t)return "";
+  var eq=(t.items||[]).filter(function(x){return !x.ref;});
+  var num=(t.items||[]).filter(function(x){return x.ref;});
+  if(!eq.length&&!num.length)return "";
+  var h="<div class=\"bk-sec\" style=\"margin-top:14px\"><div class=\"bk-sec-t\"><span class=\"dot\" style=\"background:#A16207\"></span> \u00c9quipement du camion de "+esc(t.tl||s.tlCamion)+" <span class=\"cnt\">"+(eq.length+num.length)+" \u00e9l\u00e9ment"+((eq.length+num.length)>1?"s":"")+"</span></div>";
+  h+="<div style=\"display:flex;flex-wrap:wrap;gap:5px;margin-bottom:"+(num.length?"8px":"0")+"\">";
+  eq.forEach(function(it){h+="<span style=\"font-size:9.5px;background:#FFFBEB;border:1px solid #FDE68A;color:#854D0E;border-radius:12px;padding:2px 8px\">"+esc(it.n)+" \u00d7"+esc(it.q)+"</span>";});
+  h+="</div>";
+  if(num.length){
+    h+="<table class=\"bk-tbl\"><thead><tr><th style=\"width:70%\">Machine / mat\u00e9riel</th><th style=\"width:30%\">N\u00b0</th></tr></thead><tbody>";
+    num.forEach(function(it){h+="<tr><td>"+esc(it.n)+"</td><td style=\"color:#0E7490;font-weight:700\">"+esc(it.ref)+"</td></tr>";});
+    h+="</tbody></table>";
+  }
+  h+="</div>";
+  return h;
+}
+function _bkFiletsHTML(s){
+  if(typeof FILETS==="undefined"||!s._id)return "";
+  var linked=FILETS.filter(function(f){return f.appro_id===s._id;});
+  if(!linked.length)return "";
+  var h="<div class=\"bk-sec\" style=\"margin-top:14px\"><div class=\"bk-sec-t\"><span class=\"dot\" style=\"background:#7C3AED\"></span> Filets r\u00e9serv\u00e9s <span class=\"cnt\">"+linked.length+" filet"+(linked.length>1?"s":"")+"</span></div>";
+  h+="<table class=\"bk-tbl\"><thead><tr><th style=\"width:35%\">Dimensions</th><th style=\"width:30%\">Cat\u00e9gorie</th><th style=\"width:35%\">Certification</th></tr></thead><tbody>";
+  linked.forEach(function(f){
+    var certTxt="\u2014";
+    if(f.is_anticute){
+      var c=(typeof _filCertStatus==="function")?_filCertStatus(f):null;
+      certTxt=c?c.label:"\u2014";
+    }
+    var catTxt=esc(f.type||"\u2014")+(f.pare_gravat?" \u00b7 avec pare-gravat":"");
+    h+="<tr><td>"+esc(""+f.largeur)+" \u00d7 "+esc(""+f.hauteur)+" m</td><td>"+catTxt+"</td><td>"+certTxt+"</td></tr>";
+  });
+  h+="</tbody></table></div>";
+  return h;
+}
 /* ═══ Livret A3 plié : couverture B (extérieur) + double page détail (intérieur) ═══ */
 function buildBooklet(s){
   var _qr=s._id?qrDataURL(window.location.origin+"/?appro="+s._id):"";
@@ -7949,6 +8033,8 @@ function buildBooklet(s){
   var retH=d.retTotal>0?"<div class=\"bk-ret\"><span style=\"font-size:14px\">\u21A9</span><span><b>"+d.retTotal+" article"+(d.retTotal>1?"s":"")+" rendu"+(d.retTotal>1?"s":"")+" au d\u00e9p\u00f4t</b> \u2014 d\u00e9duit"+(d.retTotal>1?"s":"")+" du stock, non d\u00e9taill\u00e9"+(d.retTotal>1?"s":"")+".</span></div>":"";
   var camH=s.camionSujet?"<div class=\"bk-ret\" style=\"border-color:#FCA5A5;background:#FEF2F2\"><span style=\"font-size:14px\">\u26A0</span><span><b>Sujet camion</b> \u2014 "+(s.camionSujetNote?esc(s.camionSujetNote):((s.tlCamion||s.tlName)?("le camion de "+esc(s.tlCamion||s.tlName)+" pose probl\u00e8me, solution \u00e0 trouver."):"technicien sans camion, solution \u00e0 trouver."))+"</span></div>":"";
   var obsH=s.observation?"<div class=\"bk-sec\" style=\"margin-top:14px\"><div class=\"bk-obs\"><div class=\"h\">Observations</div>"+esc(s.observation)+"</div></div>":"";
+  var truckEquipH=(typeof _bkTruckEquipHTML==="function")?_bkTruckEquipHTML(s):"";
+  var filetsH=(typeof _bkFiletsHTML==="function")?_bkFiletsHTML(s):"";
   var dLimite=s.dateAppro?fd(s.dateAppro):"\u2014",dChantier=s.dateChantier?fd(s.dateChantier):"\u2014";
 
   // ── FACE EXTÉRIEURE : dos (gauche) + couverture B (droite) ──
@@ -7992,7 +8078,7 @@ function buildBooklet(s){
         camH+leftSecs+
       "</div>"+
       "<div class=\"bk-a4 bk-in\">"+
-        (rightSecs||"")+retH+obsH+
+        (rightSecs||"")+retH+truckEquipH+filetsH+obsH+
         "<div class=\"bk-foot\">"+
           "<div class=\"bk-sign\"><div class=\"ln\"></div><div class=\"lb\">Charg\u00e9 d'affaires</div></div>"+
           "<div class=\"bk-sign\"><div class=\"ln\"></div><div class=\"lb\">Chef de d\u00e9p\u00f4t</div></div>"+
