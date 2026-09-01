@@ -1574,6 +1574,12 @@ table.at tr.kit-row td.td-d{position:relative}
 .kit-zone-n{background:#E2E8F0;color:#475569;border-radius:20px;padding:1px 9px;font-size:11.5px;font-weight:700}
 .kit-zone-hd i:last-child{margin-left:auto;color:#94A3B8}
 #kit-zone-inner:not(:empty){margin-top:8px}
+.truck-tools-zone{margin:0 0 16px}
+.truck-tools-hd{width:100%;display:flex;align-items:center;gap:8px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;color:#334155;cursor:pointer;font-family:inherit;transition:background .15s}
+.truck-tools-hd:hover{background:#F1F5F9}
+.truck-tools-hd i:first-child{color:#6D28D9}
+.truck-tools-hd i:last-child{margin-left:auto;color:#94A3B8}
+#truck-tools-inner:not(:empty){margin-top:10px}
 .kit-sugg{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;margin:0 0 14px}
 .kit-essentials{background:#EFF6FF;border-color:#BFDBFE}
 .kit-essentials .kit-sugg-hd{color:#1D4ED8}
@@ -5763,7 +5769,7 @@ function depotItemsPreview(s){
   var show=all.slice(0,4);
   var h="";
   show.forEach(function(it){
-    h+="<div style=\"display:flex;justify-content:space-between;gap:6px\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(it.designation)+"</span><span style=\"color:#94A3B8;flex-shrink:0\">"+(it.quantite?"x"+esc(it.quantite):"")+"</span></div>";
+    h+="<div style=\"display:flex;justify-content:space-between;gap:6px\"><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(it.designation)+"</span><span style=\"color:#94A3B8;flex-shrink:0\">"+(it.quantite?"x"+esc(it.quantite):"")+"</span></div>";
   });
   if(all.length>4)h+="<div style=\"color:#94A3B8;font-size:10px;margin-top:2px\">+"+(all.length-4)+" autre"+(all.length-4>1?"s":"")+"...</div>";
   return h;
@@ -5786,7 +5792,7 @@ function depotRowHTML(s,kind){
   else sub=(s.tlName?"Rendu par "+esc(s.tlName)+" (TL)":esc(s.conducteur||s.chargeAffaires||"Conducteur ?"))+(s.renduAt?" \u00b7 rendu le "+s.renduAt:"");
   var h="<div class=\"lib-row\" onclick=\"openFromDepot('"+s.id+"')\">";
   h+="<span class=\"lib-row-dot\" style=\"background:"+dotCol+"\" title=\""+(isAddCh?"Ajout \u00e0 pr\u00e9parer":isModif?"D\u00e9j\u00e0 pr\u00eate, modifi\u00e9e":"")+"\"></span>";
-  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span></div><div class=\"lib-row-sub\">"+sub+"</div></div>";
+  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span></div><div class=\"lib-row-sub\">"+sub+"</div></div>";
   if(kind==="prep"||kind==="ready"||kind==="renduFinal"){
     var act=(kind==="prep")?"depotMarkPrete":"depotMarkRendu";
     var ic=(kind==="prep")?"ti-package-import":"ti-checks";
@@ -6144,7 +6150,7 @@ function maRowHTML(s){
   var n=0;["consommables","fournitures","outillage"].forEach(function(k){(s[k]||[]).forEach(function(r){if(r&&String(r.designation||"").trim())n++;});});
   var h="<div class=\"lib-row\" onclick=\"openFromLib('"+s.id+"')\">";
   h+="<span class=\"lib-row-dot\" style=\"background:"+col+"\" title=\""+esc(s.conducteur||s.chargeAffaires||"Sans conducteur")+"\"></span>";
-  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans nom")+"</span>"+(s.draft?"<i class=\"ti ti-file-pencil\" style=\"color:#7C3AED;font-size:12px;flex-shrink:0\" title=\"Brouillon\"></i>":"")+"</div><div class=\"lib-row-sub\">"+esc(s.conducteur||s.chargeAffaires||"\u2014")+" \u00b7 "+n+" article"+(n>1?"s":"")+(s.clientSite?" \u00b7 "+esc(s.clientSite):"")+"</div></div>";
+  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans nom")+"</span>"+(s.draft?"<i class=\"ti ti-file-pencil\" style=\"color:#7C3AED;font-size:12px;flex-shrink:0\" title=\"Brouillon\"></i>":"")+"</div><div class=\"lib-row-sub\">"+esc(s.conducteur||s.chargeAffaires||"\u2014")+" \u00b7 "+n+" article"+(n>1?"s":"")+(s.clientSite?" \u00b7 "+esc(s.clientSite):"")+"</div></div>";
   h+="<span class=\"lib-row-rate\">"+statutBadge(s.draft?"en_attente":s.statut)+"</span>";
   h+="</div>";
   return h;
@@ -6251,7 +6257,7 @@ function previewItems(s,full){
   var show=all.slice(0,3);
   var h="<div style=\"background:#F8FAFC;border:1px solid #F1F5F9;border-radius:7px;padding:6px 8px;margin-top:8px\">";
   show.forEach(function(it){
-    h+="<div style=\"font-size:10px;color:#475569;display:flex;justify-content:space-between;gap:6px;line-height:1.5;white-space:nowrap;overflow:hidden\"><span style=\"overflow:hidden;text-overflow:ellipsis\">"+esc(it.n)+"</span>"+(it.q?"<span style=\"color:#94A3B8;flex-shrink:0\">x"+esc(it.q)+"</span>":"")+"</div>";
+    h+="<div style=\"font-size:10px;color:#475569;display:flex;justify-content:space-between;gap:6px;line-height:1.5;white-space:nowrap;overflow:hidden\"><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis\">"+esc(it.n)+"</span>"+(it.q?"<span style=\"color:#94A3B8;flex-shrink:0\">x"+esc(it.q)+"</span>":"")+"</div>";
   });
   if(total>3)h+="<div style=\"font-size:9px;color:#94A3B8;margin-top:2px\">+"+(total-3)+" autre"+(total-3>1?"s":"")+" article"+(total-3>1?"s":"")+"...</div>";
   h+="</div>";
@@ -6385,7 +6391,7 @@ function libRowHTML(s){
   var canDel=_isMyAppro(s)||(currentUser&&currentUser.role==="admin");
   var h="<div class=\"lib-row\" onclick=\"openFromLib('"+s.id+"')\">";
   h+="<span class=\"lib-row-dot\" style=\"background:"+cl.dot+"\" title=\""+esc(_condKey(s)||"Sans conducteur")+"\"></span>";
-  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span>"+(fav?"<i class=\"ti ti-pin-filled\" style=\"color:#F59E0B;font-size:12px;flex-shrink:0\"></i>":"")+""+"</div><div class=\"lib-row-sub\">"+(esc(s.conducteur||s.chargeAffaires)||"\u2014")+(s.reference?" \u00b7 "+esc(s.reference):"")+(s.dateCreation?" \u00b7 "+esc(s.dateCreation):"")+"</div></div>";
+  h+="<div class=\"lib-row-main\"><div class=\"lib-row-name\"><span style=\"flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap\">"+esc(s.nomChantier||"Sans titre")+"</span>"+(fav?"<i class=\"ti ti-pin-filled\" style=\"color:#F59E0B;font-size:12px;flex-shrink:0\"></i>":"")+""+"</div><div class=\"lib-row-sub\">"+(esc(s.conducteur||s.chargeAffaires)||"\u2014")+(s.reference?" \u00b7 "+esc(s.reference):"")+(s.dateCreation?" \u00b7 "+esc(s.dateCreation):"")+"</div></div>";
   h+="<span class=\"lib-row-rate\">"+(avg>0?"<i class=\"ti ti-star-filled\" style=\"color:#F59E0B;font-size:12px\"></i> "+avg.toFixed(1):"<span style=\"color:#CBD5E1\">\u2014</span>")+"</span>";
   h+="<button onclick=\"event.stopPropagation();toggleLibFav('"+s.id+"')\" class=\"lib-row-act\" title=\""+(fav?"Retirer l'\u00e9pingle":"\u00c9pingler")+"\" style=\"color:"+(fav?"#F59E0B":"#94A3B8")+"\"><i class=\"ti ti-pin"+(fav?"-filled":"")+"\"></i></button>";
   h+="<button onclick=\"event.stopPropagation();takeBaseFromLib('"+s.id+"')\" class=\"lib-row-act\" title=\"Prendre comme base\" style=\"color:#1D4ED8\"><i class=\"ti ti-copy\"></i></button>";
@@ -9296,6 +9302,15 @@ function renderUISettings(){try{setActiveNav('btn-ui');}catch(e){}
   var h="<div class=\"settings-page\" style=\"max-width:900px;margin:0 auto;padding:22px 18px 40px\">";
   h+=_dashHeader("Param\u00e9trage de l'interface","Catalogue, kits et clients. Tout est partag\u00e9 : vos changements s'appliquent imm\u00e9diatement \u00e0 toute l'\u00e9quipe.");
 
+  // Réglages d'export papier — décidés par l'admin/dépôt, s'appliquent à l'impression ET au livret PDF de chaque appro.
+  h+="<div class=\"ui-sec\" style=\"margin-bottom:16px;border-color:#BFDBFE\"><div class=\"ui-sec-hd\"><i class=\"ti ti-file-type-pdf\" style=\"color:#1D4ED8\"></i> Impression &amp; livret PDF</div>";
+  h+="<div style=\"padding:0 14px 12px;font-size:12.5px;color:#64748B;line-height:1.55\">Ce que la feuille papier et le livret PDF montrent par défaut. S'applique à toute l'équipe, immédiatement.</div>";
+  h+="<div class=\"jsetting-row\"><div class=\"jsetting-txt\"><div class=\"jsetting-t\"><i class=\"ti ti-package\" style=\"font-size:14px;color:#94A3B8;margin-right:5px\"></i>Détailler le contenu des kits</div><div class=\"jsetting-d\">Par défaut, un kit tient sur une seule ligne (nom + nombre d'éléments). Active pour lister chaque article du kit sur l'impression et le PDF.</div></div>";
+  h+="<label class=\"jswitch\"><input type=\"checkbox\" id=\"pdf-kits-detail\" "+(pdfKitsDetailOn()?"checked":"")+" onchange=\"togglePdfKitsDetail(this.checked)\"/><span class=\"jswitch-tr\"></span></label></div>";
+  h+="<div class=\"jsetting-row\"><div class=\"jsetting-txt\"><div class=\"jsetting-t\"><i class=\"ti ti-truck\" style=\"font-size:14px;color:#94A3B8;margin-right:5px\"></i>Détailler ce qui est déjà dans le camion</div><div class=\"jsetting-d\">Par défaut, seule la quantité restant à préparer apparaît. Active pour voir aussi la quantité totale demandée et ce qui est déjà dans le camion du technicien, ligne par ligne.</div></div>";
+  h+="<label class=\"jswitch\"><input type=\"checkbox\" id=\"pdf-truck-detail\" "+(pdfTruckDetailOn()?"checked":"")+" onchange=\"togglePdfTruckDetail(this.checked)\"/><span class=\"jswitch-tr\"></span></label></div>";
+  h+="</div>";
+
   // ---- CATALOGUE & KITS ----
   h+="<div class=\"ui-sec\"><div class=\"ui-sec-hd\"><i class=\"ti ti-package\" style=\"color:#6D28D9\"></i> Catalogue &amp; kits</div>";
   h+="<div style=\"background:#F5F3FF;border:1px solid #DDD6FE;border-radius:9px;padding:12px;margin-bottom:14px\"><div style=\"font-size:13px;color:#5B21B6;font-weight:600;margin-bottom:6px\"><i class=\"ti ti-download\"></i> Importer les kits JARNIAS</div><div style=\"font-size:12px;color:#6D28D9;margin-bottom:9px\">Ajoute d'un coup les kits du r\u00e9f\u00e9rentiel (Ma\u00e7onnerie, Couverture, Peinture, Cordiste, \u00c9lectroportatif...) comme cat\u00e9gories compl\u00e8tes du catalogue.</div><button class=\"liv\" onclick=\"importKits()\" id=\"btn-import-kits\" style=\"background:#6D28D9;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-download\"></i> Importer les kits</button></div>";
@@ -9941,14 +9956,6 @@ function renderTrucksSettings(){try{setActiveNav('btn-trucks');}catch(e){}
   var h="<div class=\"settings-page\" style=\"max-width:880px;margin:0 auto;padding:22px 18px\">";
   h+="<div style=\"display:flex;align-items:center;gap:10px;margin-bottom:6px\"><div style=\"width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--accent,#6D28D9) 12%,transparent);color:var(--accent,#6D28D9);display:flex;align-items:center;justify-content:center\"><i class=\"ti ti-truck\" style=\"font-size:23px\"></i></div><h2 style=\"margin:0;font-size:21px;color:#0F172A\">Gestion des camions</h2></div>";
   h+="<p style=\"color:#64748B;font-size:13px;margin:0 0 20px\">Chaque camion est rattach\u00e9 \u00e0 un Team Leader. L'\u00e9quipement saisi ici permet de d\u00e9duire automatiquement le mat\u00e9riel d\u00e9j\u00e0 pr\u00e9sent dans le camion lors d'une appro.</p>";
-  // Réglages d'export papier — décidés par le dépôt, s'appliquent à l'impression ET au livret PDF.
-  h+="<div class=\"ui-sec\" style=\"margin-bottom:16px;border-color:#BFDBFE\"><div class=\"ui-sec-hd\"><i class=\"ti ti-file-type-pdf\" style=\"color:#1D4ED8\"></i> Impression &amp; livret PDF</div>";
-  h+="<div style=\"padding:0 14px 12px;font-size:12.5px;color:#64748B;line-height:1.55\">Ce que la feuille papier et le livret PDF montrent par d\u00e9faut. S'applique \u00e0 toute l'\u00e9quipe, imm\u00e9diatement.</div>";
-  h+="<div class=\"jsetting-row\"><div class=\"jsetting-txt\"><div class=\"jsetting-t\"><i class=\"ti ti-package\" style=\"font-size:14px;color:#94A3B8;margin-right:5px\"></i>D\u00e9tailler le contenu des kits</div><div class=\"jsetting-d\">Par d\u00e9faut, un kit tient sur une seule ligne (nom + nombre d'\u00e9l\u00e9ments). Active pour lister chaque article du kit sur l'impression et le PDF.</div></div>";
-  h+="<label class=\"jswitch\"><input type=\"checkbox\" id=\"pdf-kits-detail\" "+(pdfKitsDetailOn()?"checked":"")+" onchange=\"togglePdfKitsDetail(this.checked)\"/><span class=\"jswitch-tr\"></span></label></div>";
-  h+="<div class=\"jsetting-row\"><div class=\"jsetting-txt\"><div class=\"jsetting-t\"><i class=\"ti ti-truck\" style=\"font-size:14px;color:#94A3B8;margin-right:5px\"></i>D\u00e9tailler ce qui est d\u00e9j\u00e0 dans le camion</div><div class=\"jsetting-d\">Par d\u00e9faut, seule la quantit\u00e9 restant \u00e0 pr\u00e9parer appara\u00eet. Active pour voir aussi la quantit\u00e9 totale demand\u00e9e et ce qui est d\u00e9j\u00e0 dans le camion du technicien, ligne par ligne.</div></div>";
-  h+="<label class=\"jswitch\"><input type=\"checkbox\" id=\"pdf-truck-detail\" "+(pdfTruckDetailOn()?"checked":"")+" onchange=\"togglePdfTruckDetail(this.checked)\"/><span class=\"jswitch-tr\"></span></label></div>";
-  h+="</div>";
   h+=loanedSummaryHTML();
   h+=_truckSearchBar();
 
@@ -9959,8 +9966,14 @@ function renderTrucksSettings(){try{setActiveNav('btn-trucks');}catch(e){}
     h+=trucksGrid();
   }
 
-  h+=truckBaseBar();
-  h+="<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px\"><button onclick=\"downloadTruckTemplate()\" style=\"background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-file-download\"></i> Mod\u00e8le Excel</button><button onclick=\"pickExcel(importTrucksExcel)\" style=\"background:#15803D;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-file-import\"></i> Importer un Excel</button><button onclick=\"exportTrucksExcel()\" style=\"background:#fff;border:1px solid #E2E8F0;color:#64748B;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-download\"></i> Exporter</button>"+(TRUCKS.length?"<button onclick=\"importTrucks()\" id=\"btn-imp-trucks\" title=\"Remplace tous les camions par la liste de r\u00e9f\u00e9rence\" style=\"background:#fff;border:1px solid #FDE68A;color:#A16207;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-refresh\"></i> R\u00e9importer</button>":"")+"</div>";
+  /* Su : "on se retrouve à avoir des réglages... pas normal, faudrait
+     clarifier et améliorer l'interface" — le camion type et les outils
+     Excel (import/export/réimport) sont des réglages avancés, rarement
+     touchés au quotidien, mais ils étaient éparpillés au-dessus ET en
+     dessous de la grille — la vraie raison d'être de cet écran. Regroupés
+     maintenant sous un seul bandeau repliable, replié par défaut, pour que
+     la grille des camions reste ce qu'on voit en premier. */
+  h+=_truckAdvancedToolsHTML();
 
   h+="</div>";
   m.innerHTML=h;
@@ -10128,6 +10141,27 @@ function _truckEquipBody(ti){
   return h;
 }
 function closeTruckEquip(){var ov=document.getElementById("teq-ov");if(ov)ov.remove();window._teqTi=null;}
+var _truckToolsOpen=false;
+function _truckToolsToggle(){
+  _truckToolsOpen=!_truckToolsOpen;
+  var z=document.getElementById("truck-tools-inner");
+  if(!z)return;
+  z.innerHTML=_truckToolsOpen?_truckToolsInnerHTML():"";
+  var chev=document.getElementById("truck-tools-chev");
+  if(chev)chev.className="ti "+(_truckToolsOpen?"ti-chevron-up":"ti-chevron-down");
+}
+function _truckToolsInnerHTML(){
+  var h=truckBaseBar();
+  h+="<div style=\"display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px\"><button onclick=\"downloadTruckTemplate()\" style=\"background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-file-download\"></i> Mod\u00e8le Excel</button><button onclick=\"pickExcel(importTrucksExcel)\" style=\"background:#15803D;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-file-import\"></i> Importer un Excel</button><button onclick=\"exportTrucksExcel()\" style=\"background:#fff;border:1px solid #E2E8F0;color:#64748B;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-download\"></i> Exporter</button>"+(TRUCKS.length?"<button onclick=\"importTrucks()\" id=\"btn-imp-trucks\" title=\"Remplace tous les camions par la liste de r\u00e9f\u00e9rence\" style=\"background:#fff;border:1px solid #FDE68A;color:#A16207;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit\"><i class=\"ti ti-refresh\"></i> R\u00e9importer</button>":"")+"</div>";
+  return h;
+}
+function _truckAdvancedToolsHTML(){
+  var h="<div class=\"truck-tools-zone\">";
+  h+="<button class=\"truck-tools-hd\" onclick=\"_truckToolsToggle()\"><i class=\"ti ti-adjustments\"></i> Outils avanc\u00e9s (camion type, Excel) <i id=\"truck-tools-chev\" class=\"ti "+(_truckToolsOpen?"ti-chevron-up":"ti-chevron-down")+"\"></i></button>";
+  h+="<div id=\"truck-tools-inner\">"+(_truckToolsOpen?_truckToolsInnerHTML():"")+"</div>";
+  h+="</div>";
+  return h;
+}
 function truckBaseBar(){
   var base=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.truckBase)||[];
   var opts="<option value=\"\">D\u00e9finir depuis un camion\u2026</option>";
